@@ -1,27 +1,27 @@
 package by.edik.car_api.dao;
 
-import by.edik.car_api.model.Ad;
+import by.edik.car_api.model.User;
 
 import java.util.List;
 
-public class AdDao implements GenericDao<Ad> {
+public class UserDao implements GenericDao <User>{
     @Override
-    public Ad create(Ad ad) {
+    public User create(User user) {
         return null;
     }
 
     @Override
-    public Ad getById(long id) {
+    public User getById(long id) {
         return null;
     }
 
     @Override
-    public List<Ad> getAll() {
+    public List<User> getAll() {
         return null;
     }
 
     @Override
-    public void update(Ad ad) {
+    public void update(User user) {
 
     }
 
