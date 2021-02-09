@@ -3,9 +3,9 @@ package by.edik.car_api.dao;
 import java.util.List;
 
 public interface GenericDao<T> {
-    T create();
+    T create(T t);
 
-    T getById(int id);
+    T getById(long id);
 
     List<T> getAll();
 

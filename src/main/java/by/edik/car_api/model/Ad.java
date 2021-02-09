@@ -1,11 +1,18 @@
 package by.edik.car_api.model;
 
+import lombok.*;
+
+@Setter
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Ad {
-    private int adId;
-    private int userId;
+    private long adId;
+    private long userId;
+    private long mileage;
     private int engineVolume;
     private int enginePower;
-    private int mileage;
     private short year;
     private String brand;
     private String model;

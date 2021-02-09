@@ -5,7 +5,7 @@ CREATE TYPE conditions AS ENUM ('new', 'used', 'damaged');
 
 CREATE TABLE users
 (
-    user_id  serial             NOT NULL PRIMARY KEY,
+    user_id  bigserial          NOT NULL PRIMARY KEY,
     username varchar(20) UNIQUE NOT NULL,
     email    varchar(30) UNIQUE NOT NULL,
     password varchar(20)        NOT NULL
@@ -13,7 +13,7 @@ CREATE TABLE users
 
 CREATE TABLE user_information
 (
-    user_id integer     NOT NULL PRIMARY KEY,
+    user_id bigint      NOT NULL PRIMARY KEY,
     name    varchar(30) NOT NULL,
     FOREIGN KEY (user_id)
         REFERENCES users (user_id)
@@ -21,17 +21,17 @@ CREATE TABLE user_information
 
 CREATE TABLE user_phones
 (
-    phone_number_id serial             NOT NULL PRIMARY KEY,
+    phone_number_id bigserial          NOT NULL PRIMARY KEY,
     phone_number    varchar(13) UNIQUE NOT NULL,
-    user_id         integer            NOT NULL,
+    user_id         bigint             NOT NULL,
     FOREIGN KEY (user_id)
         REFERENCES users (user_id)
 );
 
 CREATE TABLE ads
 (
-    ad_id         serial      NOT NULL PRIMARY KEY,
-    user_id       integer     NOT NULL,
+    ad_id         bigserial   NOT NULL PRIMARY KEY,
+    user_id       bigint      NOT NULL,
     year          smallint    NOT NULL,
     brand         varchar(30) NOT NULL,
     model         varchar(30) NOT NULL,
@@ -47,9 +47,9 @@ CREATE TABLE ads
 
 CREATE TABLE pictures
 (
-    picture_id        serial       NOT NULL PRIMARY KEY,
+    picture_id        bigserial    NOT NULL PRIMARY KEY,
     picture_reference varchar(100) NOT NULL,
-    ad_id             integer      NOT NULL,
+    ad_id             bigint       NOT NULL,
     FOREIGN KEY (ad_id)
         REFERENCES ads (ad_id)
 );

@@ -4,14 +4,17 @@ import by.edik.car_api.model.Ad;
 
 import java.util.List;
 
-public class AdDao implements GenericDao <Ad> {
+public class AdDao implements GenericDao<Ad> {
+
+
+
     @Override
-    public Ad create() {
+    public Ad create(Ad ad) {
         return null;
     }
 
     @Override
-    public Ad getById(int id) {
+    public Ad getById(long id) {
         return null;
     }
 

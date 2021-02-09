@@ -7,6 +7,7 @@ group 'by.edik'
 version '1.0-SNAPSHOT'
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
@@ -19,6 +20,9 @@ targetCompatibility = 1.8
 
 dependencies {
     compileOnly('javax.servlet:javax.servlet-api:4.0.1')
+
+    providedCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.18'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.18'
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
