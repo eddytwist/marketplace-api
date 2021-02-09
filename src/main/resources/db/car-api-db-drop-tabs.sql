@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS ads, user_informatiom, users, pictures;
