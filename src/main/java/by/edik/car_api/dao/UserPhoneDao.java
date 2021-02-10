@@ -4,7 +4,7 @@ import by.edik.car_api.model.UserPhone;
 
 import java.util.List;
 
-public class UserPhoneDao implements GenericDao<UserPhone>{
+public class UserPhoneDao implements GenericDao<UserPhone> {
     @Override
     public UserPhone create(UserPhone userPhone) {
         return null;

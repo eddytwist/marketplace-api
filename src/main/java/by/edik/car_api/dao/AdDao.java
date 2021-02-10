@@ -1,10 +1,29 @@
 package by.edik.car_api.dao;
 
 import by.edik.car_api.model.Ad;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AdDao implements GenericDao<Ad> {
+
+    private static volatile AdDao adDaoInstance;
+
+    public static AdDao getInstance() {
+        AdDao localInstance = adDaoInstance;
+        if (localInstance == null) {
+            synchronized (AdDao.class) {
+                localInstance = adDaoInstance;
+                if (localInstance == null) {
+                    adDaoInstance = localInstance = new AdDao();
+                }
+            }
+        }
+        return localInstance;
+    }
+
     @Override
     public Ad create(Ad ad) {
         return null;

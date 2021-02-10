@@ -4,7 +4,7 @@ import by.edik.car_api.model.Picture;
 
 import java.util.List;
 
-public class PictureDao implements GenericDao<Picture>{
+public class PictureDao implements GenericDao<Picture> {
     @Override
     public Picture create(Picture picture) {
         return null;

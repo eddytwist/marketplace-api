@@ -4,7 +4,7 @@ import by.edik.car_api.model.User;
 
 import java.util.List;
 
-public class UserDao implements GenericDao <User>{
+public class UserDao implements GenericDao<User> {
     @Override
     public User create(User user) {
         return null;
