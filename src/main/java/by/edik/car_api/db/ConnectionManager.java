@@ -8,7 +8,7 @@ public class ConnectionManager {
 
     private static final ThreadLocal<Connection> tl = new ThreadLocal<>();
 
-    public static Connection getConnection() throws DbManagerException {
+    public static Connection getConnection() {
         try {
             if (tl.get() == null) {
                 tl.set(DataSource.getConnection());
@@ -18,5 +18,4 @@ public class ConnectionManager {
             throw new DbManagerException();
         }
     }
-
 }
