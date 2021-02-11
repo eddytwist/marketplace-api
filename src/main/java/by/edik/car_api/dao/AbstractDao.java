@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public abstract class AbstractDao<T> implements GenericDao<T>  {
+public abstract class AbstractDao<T> implements GenericDao<T> {
     protected PreparedStatement prepareStatement(String query) throws SQLException {
         return ConnectionManager.getConnection().prepareStatement(query);
     }
@@ -16,11 +16,12 @@ public abstract class AbstractDao<T> implements GenericDao<T>  {
     }
 
     protected void close(ResultSet rs) {
-        try {
-            if (rs != null)
+        if (rs != null) {
+            try {
                 rs.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -1,7 +1,11 @@
 package by.edik.car_api.model;
 
 import lombok.*;
+import lombok.experimental.Accessors;
 
+import java.util.Date;
+
+@Accessors(chain = true)
 @Setter
 @Getter
 @Builder
@@ -10,13 +14,14 @@ import lombok.*;
 public class Ad {
     private long adId;
     private long userId;
-    private long mileage;
-    private int engineVolume;
-    private int enginePower;
     private short year;
     private String brand;
     private String model;
-    private String creationTime;
-    private String editingTime;
+    private int engineVolume;
     private Condition condition;
+    private long mileage;
+    private int enginePower;
+    private Date creationTime;
+    private Date editingTime;
+
 }
