@@ -7,22 +7,9 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class AdDao implements GenericDao<Ad> {
+public class AdDao extends AbstractDao<Ad> {
 
     private static volatile AdDao adDaoInstance;
-
-    public static AdDao getInstance() {
-        AdDao localInstance = adDaoInstance;
-        if (localInstance == null) {
-            synchronized (AdDao.class) {
-                localInstance = adDaoInstance;
-                if (localInstance == null) {
-                    adDaoInstance = localInstance = new AdDao();
-                }
-            }
-        }
-        return localInstance;
-    }
 
     @Override
     public Ad create(Ad ad) {
@@ -47,5 +34,18 @@ public class AdDao implements GenericDao<Ad> {
     @Override
     public void delete(long id) {
 
+    }
+
+    public static AdDao getInstance() {
+        AdDao localInstance = adDaoInstance;
+        if (localInstance == null) {
+            synchronized (AdDao.class) {
+                localInstance = adDaoInstance;
+                if (localInstance == null) {
+                    adDaoInstance = localInstance = new AdDao();
+                }
+            }
+        }
+        return localInstance;
     }
 }

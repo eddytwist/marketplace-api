@@ -1,10 +1,16 @@
 package by.edik.car_api.dao;
 
 import by.edik.car_api.model.UserInformation;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-public class UserInformationDao implements GenericDao<UserInformation> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class UserInformationDao extends AbstractDao<UserInformation> {
+
+    private static volatile UserInformationDao userInformationDaoInstance;
+
     @Override
     public UserInformation create(UserInformation userInformation) {
         return null;
@@ -28,5 +34,18 @@ public class UserInformationDao implements GenericDao<UserInformation> {
     @Override
     public void delete(long id) {
 
+    }
+
+    public static UserInformationDao getInstance() {
+        UserInformationDao localInstance = userInformationDaoInstance;
+        if (localInstance == null) {
+            synchronized (UserInformationDao.class) {
+                localInstance = userInformationDaoInstance;
+                if (localInstance == null) {
+                    userInformationDaoInstance = localInstance = new UserInformationDao();
+                }
+            }
+        }
+        return localInstance;
     }
 }

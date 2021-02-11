@@ -1,17 +1,17 @@
-package by.edik.car_api.db;
+package by.edik.car_api.dao;
 
-import by.edik.car_api.db.exception.DbManagerException;
+import by.edik.car_api.db.ConnectionManager;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public abstract class AbstractDao {
-    protected PreparedStatement prepareStatement(String query) throws SQLException, DbManagerException {
+public abstract class AbstractDao<T> implements GenericDao<T>  {
+    protected PreparedStatement prepareStatement(String query) throws SQLException {
         return ConnectionManager.getConnection().prepareStatement(query);
     }
 
-    protected PreparedStatement prepareStatement(String query, int flag) throws SQLException, DbManagerException {
+    protected PreparedStatement prepareStatement(String query, int flag) throws SQLException {
         return ConnectionManager.getConnection().prepareStatement(query, flag);
     }
 
