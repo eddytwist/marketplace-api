@@ -184,12 +184,4 @@ public class AdDao extends AbstractDao<Ad> {
         return localInstance;
     }
 
-    public static void main(String[] args) {
-        AdDao adDaoo = AdDao.getInstance();
-        Ad ad = adDaoo.getById(2);
-        System.out.println(ad);
-        Ad newAd = adDaoo.create(ad);
-        System.out.println(newAd);
-    }
-
 }

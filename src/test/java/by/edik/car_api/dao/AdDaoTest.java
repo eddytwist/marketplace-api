@@ -25,8 +25,8 @@ class AdDaoTest {
     private static final int ENGINE_VOLUME = 1600;
     private static final int MILEAGE = 350555;
     private static final int ENGINE_POWER = 80;
-    private static final LocalDateTime CREATION_TIME = LocalDateTime.of(2021,2,8,12,20);
-    private static final LocalDateTime EDITING_TIME = LocalDateTime.of(2021,2,15,16,20);
+    private static final LocalDateTime CREATION_TIME = LocalDateTime.of(2021, 2, 8, 12, 20);
+    private static final LocalDateTime EDITING_TIME = LocalDateTime.of(2021, 2, 15, 16, 20);
 
     AdDao adDao = AdDao.getInstance();
     UserDao userDao = UserDao.getInstance();
