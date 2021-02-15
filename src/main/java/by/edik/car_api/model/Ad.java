@@ -8,7 +8,8 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 @Setter
 @Getter
-@Builder
+@Builder (toBuilder = true)
+@EqualsAndHashCode
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor

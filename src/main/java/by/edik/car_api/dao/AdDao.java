@@ -1,5 +1,6 @@
 package by.edik.car_api.dao;
 
+import by.edik.car_api.dao.exception.DaoSqlException;
 import by.edik.car_api.model.Ad;
 import by.edik.car_api.model.Condition;
 import lombok.AccessLevel;
@@ -14,22 +15,28 @@ public class AdDao extends AbstractDao<Ad> {
 
     private static volatile AdDao adDaoInstance;
 
-    private final String getAllQuery = "SELECT * FROM ads";
-    private final String getByIdQuery = "SELECT * FROM ads WHERE ad_id = ?";
-    private final String createQuery = "INSERT INTO ads " +
+    private static final String GET_ALL_QUERY = "SELECT * FROM ads";
+    private static final String GET_BY_ID_QUERY = "SELECT * FROM ads WHERE ad_id = ?";
+    private static final String CREATE_QUERY = "INSERT INTO ads " +
             "VALUES (DEFAULT, ?, ?, ?, ?, ?, ?::\"conditions\", ?, ?, ?, ?)";
-    private final String updateQuery = "UPDATE ads SET (year, brand, model, engine_volume, mileage, engine_power) " +
+    private static final String UPDATE_QUERY = "UPDATE ads SET (" +
+            "year, brand, model, engine_volume, condition, mileage, engine_power, creation_time, editing_time) " +
+            "= (?, ?, ?, ?, ?::\"conditions\", ?, ?, ?, ?) " +
+            "WHERE ad_id = ?";
+    private static final String DELETE_QUERY = "DELETE FROM ads WHERE ad_id = ?";
+    private static final String UPDATE_ALLOWED_FIELDS_QUERY = "UPDATE ads SET (" +
+            "year, brand, model, engine_volume, mileage, engine_power) " +
             "= (?, ?, ?, ?, ?, ?) " +
             "WHERE ad_id = ?";
-    private final String deleteQuery = "DELETE FROM ads WHERE ad_id = ?";
 
 
     @Override
     public Ad create(Ad ad) {
         PreparedStatement preparedStatement;
-        ResultSet keys = null;
+        ResultSet resultSet;
+        long key = -1L;
         try {
-            preparedStatement = prepareStatement(createQuery, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement = prepareStatement(CREATE_QUERY, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setLong(1, ad.getUserId());
             preparedStatement.setInt(2, ad.getYear());
             preparedStatement.setString(3, ad.getBrand());
@@ -41,11 +48,14 @@ public class AdDao extends AbstractDao<Ad> {
             preparedStatement.setObject(9, ad.getCreationTime());
             preparedStatement.setObject(10, ad.getEditingTime());
             preparedStatement.executeUpdate();
-            keys = preparedStatement.getGeneratedKeys();
+            resultSet = preparedStatement.getGeneratedKeys();
+            if (resultSet != null && resultSet.next()) {
+                key = resultSet.getLong(1);
+            }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoSqlException(e);
         }
-        return ad.setAdId(keys);
+        return ad.setAdId(key);
     }
 
     @Override
@@ -54,7 +64,7 @@ public class AdDao extends AbstractDao<Ad> {
         ResultSet resultSet = null;
         Ad ad = null;
         try {
-            preparedStatement = prepareStatement(getByIdQuery);
+            preparedStatement = prepareStatement(GET_BY_ID_QUERY);
             preparedStatement.setLong(1, id);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -73,7 +83,7 @@ public class AdDao extends AbstractDao<Ad> {
                 );
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoSqlException(e);
         }
         close(resultSet);
         return ad;
@@ -85,7 +95,7 @@ public class AdDao extends AbstractDao<Ad> {
         ResultSet resultSet = null;
         List<Ad> ads = new ArrayList<>();
         try {
-            preparedStatement = prepareStatement(getAllQuery);
+            preparedStatement = prepareStatement(GET_ALL_QUERY);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 ads.add(new Ad(
@@ -103,7 +113,7 @@ public class AdDao extends AbstractDao<Ad> {
                 );
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoSqlException(e);
         }
         close(resultSet);
         return ads;
@@ -113,17 +123,20 @@ public class AdDao extends AbstractDao<Ad> {
     public void update(Ad ad) {
         PreparedStatement preparedStatement;
         try {
-            preparedStatement = prepareStatement(updateQuery, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement = prepareStatement(UPDATE_QUERY);
             preparedStatement.setInt(1, ad.getYear());
             preparedStatement.setString(2, ad.getBrand());
             preparedStatement.setString(3, ad.getModel());
             preparedStatement.setInt(4, ad.getEngineVolume());
-            preparedStatement.setLong(5, ad.getMileage());
-            preparedStatement.setInt(6, ad.getEnginePower());
-            preparedStatement.setLong(7, ad.getAdId());
+            preparedStatement.setString(5, ad.getCondition().name().toLowerCase());
+            preparedStatement.setLong(6, ad.getMileage());
+            preparedStatement.setInt(7, ad.getEnginePower());
+            preparedStatement.setObject(8, ad.getCreationTime());
+            preparedStatement.setObject(9, ad.getEditingTime());
+            preparedStatement.setLong(10, ad.getAdId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoSqlException(e);
         }
     }
 
@@ -133,11 +146,28 @@ public class AdDao extends AbstractDao<Ad> {
         pictureDao.delete(id);
         PreparedStatement preparedStatement;
         try {
-            preparedStatement = prepareStatement(deleteQuery, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement = prepareStatement(DELETE_QUERY);
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoSqlException(e);
+        }
+    }
+
+    public void updateAllowedFields(Ad ad) {
+        PreparedStatement preparedStatement;
+        try {
+            preparedStatement = prepareStatement(UPDATE_ALLOWED_FIELDS_QUERY);
+            preparedStatement.setInt(1, ad.getYear());
+            preparedStatement.setString(2, ad.getBrand());
+            preparedStatement.setString(3, ad.getModel());
+            preparedStatement.setInt(4, ad.getEngineVolume());
+            preparedStatement.setLong(5, ad.getMileage());
+            preparedStatement.setInt(6, ad.getEnginePower());
+            preparedStatement.setLong(7, ad.getAdId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoSqlException(e);
         }
     }
 
@@ -155,15 +185,11 @@ public class AdDao extends AbstractDao<Ad> {
     }
 
     public static void main(String[] args) {
-        AdDao adDao = new AdDao();
-        Ad ad = adDao.getById(2);
-        Ad newAd = adDao.create(ad);
+        AdDao adDaoo = AdDao.getInstance();
+        Ad ad = adDaoo.getById(2);
+        System.out.println(ad);
+        Ad newAd = adDaoo.create(ad);
         System.out.println(newAd);
-        newAd.setBrand("DJIGULI");
-        adDao.update(newAd);
-        adDao.delete(1);
-        List<Ad> all = adDao.getAll();
-        System.out.println(all);
     }
 
 }

@@ -1,26 +1,38 @@
 package by.edik.car_api.dao;
 
+import by.edik.car_api.db.DataSource;
 import by.edik.car_api.model.Ad;
 import by.edik.car_api.model.Condition;
 import by.edik.car_api.model.User;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class AdDaoTest {
+
+    private static final int YEAR = 1999;
+    private static final String BRAND = "Lada";
+    private static final String MODEL = "Kalina";
+    private static final int ENGINE_VOLUME = 1600;
+    private static final int MILEAGE = 350555;
+    private static final int ENGINE_POWER = 80;
+    private static final LocalDateTime CREATION_TIME = LocalDateTime.of(2021,2,8,12,20);
+    private static final LocalDateTime EDITING_TIME = LocalDateTime.of(2021,2,15,16,20);
 
     AdDao adDao = AdDao.getInstance();
     UserDao userDao = UserDao.getInstance();
     User user;
     Ad ad;
-
-
-
+    List<Ad> ads = new ArrayList<>();
 
     @BeforeEach
     void setUp() {
@@ -28,51 +40,163 @@ class AdDaoTest {
                 .setUsername("test")
                 .setEmail("test@tut.by")
                 .setPassword("pass"));
-        ad = new Ad()
+        ad = adDao.create(new Ad()
                 .setUserId(user.getUserId())
-                .setYear(1999)
-                .setBrand("brand")
-                .setModel("model")
-                .setEngineVolume(1500)
+                .setYear(YEAR)
+                .setBrand(BRAND)
+                .setModel(MODEL)
+                .setEngineVolume(ENGINE_VOLUME)
                 .setCondition(Condition.USED)
-                .setMileage(200000)
-                .setEnginePower(99)
-                .setCreationTime(LocalDateTime.now().minusMinutes(10))
-                .setEditingTime(LocalDateTime.now());
+                .setMileage(MILEAGE)
+                .setEnginePower(ENGINE_POWER)
+                .setCreationTime(CREATION_TIME)
+                .setEditingTime(EDITING_TIME));
     }
+
 
     @AfterEach
     void tearDown() {
-        adDao.delete(ad.getAdId());
-        userDao.delete(user.getUserId());
+        truncateAll();
+        ads.clear();
     }
 
     @Test
     void create() {
         Ad createdAd = adDao.create(ad);
-
-        assertTrue(ad.getUserId() > 0);
+        assertEquals(createdAd, adDao.getById(createdAd.getAdId()));
+        assertTrue(createdAd.getAdId() > 0);
+        assertTrue(createdAd.getUserId() > 0);
+        assertEquals(YEAR, createdAd.getYear());
+        assertEquals(BRAND, createdAd.getBrand());
+        assertEquals(MODEL, createdAd.getModel());
+        assertEquals(ENGINE_VOLUME, createdAd.getEngineVolume());
+        assertEquals(Condition.USED, createdAd.getCondition());
+        assertEquals(MILEAGE, createdAd.getMileage());
+        assertEquals(ENGINE_POWER, createdAd.getEnginePower());
+        assertEquals(CREATION_TIME, createdAd.getCreationTime());
+        assertEquals(EDITING_TIME, createdAd.getEditingTime());
+        adDao.delete(createdAd.getAdId());
     }
 
     @Test
     void getById() {
-
         Ad foundedAd = adDao.getById(ad.getAdId());
-
-        //then
-        assertTrue(user.getUserId() > 0);
-        assertEquals("brand", foundedAd.getBrand());
+        assertTrue(foundedAd.getAdId() > 0);
+        assertTrue(foundedAd.getUserId() > 0);
+        assertEquals(YEAR, foundedAd.getYear());
+        assertEquals(BRAND, foundedAd.getBrand());
+        assertEquals(MODEL, foundedAd.getModel());
+        assertEquals(ENGINE_VOLUME, foundedAd.getEngineVolume());
+        assertEquals(Condition.USED, foundedAd.getCondition());
+        assertEquals(MILEAGE, foundedAd.getMileage());
+        assertEquals(ENGINE_POWER, foundedAd.getEnginePower());
+        assertEquals(CREATION_TIME, foundedAd.getCreationTime());
+        assertEquals(EDITING_TIME, foundedAd.getEditingTime());
     }
 
     @Test
     void getAll() {
+        Ad anotherAd = adDao.create(ad
+                .setBrand("JIGULI")
+                .setModel("2107")
+                .setCondition(Condition.NEW)
+                .setYear(2020)
+                .setEnginePower(0)
+                .setEngineVolume(0)
+                .setMileage(0)
+        );
+        List<Ad> foundedAds = adDao.getAll();
+        assertEquals(foundedAds.size(), 2);
+        Ad firstAd = foundedAds.get(0);
+        assertTrue(firstAd.getAdId() > 0);
+        assertTrue(firstAd.getUserId() > 0);
+        assertEquals(YEAR, firstAd.getYear());
+        assertEquals(BRAND, firstAd.getBrand());
+        assertEquals(MODEL, firstAd.getModel());
+        assertEquals(ENGINE_VOLUME, firstAd.getEngineVolume());
+        assertEquals(Condition.USED, firstAd.getCondition());
+        assertEquals(MILEAGE, firstAd.getMileage());
+        assertEquals(ENGINE_POWER, firstAd.getEnginePower());
+        assertEquals(CREATION_TIME, firstAd.getCreationTime());
+        assertEquals(EDITING_TIME, firstAd.getEditingTime());
+        Ad secondAd = foundedAds.get(1);
+        assertTrue(secondAd.getAdId() > 0);
+        assertTrue(secondAd.getUserId() > 0);
+        assertEquals(2020, secondAd.getYear());
+        assertEquals("JIGULI", secondAd.getBrand());
+        assertEquals("2107", secondAd.getModel());
+        assertEquals(0, secondAd.getEngineVolume());
+        assertEquals(Condition.NEW, secondAd.getCondition());
+        assertEquals(0, secondAd.getMileage());
+        assertEquals(0, secondAd.getEnginePower());
+        assertEquals(CREATION_TIME, secondAd.getCreationTime());
+        assertEquals(EDITING_TIME, secondAd.getEditingTime());
     }
 
     @Test
     void update() {
+        Ad foundedAd = adDao.getById(ad.getAdId())
+                .setYear(2010)
+                .setBrand("Ford")
+                .setModel("Focus")
+                .setEngineVolume(2000)
+                .setCondition(Condition.DAMAGED)
+                .setMileage(10999)
+                .setEnginePower(150)
+                .setCreationTime(CREATION_TIME)
+                .setEditingTime(EDITING_TIME);
+        adDao.update(foundedAd);
+        Ad updatedAd = adDao.getById(foundedAd.getAdId());
+        assertTrue(updatedAd.getAdId() > 0);
+        assertTrue(updatedAd.getUserId() > 0);
+        assertEquals(2010, updatedAd.getYear());
+        assertEquals("Ford", updatedAd.getBrand());
+        assertEquals("Focus", updatedAd.getModel());
+        assertEquals(2000, updatedAd.getEngineVolume());
+        assertEquals(Condition.DAMAGED, updatedAd.getCondition());
+        assertEquals(10999, updatedAd.getMileage());
+        assertEquals(150, updatedAd.getEnginePower());
+        assertEquals(CREATION_TIME, updatedAd.getCreationTime());
+        assertEquals(EDITING_TIME, updatedAd.getEditingTime());
     }
 
     @Test
     void delete() {
+        Ad createdAd = adDao.create(ad);
+        assertEquals(createdAd, adDao.getById(createdAd.getAdId()));
+        adDao.delete(createdAd.getAdId());
+        assertNull(adDao.getById(createdAd.getAdId()));
+    }
+
+    @Test
+    void updateAllowedFields() {
+        Ad foundedAd = adDao.getById(ad.getAdId())
+                .setYear(2010)
+                .setBrand("Ford")
+                .setModel("Focus")
+                .setEngineVolume(2000)
+                .setMileage(10999)
+                .setEnginePower(150);
+        adDao.updateAllowedFields(foundedAd);
+        Ad updatedAd = adDao.getById(foundedAd.getAdId());
+        assertTrue(updatedAd.getAdId() > 0);
+        assertTrue(updatedAd.getUserId() > 0);
+        assertEquals(2010, updatedAd.getYear());
+        assertEquals("Ford", updatedAd.getBrand());
+        assertEquals("Focus", updatedAd.getModel());
+        assertEquals(2000, updatedAd.getEngineVolume());
+        assertEquals(10999, updatedAd.getMileage());
+        assertEquals(150, updatedAd.getEnginePower());
+    }
+
+    @SneakyThrows
+    private void truncateAll() {
+        Connection connection = DataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(
+                "truncate pictures, ads, user_information, user_phones, users;"
+        );
+        preparedStatement.execute();
+        preparedStatement.close();
+        connection.close();
     }
 }
