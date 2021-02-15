@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,7 +31,6 @@ class AdDaoTest {
     UserDao userDao = UserDao.getInstance();
     User user;
     Ad ad;
-    List<Ad> ads = new ArrayList<>();
 
     @BeforeEach
     void setUp() {
@@ -57,13 +55,11 @@ class AdDaoTest {
     @AfterEach
     void tearDown() {
         truncateAll();
-        ads.clear();
     }
 
     @Test
     void create() {
         Ad createdAd = adDao.create(ad);
-        assertEquals(createdAd, adDao.getById(createdAd.getAdId()));
         assertTrue(createdAd.getAdId() > 0);
         assertTrue(createdAd.getUserId() > 0);
         assertEquals(YEAR, createdAd.getYear());
@@ -75,7 +71,6 @@ class AdDaoTest {
         assertEquals(ENGINE_POWER, createdAd.getEnginePower());
         assertEquals(CREATION_TIME, createdAd.getCreationTime());
         assertEquals(EDITING_TIME, createdAd.getEditingTime());
-        adDao.delete(createdAd.getAdId());
     }
 
     @Test
@@ -96,7 +91,7 @@ class AdDaoTest {
 
     @Test
     void getAll() {
-        Ad anotherAd = adDao.create(ad
+        adDao.create(ad
                 .setBrand("JIGULI")
                 .setModel("2107")
                 .setCondition(Condition.NEW)
@@ -162,10 +157,8 @@ class AdDaoTest {
 
     @Test
     void delete() {
-        Ad createdAd = adDao.create(ad);
-        assertEquals(createdAd, adDao.getById(createdAd.getAdId()));
-        adDao.delete(createdAd.getAdId());
-        assertNull(adDao.getById(createdAd.getAdId()));
+        adDao.delete(ad.getAdId());
+        assertNull(adDao.getById(ad.getAdId()));
     }
 
     @Test

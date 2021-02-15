@@ -1,5 +1,6 @@
 package by.edik.car_api.dao;
 
+import by.edik.car_api.dao.exception.DaoSqlException;
 import by.edik.car_api.model.User;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -15,14 +17,14 @@ public class UserDao extends AbstractDao<User> {
 
     private static volatile UserDao userDaoInstance;
 
-    private final String getAllQuery = "SELECT * FROM users";
-    private final String getByIdQuery = "SELECT * FROM users WHERE user_id = ?";
-    private final String createQuery = "INSERT INTO users " +
+    private static final String GET_ALL_QUERY = "SELECT * FROM users";
+    private static final String GET_BY_ID_QUERY = "SELECT * FROM users WHERE user_id = ?";
+    private static final String CREATE_QUERY = "INSERT INTO users " +
             "VALUES (DEFAULT, ?, ?, ?)";
-    private final String updateQuery = "UPDATE users SET (username, email, password) " +
+    private static final String UPDATE_QUERY = "UPDATE users SET (username, email, password) " +
             "= (?, ?, ?) " +
             "WHERE user_id = ?";
-    private final String deleteQuery = "DELETE FROM users WHERE user_id = ?";
+    private static final String DELETE_QUERY = "DELETE FROM users WHERE user_id = ?";
 
     @Override
     public User create(User user) {
@@ -30,7 +32,7 @@ public class UserDao extends AbstractDao<User> {
         ResultSet resultSet;
         long key = -1L;
         try {
-            preparedStatement = prepareStatement(createQuery, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement = prepareStatement(CREATE_QUERY, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getEmail());
             preparedStatement.setString(3, user.getPassword());
@@ -47,17 +49,64 @@ public class UserDao extends AbstractDao<User> {
 
     @Override
     public User getById(long id) {
-        return null;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet = null;
+        User user = null;
+        try {
+            preparedStatement = prepareStatement(GET_BY_ID_QUERY);
+            preparedStatement.setLong(1, id);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                user = new User(
+                        resultSet.getLong("user_id"),
+                        resultSet.getString("username"),
+                        resultSet.getString("email"),
+                        resultSet.getString("password")
+                );
+            }
+        } catch (SQLException e) {
+            throw new DaoSqlException(e);
+        }
+        close(resultSet);
+        return user;
     }
 
     @Override
     public List<User> getAll() {
-        return null;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet = null;
+        List<User> users = new ArrayList<>();
+        try {
+            preparedStatement = prepareStatement(GET_ALL_QUERY);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                users.add(new User(
+                        resultSet.getLong("user_id"),
+                        resultSet.getString("username"),
+                        resultSet.getString("email"),
+                        resultSet.getString("password"))
+                );
+            }
+        } catch (SQLException e) {
+            throw new DaoSqlException(e);
+        }
+        close(resultSet);
+        return users;
     }
 
     @Override
     public void update(User user) {
-
+        PreparedStatement preparedStatement;
+        try {
+            preparedStatement = prepareStatement(UPDATE_QUERY);
+            preparedStatement.setString(1, user.getUsername());
+            preparedStatement.setString(2, user.getEmail());
+            preparedStatement.setString(3, user.getPassword());
+            preparedStatement.setLong(4, user.getUserId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoSqlException(e);
+        }
     }
 
     @Override
@@ -66,7 +115,7 @@ public class UserDao extends AbstractDao<User> {
         adDao.delete(id);
         PreparedStatement preparedStatement;
         try {
-            preparedStatement = prepareStatement(deleteQuery, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement = prepareStatement(DELETE_QUERY, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
