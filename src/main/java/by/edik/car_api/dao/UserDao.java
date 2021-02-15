@@ -39,10 +39,10 @@ public class UserDao extends AbstractDao<User> {
             preparedStatement.executeUpdate();
             resultSet = preparedStatement.getGeneratedKeys();
             if (resultSet != null && resultSet.next()) {
-                key = resultSet.getLong(1);
+                key = resultSet.getLong("user_id");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoSqlException(e);
         }
         return user.setUserId(key);
     }
@@ -115,11 +115,11 @@ public class UserDao extends AbstractDao<User> {
         adDao.delete(id);
         PreparedStatement preparedStatement;
         try {
-            preparedStatement = prepareStatement(DELETE_QUERY, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement = prepareStatement(DELETE_QUERY);
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoSqlException(e);
         }
     }
 

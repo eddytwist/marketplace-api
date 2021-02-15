@@ -18,12 +18,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AdDaoTest {
 
-    private static final int YEAR = 1999;
+    private static final Integer YEAR = 1999;
     private static final String BRAND = "Lada";
     private static final String MODEL = "Kalina";
-    private static final int ENGINE_VOLUME = 1600;
-    private static final int MILEAGE = 350555;
-    private static final int ENGINE_POWER = 80;
+    private static final Integer ENGINE_VOLUME = 1600;
+    private static final Long MILEAGE = 350555L;
+    private static final Integer ENGINE_POWER = 80;
     private static final LocalDateTime CREATION_TIME = LocalDateTime.of(2021, 2, 8, 12, 20);
     private static final LocalDateTime EDITING_TIME = LocalDateTime.of(2021, 2, 15, 16, 20);
 
@@ -98,7 +98,7 @@ class AdDaoTest {
                 .setYear(2020)
                 .setEnginePower(0)
                 .setEngineVolume(0)
-                .setMileage(0)
+                .setMileage(0L)
         );
         List<Ad> foundedAds = adDao.getAll();
         assertEquals(foundedAds.size(), 2);
@@ -136,7 +136,7 @@ class AdDaoTest {
                 .setModel("Focus")
                 .setEngineVolume(2000)
                 .setCondition(Condition.DAMAGED)
-                .setMileage(10999)
+                .setMileage(10999L)
                 .setEnginePower(150)
                 .setCreationTime(CREATION_TIME)
                 .setEditingTime(EDITING_TIME);
@@ -168,7 +168,7 @@ class AdDaoTest {
                 .setBrand("Ford")
                 .setModel("Focus")
                 .setEngineVolume(2000)
-                .setMileage(10999)
+                .setMileage(10999L)
                 .setEnginePower(150);
         adDao.updateAllowedFields(foundedAd);
         Ad updatedAd = adDao.getById(foundedAd.getAdId());

@@ -50,7 +50,7 @@ public class AdDao extends AbstractDao<Ad> {
             preparedStatement.executeUpdate();
             resultSet = preparedStatement.getGeneratedKeys();
             if (resultSet != null && resultSet.next()) {
-                key = resultSet.getLong(1);
+                key = resultSet.getLong("ad_id");
             }
         } catch (SQLException e) {
             throw new DaoSqlException(e);
@@ -71,10 +71,10 @@ public class AdDao extends AbstractDao<Ad> {
                 ad = new Ad(
                         resultSet.getLong("ad_id"),
                         resultSet.getLong("user_id"),
-                        resultSet.getShort("year"),
+                        resultSet.getInt("year"),
                         resultSet.getString("brand"),
                         resultSet.getString("model"),
-                        resultSet.getShort("engine_volume"),
+                        resultSet.getInt("engine_volume"),
                         Condition.valueOf(resultSet.getString("condition").toUpperCase()),
                         resultSet.getLong("mileage"),
                         resultSet.getInt("engine_power"),
@@ -101,10 +101,10 @@ public class AdDao extends AbstractDao<Ad> {
                 ads.add(new Ad(
                         resultSet.getLong("ad_id"),
                         resultSet.getLong("user_id"),
-                        resultSet.getShort("year"),
+                        resultSet.getInt("year"),
                         resultSet.getString("brand"),
                         resultSet.getString("model"),
-                        resultSet.getShort("engine_volume"),
+                        resultSet.getInt("engine_volume"),
                         Condition.valueOf(resultSet.getString("condition").toUpperCase()),
                         resultSet.getLong("mileage"),
                         resultSet.getInt("engine_power"),

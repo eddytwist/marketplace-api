@@ -48,7 +48,7 @@ CREATE TABLE ads
 CREATE TABLE pictures
 (
     picture_id        bigserial    NOT NULL PRIMARY KEY,
-    picture_reference varchar(100) NOT NULL,
+    reference varchar(100) NOT NULL,
     ad_id             bigint       NOT NULL,
     FOREIGN KEY (ad_id)
         REFERENCES ads (ad_id)
