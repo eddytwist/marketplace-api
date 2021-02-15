@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserPhone {
-    private long phoneNumberId;
-    private long userId;
+    private Long phoneNumberId;
+    private Long userId;
     private String phoneNumber;
 }

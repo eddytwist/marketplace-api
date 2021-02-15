@@ -14,15 +14,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Ad {
-    private long adId;
-    private long userId;
-    private int year;
+    private Long adId;
+    private Long userId;
+    private Integer year;
     private String brand;
     private String model;
-    private int engineVolume;
+    private Integer engineVolume;
     private Condition condition;
-    private long mileage;
-    private int enginePower;
+    private Long mileage;
+    private Integer enginePower;
     private LocalDateTime creationTime;
     private LocalDateTime editingTime;
 

@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Picture {
-    private long pictureId;
-    private long adId;
+    private Long pictureId;
+    private Long adId;
     private String pictureReference;
 }

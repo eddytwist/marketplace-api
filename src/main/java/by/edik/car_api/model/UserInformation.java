@@ -8,6 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserInformation {
-    private long userId;
+    private Long userId;
     private String name;
 }
