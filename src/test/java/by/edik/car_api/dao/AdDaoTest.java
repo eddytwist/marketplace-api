@@ -104,6 +104,7 @@ class AdDaoTest {
         );
         List<Ad> foundedAds = adDao.getAll();
         assertEquals(foundedAds.size(), 2);
+
         Ad firstAd = foundedAds.get(0);
         assertTrue(firstAd.getAdId() > 0);
         assertTrue(firstAd.getUserId() > 0);
@@ -116,6 +117,7 @@ class AdDaoTest {
         assertEquals(ENGINE_POWER, firstAd.getEnginePower());
         assertEquals(CREATION_TIME, firstAd.getCreationTime());
         assertEquals(EDITING_TIME, firstAd.getEditingTime());
+
         Ad secondAd = foundedAds.get(1);
         assertTrue(secondAd.getAdId() > 0);
         assertTrue(secondAd.getUserId() > 0);

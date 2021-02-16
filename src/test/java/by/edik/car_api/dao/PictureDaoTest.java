@@ -81,10 +81,12 @@ class PictureDaoTest {
         );
         List<Picture> foundedPictures = pictureDao.getAll();
         assertEquals(foundedPictures.size(), 2);
+
         Picture firstPicture = foundedPictures.get(0);
         assertTrue(firstPicture.getAdId() > 0);
         assertTrue(firstPicture.getPictureId() > 0);
         assertEquals(REFERENCE, firstPicture.getReference());
+
         Picture secondPicture = foundedPictures.get(1);
         assertTrue(secondPicture.getPictureId() > 0);
         assertTrue(secondPicture.getAdId() > 0);

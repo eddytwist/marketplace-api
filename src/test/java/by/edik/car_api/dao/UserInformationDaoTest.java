@@ -59,8 +59,8 @@ class UserInformationDaoTest {
     @Test
     void getAll() {
         User secondUser = userDao.create(user
-        .setUsername("testPetr")
-        .setEmail("testptr@mail.com")
+                .setUsername("testPetr")
+                .setEmail("testptr@mail.com")
         );
         userInformationDao.create(userInformation
                 .setUserId(secondUser.getUserId())
@@ -68,13 +68,12 @@ class UserInformationDaoTest {
         );
         List<UserInformation> foundedUsersInformation = userInformationDao.getAll();
         assertEquals(foundedUsersInformation.size(), 2);
+
         UserInformation firstUserInformation = foundedUsersInformation.get(0);
         assertTrue(firstUserInformation.getUserId() > 0);
-        System.out.println(firstUserInformation.getUserId());
         assertEquals(NAME, firstUserInformation.getName());
+
         UserInformation secondUserInformation = foundedUsersInformation.get(1);
-        System.out.println(secondUserInformation.getUserId());
-        System.out.println(secondUser.getUserId());
         assertTrue(secondUserInformation.getUserId() > 0);
         assertEquals(secondUser.getUserId(), secondUserInformation.getUserId());
         assertEquals("Petr", secondUserInformation.getName());

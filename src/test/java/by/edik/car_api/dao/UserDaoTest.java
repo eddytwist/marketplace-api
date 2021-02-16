@@ -38,8 +38,7 @@ class UserDaoTest {
 
     @Test
     void create() {
-        tearDown();
-        User createdUser = userDao.create(user);
+        User createdUser = userDao.getById(user.getUserId());
         assertTrue(createdUser.getUserId() > 0);
         assertEquals(USERNAME, createdUser.getUsername());
         assertEquals(EMAIL, createdUser.getEmail());
@@ -64,11 +63,13 @@ class UserDaoTest {
         );
         List<User> foundedUsers = userDao.getAll();
         assertEquals(foundedUsers.size(), 2);
+
         User firstUser = foundedUsers.get(0);
         assertTrue(firstUser.getUserId() > 0);
         assertEquals(USERNAME, firstUser.getUsername());
         assertEquals(EMAIL, firstUser.getEmail());
         assertEquals(PASSWORD, firstUser.getPassword());
+
         User secondUser = foundedUsers.get(1);
         assertTrue(secondUser.getUserId() > 0);
         assertEquals("Fedor", secondUser.getUsername());

@@ -61,7 +61,7 @@ public class AdDao extends AbstractDao<Ad> {
     @Override
     public Ad getById(long id) {
         PreparedStatement preparedStatement;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         Ad ad = null;
         try {
             preparedStatement = prepareStatement(GET_BY_ID_QUERY);
@@ -92,7 +92,7 @@ public class AdDao extends AbstractDao<Ad> {
     @Override
     public List<Ad> getAll() {
         PreparedStatement preparedStatement;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         List<Ad> ads = new ArrayList<>();
         try {
             preparedStatement = prepareStatement(GET_ALL_QUERY);

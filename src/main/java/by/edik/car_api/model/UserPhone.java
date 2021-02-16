@@ -11,6 +11,6 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 public class UserPhone {
     private Long phoneNumberId;
-    private Long userId;
     private String phoneNumber;
+    private Long userId;
 }
