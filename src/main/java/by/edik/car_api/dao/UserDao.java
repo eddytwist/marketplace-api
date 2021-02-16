@@ -111,8 +111,6 @@ public class UserDao extends AbstractDao<User> {
 
     @Override
     public void delete(long id) {
-        AdDao adDao = AdDao.getInstance();
-        adDao.delete(id);
         PreparedStatement preparedStatement;
         try {
             preparedStatement = prepareStatement(DELETE_QUERY);

@@ -17,6 +17,7 @@ CREATE TABLE user_information
     name    varchar(30) NOT NULL,
     FOREIGN KEY (user_id)
         REFERENCES users (user_id)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE user_phones
@@ -26,6 +27,7 @@ CREATE TABLE user_phones
     user_id         bigint             NOT NULL,
     FOREIGN KEY (user_id)
         REFERENCES users (user_id)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE ads
@@ -43,15 +45,17 @@ CREATE TABLE ads
     editing_time  timestamp   NOT NULL,
     FOREIGN KEY (user_id)
         REFERENCES users (user_id)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE pictures
 (
-    picture_id        bigserial    NOT NULL PRIMARY KEY,
-    reference varchar(100) NOT NULL,
-    ad_id             bigint       NOT NULL,
+    picture_id bigserial    NOT NULL PRIMARY KEY,
+    reference  varchar(100) NOT NULL,
+    ad_id      bigint       NOT NULL,
     FOREIGN KEY (ad_id)
         REFERENCES ads (ad_id)
+        ON DELETE CASCADE
 );
 
 INSERT INTO users

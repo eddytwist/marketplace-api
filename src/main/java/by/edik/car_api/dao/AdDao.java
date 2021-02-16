@@ -142,8 +142,6 @@ public class AdDao extends AbstractDao<Ad> {
 
     @Override
     public void delete(long id) {
-        PictureDao pictureDao = PictureDao.getInstance();
-        pictureDao.delete(id);
         PreparedStatement preparedStatement;
         try {
             preparedStatement = prepareStatement(DELETE_QUERY);
