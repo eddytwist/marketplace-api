@@ -21,8 +21,7 @@ public class PictureDao extends AbstractDao<Picture> {
     private static final String GET_BY_ID_QUERY = "SELECT * FROM pictures WHERE picture_id = ?";
     private static final String CREATE_QUERY = "INSERT INTO pictures " +
             "VALUES (DEFAULT, ?, ?)";
-    private static final String UPDATE_QUERY = "UPDATE pictures SET (picture_reference) " +
-            "= (?) " +
+    private static final String UPDATE_QUERY = "UPDATE pictures SET reference = ? " +
             "WHERE picture_id = ?";
     private static final String DELETE_QUERY = "DELETE FROM pictures WHERE picture_id = ?";
 
@@ -97,6 +96,7 @@ public class PictureDao extends AbstractDao<Picture> {
         try {
             preparedStatement = prepareStatement(UPDATE_QUERY);
             preparedStatement.setString(1, picture.getReference());
+            preparedStatement.setLong(2, picture.getPictureId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DaoSqlException(e);
