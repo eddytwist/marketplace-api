@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PictureDaoTest {
 
-    private static final String REFERENCE = "REFERENCE";
+    private static final String REFERENCE = "reference";
 
     PictureDao pictureDao = PictureDao.getInstance();
     AdDao adDao = AdDao.getInstance();
@@ -33,7 +33,8 @@ class PictureDaoTest {
         user = userDao.create(new User()
                 .setUsername("test")
                 .setEmail("test@tut.by")
-                .setPassword("pass"));
+                .setPassword("pass")
+        );
         ad = adDao.create(new Ad()
                 .setUserId(user.getUserId())
                 .setYear(2020)
@@ -44,7 +45,8 @@ class PictureDaoTest {
                 .setMileage(0L)
                 .setEnginePower(0)
                 .setCreationTime(LocalDateTime.of(2021, 2, 8, 12, 20))
-                .setEditingTime(LocalDateTime.of(2021, 2, 16, 12, 20)));
+                .setEditingTime(LocalDateTime.of(2021, 2, 16, 12, 20))
+        );
         picture = pictureDao.create(new Picture()
                 .setAdId(ad.getAdId())
                 .setReference(REFERENCE));
@@ -75,7 +77,8 @@ class PictureDaoTest {
     @Test
     void getAll() {
         pictureDao.create(picture
-                .setReference("NEW_REFERENCE"));
+                .setReference("new_reference")
+        );
         List<Picture> foundedPictures = pictureDao.getAll();
         assertEquals(foundedPictures.size(), 2);
         Picture firstPicture = foundedPictures.get(0);
@@ -85,7 +88,7 @@ class PictureDaoTest {
         Picture secondPicture = foundedPictures.get(1);
         assertTrue(secondPicture.getPictureId() > 0);
         assertTrue(secondPicture.getAdId() > 0);
-        assertEquals("NEW_REFERENCE", secondPicture.getReference());
+        assertEquals("new_reference", secondPicture.getReference());
     }
 
     @Test

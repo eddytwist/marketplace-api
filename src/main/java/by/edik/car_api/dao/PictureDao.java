@@ -48,7 +48,7 @@ public class PictureDao extends AbstractDao<Picture> {
     @Override
     public Picture getById(long id) {
         PreparedStatement preparedStatement;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         Picture picture = null;
         try {
             preparedStatement = prepareStatement(GET_BY_ID_QUERY);
@@ -71,7 +71,7 @@ public class PictureDao extends AbstractDao<Picture> {
     @Override
     public List<Picture> getAll() {
         PreparedStatement preparedStatement;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         List<Picture> pictures = new ArrayList<>();
         try {
             preparedStatement = prepareStatement(GET_ALL_QUERY);

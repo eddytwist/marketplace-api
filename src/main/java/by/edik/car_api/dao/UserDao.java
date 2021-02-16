@@ -50,7 +50,7 @@ public class UserDao extends AbstractDao<User> {
     @Override
     public User getById(long id) {
         PreparedStatement preparedStatement;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         User user = null;
         try {
             preparedStatement = prepareStatement(GET_BY_ID_QUERY);
@@ -74,7 +74,7 @@ public class UserDao extends AbstractDao<User> {
     @Override
     public List<User> getAll() {
         PreparedStatement preparedStatement;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         List<User> users = new ArrayList<>();
         try {
             preparedStatement = prepareStatement(GET_ALL_QUERY);

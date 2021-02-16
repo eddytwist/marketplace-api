@@ -37,7 +37,8 @@ class AdDaoTest {
         user = userDao.create(new User()
                 .setUsername("test")
                 .setEmail("test@tut.by")
-                .setPassword("pass"));
+                .setPassword("pass")
+        );
         ad = adDao.create(new Ad()
                 .setUserId(user.getUserId())
                 .setYear(YEAR)
@@ -48,7 +49,8 @@ class AdDaoTest {
                 .setMileage(MILEAGE)
                 .setEnginePower(ENGINE_POWER)
                 .setCreationTime(CREATION_TIME)
-                .setEditingTime(EDITING_TIME));
+                .setEditingTime(EDITING_TIME)
+        );
     }
 
 

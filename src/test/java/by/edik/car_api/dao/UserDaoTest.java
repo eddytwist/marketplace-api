@@ -27,7 +27,8 @@ class UserDaoTest {
         user = userDao.create(new User()
                 .setUsername(USERNAME)
                 .setEmail(EMAIL)
-                .setPassword(PASSWORD));
+                .setPassword(PASSWORD)
+        );
     }
 
     @AfterEach
