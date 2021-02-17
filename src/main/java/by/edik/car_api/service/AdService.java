@@ -7,6 +7,8 @@ import java.util.List;
 
 public class AdService implements Service<Ad> {
 
+    private static volatile AdService adServiceInstance;
+
     private final AdDao adDao = AdDao.getInstance();
 
     @Override
@@ -36,5 +38,18 @@ public class AdService implements Service<Ad> {
 
     public void updateAllowedFields (Ad ad) {
         adDao.updateAllowedFields(ad);
+    }
+
+    public static AdService getInstance() {
+        AdService localInstance = adServiceInstance;
+        if (localInstance == null) {
+            synchronized (AdService.class) {
+                localInstance = adServiceInstance;
+                if (localInstance == null) {
+                    adServiceInstance = localInstance = new AdService();
+                }
+            }
+        }
+        return localInstance;
     }
 }

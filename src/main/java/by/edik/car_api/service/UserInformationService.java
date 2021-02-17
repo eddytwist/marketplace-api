@@ -7,6 +7,8 @@ import java.util.List;
 
 public class UserInformationService implements Service<UserInformation> {
 
+    private static volatile UserInformationService userInformationServiceInstance;
+
     private final UserInformationDao userInformationDao = UserInformationDao.getInstance();
 
     @Override
@@ -32,5 +34,18 @@ public class UserInformationService implements Service<UserInformation> {
     @Override
     public void delete(long id) {
         userInformationDao.delete(id);
+    }
+
+    public static UserInformationService getInstance() {
+        UserInformationService localInstance = userInformationServiceInstance;
+        if (localInstance == null) {
+            synchronized (UserInformationService.class) {
+                localInstance = userInformationServiceInstance;
+                if (localInstance == null) {
+                    userInformationServiceInstance = localInstance = new UserInformationService();
+                }
+            }
+        }
+        return localInstance;
     }
 }

@@ -7,6 +7,8 @@ import java.util.List;
 
 public class UserService implements Service<User>{
 
+    private static volatile UserService userServiceInstance;
+
     private final UserDao userDao = UserDao.getInstance();
 
     @Override
@@ -32,5 +34,18 @@ public class UserService implements Service<User>{
     @Override
     public void delete(long id) {
         userDao.delete(id);
+    }
+
+    public static UserService getInstance() {
+        UserService localInstance = userServiceInstance;
+        if (localInstance == null) {
+            synchronized (UserService.class) {
+                localInstance = userServiceInstance;
+                if (localInstance == null) {
+                    userServiceInstance = localInstance = new UserService();
+                }
+            }
+        }
+        return localInstance;
     }
 }

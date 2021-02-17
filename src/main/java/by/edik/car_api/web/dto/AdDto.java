@@ -1,4 +1,4 @@
-package by.edik.car_api.dto;
+package by.edik.car_api.web.dto;
 
 import by.edik.car_api.model.Condition;
 import lombok.*;
