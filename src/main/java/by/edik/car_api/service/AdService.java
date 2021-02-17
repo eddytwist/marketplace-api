@@ -33,4 +33,8 @@ public class AdService implements Service<Ad> {
     public void delete(long id) {
         adDao.delete(id);
     }
+
+    public void updateAllowedFields (Ad ad) {
+        adDao.updateAllowedFields(ad);
+    }
 }
