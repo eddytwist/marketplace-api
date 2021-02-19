@@ -8,7 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PictureDto {
-    private long pictureId;
-    private long adId;
-    private String pictureReference;
+    private Long pictureId;
+    private String reference;
 }

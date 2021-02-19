@@ -8,6 +8,5 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserInformationDto {
-    private long userId;
     private String name;
 }

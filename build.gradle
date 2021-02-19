@@ -28,7 +28,6 @@ dependencies {
     providedCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.18'
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.18'
 
-
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
     testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.18'

@@ -4,6 +4,10 @@ import by.edik.car_api.db.DataSource;
 import by.edik.car_api.model.Ad;
 import by.edik.car_api.model.Condition;
 import by.edik.car_api.model.User;
+import by.edik.car_api.service.impl.AdServiceImpl;
+import by.edik.car_api.service.impl.UserServiceImpl;
+import by.edik.car_api.web.dto.AdDto;
+import by.edik.car_api.web.dto.UserDto;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,20 +31,20 @@ class AdServiceTest {
     private static final LocalDateTime CREATION_TIME = LocalDateTime.of(2021, 2, 8, 12, 20);
     private static final LocalDateTime EDITING_TIME = LocalDateTime.of(2021, 2, 15, 16, 20);
 
-    AdService adService = AdService.getInstance();
-    UserService userService = UserService.getInstance();
-    User user;
-    Ad ad;
+    AdServiceImpl adServiceImpl = AdServiceImpl.getInstance();
+    UserServiceImpl userService = UserServiceImpl.getInstance();
+    UserDto userDto;
+    AdDto adDto;
 
     @BeforeEach
     void setUp() {
-        user = userService.create(new User()
+        userDto = userService.create(new User()
                 .setUsername("test")
                 .setEmail("test@tut.by")
                 .setPassword("pass")
         );
-        ad = adService.create(new Ad()
-                .setUserId(user.getUserId())
+        adDto = adServiceImpl.create(new Ad()
+                .setUserId(userDto.getUserId())
                 .setYear(YEAR)
                 .setBrand(BRAND)
                 .setModel(MODEL)
@@ -61,7 +65,7 @@ class AdServiceTest {
 
     @Test
     void create() {
-        Ad createdAd = adService.create(ad);
+        Ad createdAd = adServiceImpl.create(Ad);
         assertTrue(createdAd.getAdId() > 0);
         assertTrue(createdAd.getUserId() > 0);
         assertEquals(YEAR, createdAd.getYear());
@@ -77,7 +81,7 @@ class AdServiceTest {
 
     @Test
     void getById() {
-        Ad foundedAd = adService.getById(ad.getAdId());
+        Ad foundedAd = adServiceImpl.getById(adDto.getAdId());
         assertTrue(foundedAd.getAdId() > 0);
         assertTrue(foundedAd.getUserId() > 0);
         assertEquals(YEAR, foundedAd.getYear());
@@ -93,7 +97,7 @@ class AdServiceTest {
 
     @Test
     void getAll() {
-        adService.create(ad
+        adServiceImpl.create(adDto
                 .setBrand("JIGULI")
                 .setModel("2107")
                 .setCondition(Condition.NEW)
@@ -102,7 +106,7 @@ class AdServiceTest {
                 .setEngineVolume(0)
                 .setMileage(0L)
         );
-        List<Ad> foundedAds = adService.getAll();
+        List<AdDto> foundedAds = adServiceImpl.getAll();
         assertEquals(foundedAds.size(), 2);
 
         Ad firstAd = foundedAds.get(0);
@@ -134,7 +138,7 @@ class AdServiceTest {
 
     @Test
     void update() {
-        Ad foundedAd = adService.getById(ad.getAdId())
+        Ad foundedAd = adServiceImpl.getById(ad.getAdId())
                 .setYear(2010)
                 .setBrand("Ford")
                 .setModel("Focus")
@@ -144,8 +148,8 @@ class AdServiceTest {
                 .setEnginePower(150)
                 .setCreationTime(CREATION_TIME)
                 .setEditingTime(EDITING_TIME);
-        adService.update(foundedAd);
-        Ad updatedAd = adService.getById(foundedAd.getAdId());
+        adServiceImpl.update(foundedAd);
+        Ad updatedAd = adServiceImpl.getById(foundedAd.getAdId());
         assertTrue(updatedAd.getAdId() > 0);
         assertTrue(updatedAd.getUserId() > 0);
         assertEquals(2010, updatedAd.getYear());
@@ -161,21 +165,21 @@ class AdServiceTest {
 
     @Test
     void delete() {
-        adService.delete(ad.getAdId());
-        assertNull(adService.getById(ad.getAdId()));
+        adServiceImpl.delete(ad.getAdId());
+        assertNull(adServiceImpl.getById(ad.getAdId()));
     }
 
     @Test
     void updateAllowedFields() {
-        Ad foundedAd = adService.getById(ad.getAdId())
+        Ad foundedAd = adServiceImpl.getById(ad.getAdId())
                 .setYear(2010)
                 .setBrand("Ford")
                 .setModel("Focus")
                 .setEngineVolume(2000)
                 .setMileage(10999L)
                 .setEnginePower(150);
-        adService.updateAllowedFields(foundedAd);
-        Ad updatedAd = adService.getById(foundedAd.getAdId());
+        adServiceImpl.updateAllowedFields(foundedAd);
+        Ad updatedAd = adServiceImpl.getById(foundedAd.getAdId());
         assertTrue(updatedAd.getAdId() > 0);
         assertTrue(updatedAd.getUserId() > 0);
         assertEquals(2010, updatedAd.getYear());

@@ -2,6 +2,7 @@ package by.edik.car_api.service;
 
 import by.edik.car_api.db.DataSource;
 import by.edik.car_api.model.User;
+import by.edik.car_api.service.impl.UserServiceImpl;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +20,7 @@ class UserServiceTest {
     private static final String EMAIL = "user@user.com";
     private static final String PASSWORD = "user";
 
-    UserService userService = UserService.getInstance();
+    UserServiceImpl userService = UserServiceImpl.getInstance();
     User user;
 
     @BeforeEach

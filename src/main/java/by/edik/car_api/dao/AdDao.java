@@ -3,10 +3,15 @@ package by.edik.car_api.dao;
 import by.edik.car_api.dao.exception.DaoSqlException;
 import by.edik.car_api.model.Ad;
 import by.edik.car_api.model.Condition;
+import by.edik.car_api.web.dto.AdFullInformationDto;
+import by.edik.car_api.web.dto.AdShortInformationDto;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +21,39 @@ public class AdDao extends AbstractDao<Ad> {
     private static volatile AdDao adDaoInstance;
 
     private static final String GET_ALL_QUERY = "SELECT * FROM ads";
+    private static final String GET_ALL_SHORT_INFO_QUERY = "SELECT ads.ad_id," +
+            "       ads.year," +
+            "       ads.brand," +
+            "       ads.model," +
+            "       ads.condition," +
+            "       ads.mileage," +
+            "       ads.creation_time," +
+            "       ui.name," +
+            "       COUNT(p.reference) as pics" +
+            "FROM ads" +
+            "         INNER JOIN user_information ui on ads.user_id = ui.user_id" +
+            "         LEFT JOIN pictures p on ads.ad_id = p.ad_id" +
+            "GROUP BY ads.ad_id, ui.name" +
+            "ORDER BY ads.ad_id;";
+    private static final String GET_BY_ID_FULL_INFO_QUERY = "SELECT ads.ad_id," +
+            "       ads.year," +
+            "       ads.brand," +
+            "       ads.model," +
+            "       ads.engine_volume," +
+            "       ads.engine_power," +
+            "       ads.condition," +
+            "       ads.mileage," +
+            "       ui.name," +
+            "       up.phone_number," +
+            "       ads.creation_time," +
+            "       ads.editing_time" +
+            "FROM ads" +
+            "         INNER JOIN user_information ui on ads.user_id = ui.user_id " +
+            "         LEFT JOIN user_phones up on ui.user_id = up.user_id " +
+            "WHERE ads.ad_id = ?";
+    private static final String GET_ALL_PICTURES_BY_ID_QUERY = "SELECT reference " +
+            "FROM pictures " +
+            "WHERE ad_id = ?";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM ads WHERE ad_id = ?";
     private static final String CREATE_QUERY = "INSERT INTO ads " +
             "VALUES (DEFAULT, ?, ?, ?, ?, ?, ?::\"conditions\", ?, ?, ?, ?)";
@@ -150,6 +188,92 @@ public class AdDao extends AbstractDao<Ad> {
         } catch (SQLException e) {
             throw new DaoSqlException(e);
         }
+    }
+
+    public List<AdShortInformationDto> getAllShortInformationAds() {
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        List<AdShortInformationDto> ads = new ArrayList<>();
+        try {
+            preparedStatement = prepareStatement(GET_ALL_SHORT_INFO_QUERY);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                ads.add(new AdShortInformationDto(
+                        resultSet.getLong("ad_id"),
+                        resultSet.getInt("year"),
+                        resultSet.getString("brand"),
+                        resultSet.getString("model"),
+                        Condition.valueOf(resultSet.getString("condition").toUpperCase()),
+                        resultSet.getLong("mileage"),
+                        resultSet.getTimestamp("creation_time").toLocalDateTime(),
+                        resultSet.getString("name"),
+                        resultSet.getInt("pics"))
+                );
+            }
+        } catch (SQLException e) {
+            throw new DaoSqlException(e);
+        }
+        close(resultSet);
+        return ads;
+    }
+
+    public AdFullInformationDto getFullInformationAdById(long id) {
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        AdFullInformationDto adFullInformationDto = null;
+        try {
+            preparedStatement = prepareStatement(GET_BY_ID_FULL_INFO_QUERY);
+            preparedStatement.setLong(1, id);
+            resultSet = preparedStatement.executeQuery();
+            List<String> phones = new ArrayList<>();
+
+            if (resultSet.next()) {
+                phones.add(resultSet.getString("phone_number"));
+
+                adFullInformationDto = new AdFullInformationDto(
+                        resultSet.getLong("ad_id"),
+                        resultSet.getInt("year"),
+                        resultSet.getString("brand"),
+                        resultSet.getString("model"),
+                        resultSet.getInt("engine_volume"),
+                        resultSet.getInt("engine_power"),
+                        Condition.valueOf(resultSet.getString("condition").toUpperCase()),
+                        resultSet.getLong("mileage"),
+                        resultSet.getString("name"),
+                        null,
+                        null,
+                        resultSet.getTimestamp("creation_time").toLocalDateTime(),
+                        resultSet.getTimestamp("editing_time").toLocalDateTime()
+                );
+            }
+            while (resultSet.next()) {
+                phones.add(resultSet.getString("phone_number"));
+            }
+            adFullInformationDto.setOwnerPhoneNumbers(phones);
+            adFullInformationDto.setPictureReferences(getAllPicturesByAdId());
+        } catch (SQLException e) {
+            throw new DaoSqlException(e);
+        }
+        close(resultSet);
+        return adFullInformationDto;
+    }
+
+    public List<String> getAllPicturesByAdId() {
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        List<String> pictureReferences = new ArrayList<>();
+        try {
+            preparedStatement = prepareStatement(GET_ALL_PICTURES_BY_ID_QUERY);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                pictureReferences.add(resultSet.getString("reference")
+                );
+            }
+        } catch (SQLException e) {
+            throw new DaoSqlException(e);
+        }
+        close(resultSet);
+        return pictureReferences;
     }
 
     public void updateAllowedFields(Ad ad) {

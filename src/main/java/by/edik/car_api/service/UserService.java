@@ -1,51 +1,18 @@
 package by.edik.car_api.service;
 
-import by.edik.car_api.dao.UserDao;
 import by.edik.car_api.model.User;
+import by.edik.car_api.web.dto.UserDto;
 
 import java.util.List;
 
-public class UserService implements Service<User>{
+public interface UserService {
+    UserDto create(User user);
 
-    private static volatile UserService userServiceInstance;
+    UserDto getById(long id);
 
-    private final UserDao userDao = UserDao.getInstance();
+    List<UserDto> getAll();
 
-    @Override
-    public User create(User user) {
-        return userDao.create(user);
-    }
+    void update(User user);
 
-    @Override
-    public User getById(long id) {
-        return userDao.getById(id);
-    }
-
-    @Override
-    public List<User> getAll() {
-        return userDao.getAll();
-    }
-
-    @Override
-    public void update(User user) {
-        userDao.update(user);
-    }
-
-    @Override
-    public void delete(long id) {
-        userDao.delete(id);
-    }
-
-    public static UserService getInstance() {
-        UserService localInstance = userServiceInstance;
-        if (localInstance == null) {
-            synchronized (UserService.class) {
-                localInstance = userServiceInstance;
-                if (localInstance == null) {
-                    userServiceInstance = localInstance = new UserService();
-                }
-            }
-        }
-        return localInstance;
-    }
+    void delete(long id);
 }
