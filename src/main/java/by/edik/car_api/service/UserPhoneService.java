@@ -8,11 +8,11 @@ import java.util.List;
 public interface UserPhoneService {
     UserPhoneDto create(UserPhone userPhone);
 
-    UserPhoneDto getById(long id);
+    UserPhoneDto getById(Long id);
 
     List<UserPhoneDto> getAll();
 
     void update(UserPhone userPhone);
 
-    void delete(long id);
+    void delete(Long id);
 }

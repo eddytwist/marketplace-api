@@ -21,20 +21,21 @@ public class AdDao extends AbstractDao<Ad> {
     private static volatile AdDao adDaoInstance;
 
     private static final String GET_ALL_QUERY = "SELECT * FROM ads";
-    private static final String GET_ALL_SHORT_INFO_QUERY = "SELECT ads.ad_id," +
-            "       ads.year," +
-            "       ads.brand," +
-            "       ads.model," +
-            "       ads.condition," +
-            "       ads.mileage," +
-            "       ads.creation_time," +
-            "       ui.name," +
-            "       COUNT(p.reference) as pics" +
-            "FROM ads" +
-            "         INNER JOIN user_information ui on ads.user_id = ui.user_id" +
-            "         LEFT JOIN pictures p on ads.ad_id = p.ad_id" +
-            "GROUP BY ads.ad_id, ui.name" +
-            "ORDER BY ads.ad_id;";
+    private static final String GET_ALL_SHORT_INFO_QUERY = "SELECT " +
+        "ads.ad_id, " +
+        "ads.year, " +
+        "ads.brand, " +
+        "ads.model, " +
+        "ads.condition, " +
+        "ads.mileage, " +
+        "ads.creation_time, " +
+        "ui.name, " +
+        "COUNT(p.reference) as pics " +
+            "FROM ads " +
+            "INNER JOIN user_information ui on ads.user_id = ui.user_id " +
+            "LEFT JOIN pictures p on ads.ad_id = p.ad_id " +
+            "GROUP BY ads.ad_id, ui.name " +
+            "ORDER BY ads.ad_id";
     private static final String GET_BY_ID_FULL_INFO_QUERY = "SELECT ads.ad_id," +
             "       ads.year," +
             "       ads.brand," +
@@ -97,7 +98,7 @@ public class AdDao extends AbstractDao<Ad> {
     }
 
     @Override
-    public Ad getById(long id) {
+    public Ad getById(Long id) {
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         Ad ad = null;
@@ -179,7 +180,7 @@ public class AdDao extends AbstractDao<Ad> {
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         PreparedStatement preparedStatement;
         try {
             preparedStatement = prepareStatement(DELETE_QUERY);

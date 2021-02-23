@@ -8,11 +8,11 @@ import java.util.List;
 public interface AdService {
     AdDto create(Ad ad);
 
-    AdDto getById(long id);
+    AdDto getById(Long id);
 
     List<AdDto> getAll();
 
     void update(Ad ad);
 
-    void delete(long id);
+    void delete(Long id);
 }

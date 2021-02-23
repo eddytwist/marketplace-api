@@ -21,7 +21,7 @@ public class UserInformationServiceImpl implements UserInformationService {
     }
 
     @Override
-    public UserInformationDto getById(long id) {
+    public UserInformationDto getById(Long id) {
         return UserInformationMapper.userInformationToUserInformationDto(userInformationDao.getById(id));
     }
 
@@ -38,7 +38,7 @@ public class UserInformationServiceImpl implements UserInformationService {
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         userInformationDao.delete(id);
     }
 

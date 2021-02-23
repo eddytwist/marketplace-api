@@ -8,11 +8,11 @@ import java.util.List;
 public interface PictureService {
     PictureDto create(Picture Picture);
 
-    PictureDto getById(long id);
+    PictureDto getById(Long id);
 
     List<PictureDto> getAll();
 
     void update(Picture Picture);
 
-    void delete(long id);
+    void delete(Long id);
 }

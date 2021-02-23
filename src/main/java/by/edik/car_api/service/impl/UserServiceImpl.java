@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getById(long id) {
+    public UserDto getById(Long id) {
         return UserMapper.userToUserDto(userDao.getById(id));
     }
 
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         userDao.delete(id);
     }
 

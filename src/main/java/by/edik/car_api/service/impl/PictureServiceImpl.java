@@ -21,7 +21,7 @@ public class PictureServiceImpl implements PictureService {
     }
 
     @Override
-    public PictureDto getById(long id) {
+    public PictureDto getById(Long id) {
         return PictureMapper.pictureToPictureDto(pictureDao.getById(id));
     }
 
@@ -38,7 +38,7 @@ public class PictureServiceImpl implements PictureService {
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         pictureDao.delete(id);
     }
 

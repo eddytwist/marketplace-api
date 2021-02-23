@@ -4,6 +4,8 @@ import by.edik.car_api.dao.AdDao;
 import by.edik.car_api.model.Ad;
 import by.edik.car_api.service.AdService;
 import by.edik.car_api.web.dto.AdDto;
+import by.edik.car_api.web.dto.AdFullInformationDto;
+import by.edik.car_api.web.dto.AdShortInformationDto;
 import by.edik.car_api.web.mapper.AdMapper;
 
 import java.util.List;
@@ -21,8 +23,12 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
-    public AdDto getById(long id) {
+    public AdDto getById(Long id) {
         return AdMapper.adToAdDto(adDao.getById(id));
+    }
+    
+    public AdFullInformationDto getFullInformationAdById(Long id) {
+        return adDao.getFullInformationAdById(id);
     }
 
     @Override
@@ -31,6 +37,10 @@ public class AdServiceImpl implements AdService {
                 .map(AdMapper::adToAdDto)
                 .collect(Collectors.toList());
     }
+    
+    public List<AdShortInformationDto> getAllShortInformationAds() {
+        return adDao.getAllShortInformationAds();
+    }
 
     @Override
     public void update(Ad ad) {
@@ -38,7 +48,7 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         adDao.delete(id);
     }
 
@@ -57,5 +67,10 @@ public class AdServiceImpl implements AdService {
             }
         }
         return localInstance;
+    }
+
+    public static void main(String[] args) {
+        List<AdShortInformationDto> ads = AdServiceImpl.getInstance().getAllShortInformationAds();
+        System.out.println(ads);
     }
 }
