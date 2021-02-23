@@ -250,7 +250,7 @@ public class AdDao extends AbstractDao<Ad> {
                 phones.add(resultSet.getString("phone_number"));
             }
             adFullInformationDto.setOwnerPhoneNumbers(phones);
-            adFullInformationDto.setPictureReferences(getAllPicturesByAdId());
+            adFullInformationDto.setPictureReferences(getAllPicturesByAdId(adFullInformationDto.getAdId()));
         } catch (SQLException e) {
             throw new DaoSqlException(e);
         }
@@ -258,12 +258,13 @@ public class AdDao extends AbstractDao<Ad> {
         return adFullInformationDto;
     }
 
-    public List<String> getAllPicturesByAdId() {
+    public List<String> getAllPicturesByAdId(Long id) {
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         List<String> pictureReferences = new ArrayList<>();
         try {
             preparedStatement = prepareStatement(GET_ALL_PICTURES_BY_ID_QUERY);
+            preparedStatement.setLong(1, id);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 pictureReferences.add(resultSet.getString("reference")

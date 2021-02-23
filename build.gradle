@@ -26,7 +26,10 @@ dependencies {
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.18'
 
     providedCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.18'
+
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.18'
+
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.1'
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
