@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet("/api/v1/ads")
-public class AdsController extends HttpServlet {
+@WebServlet("/api/v1/ads/*")
+public class AdByIdController extends HttpServlet {
 
     private final AdServiceImpl adService = AdServiceImpl.getInstance();
 
@@ -22,16 +22,16 @@ public class AdsController extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         PrintWriter writer = resp.getWriter();
         ObjectMapper mapper = new ObjectMapper();
-        mapper.findAndRegisterModules();
-        String jsonStr = mapper.writeValueAsString(adService.getAllShortInformationAds());
+
+        String adId = req.getParameter("id");
+        String jsonStr = mapper.writeValueAsString(adService.getById(Long.parseLong(adId)));
         writer.write(jsonStr);
         writer.flush();
         writer.close();
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-//        userService.create()
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        super.doDelete(req, resp);
     }
 }

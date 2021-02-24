@@ -6,6 +6,7 @@ import by.edik.car_api.service.AdService;
 import by.edik.car_api.web.dto.AdDto;
 import by.edik.car_api.web.dto.AdFullInformationDto;
 import by.edik.car_api.web.dto.AdShortInformationDto;
+import by.edik.car_api.web.dto.CreatedAdDto;
 import by.edik.car_api.web.mapper.AdMapper;
 
 import java.util.List;
@@ -18,7 +19,8 @@ public class AdServiceImpl implements AdService {
     private final AdDao adDao = AdDao.getInstance();
 
     @Override
-    public AdDto create(Ad ad) {
+    public AdDto create(CreatedAdDto createdAdDto) {
+        Ad ad = AdMapper.adCreatedDtoToAd(createdAdDto);
         return AdMapper.adToAdDto(adDao.create(ad));
     }
 
@@ -67,10 +69,5 @@ public class AdServiceImpl implements AdService {
             }
         }
         return localInstance;
-    }
-
-    public static void main(String[] args) {
-        List<AdShortInformationDto> ads = AdServiceImpl.getInstance().getAllShortInformationAds();
-        System.out.println(ads);
     }
 }

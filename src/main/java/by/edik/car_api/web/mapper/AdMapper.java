@@ -4,6 +4,7 @@ import by.edik.car_api.model.Ad;
 import by.edik.car_api.web.dto.AdDto;
 import by.edik.car_api.web.dto.AdFullInformationDto;
 import by.edik.car_api.web.dto.AdShortInformationDto;
+import by.edik.car_api.web.dto.CreatedAdDto;
 
 public class AdMapper {
 
@@ -19,6 +20,20 @@ public class AdMapper {
                 .enginePower(ad.getEnginePower())
                 .creationTime(ad.getCreationTime())
                 .editingTime(ad.getEditingTime())
+                .build();
+    }
+
+    public static Ad adCreatedDtoToAd(CreatedAdDto createdAdDto) {
+        return Ad.builder()
+                .year(createdAdDto.getYear())
+                .brand(createdAdDto.getBrand())
+                .model(createdAdDto.getModel())
+                .engineVolume(createdAdDto.getEngineVolume())
+                .condition(createdAdDto.getCondition())
+                .mileage(createdAdDto.getMileage())
+                .enginePower(createdAdDto.getEnginePower())
+                .creationTime(createdAdDto.getCreationTime())
+                .editingTime(createdAdDto.getEditingTime())
                 .build();
     }
 
