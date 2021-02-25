@@ -1,10 +1,9 @@
 package by.edik.car_api.web.mapper;
 
 import by.edik.car_api.model.Ad;
-import by.edik.car_api.web.dto.AdDto;
-import by.edik.car_api.web.dto.AdFullInformationDto;
-import by.edik.car_api.web.dto.AdShortInformationDto;
-import by.edik.car_api.web.dto.CreatedAdDto;
+import by.edik.car_api.web.dto.*;
+
+import java.time.LocalDateTime;
 
 public class AdMapper {
 
@@ -23,8 +22,9 @@ public class AdMapper {
                 .build();
     }
 
-    public static Ad adCreatedDtoToAd(CreatedAdDto createdAdDto) {
+    public static Ad createdAdDtoToAd(CreatedAdDto createdAdDto) {
         return Ad.builder()
+                .userId(createdAdDto.getUserId())
                 .year(createdAdDto.getYear())
                 .brand(createdAdDto.getBrand())
                 .model(createdAdDto.getModel())
@@ -37,25 +37,32 @@ public class AdMapper {
                 .build();
     }
 
-    public static AdShortInformationDto adToAdListedDto(Ad ad) {
-        return AdShortInformationDto.builder()
-                .year(ad.getYear())
-                .brand(ad.getBrand())
-                .model(ad.getModel())
-                .condition(ad.getCondition())
-                .mileage(ad.getMileage())
-                .creationTime(ad.getCreationTime())
+    public static Ad updatedAdDtoToAd(UpdatedAdDto updatedAdDto) {
+        return Ad.builder()
+                .adId(updatedAdDto.getAdId())
+                .userId(updatedAdDto.getUserId())
+                .year(updatedAdDto.getYear())
+                .brand(updatedAdDto.getBrand())
+                .model(updatedAdDto.getModel())
+                .engineVolume(updatedAdDto.getEngineVolume())
+                .condition(updatedAdDto.getCondition())
+                .mileage(updatedAdDto.getMileage())
+                .enginePower(updatedAdDto.getEnginePower())
+                .creationTime(updatedAdDto.getCreationTime())
+                .editingTime(updatedAdDto.getEditingTime())
                 .build();
     }
 
-    public static AdFullInformationDto adToAdInformationDto(Ad ad) {
-        return AdFullInformationDto.builder()
-                .year(ad.getYear())
-                .brand(ad.getBrand())
-                .model(ad.getModel())
-                .condition(ad.getCondition())
-                .mileage(ad.getMileage())
-                .creationTime(ad.getCreationTime())
+    public static Ad patchedAdDtoToAd(PatchedAdDto patchedAdDto) {
+        return Ad.builder()
+                .adId(patchedAdDto.getAdId())
+                .year(patchedAdDto.getYear())
+                .brand(patchedAdDto.getBrand())
+                .model(patchedAdDto.getModel())
+                .engineVolume(patchedAdDto.getEngineVolume())
+                .mileage(patchedAdDto.getMileage())
+                .enginePower(patchedAdDto.getEnginePower())
+                .editingTime(LocalDateTime.now())
                 .build();
     }
 }

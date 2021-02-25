@@ -3,6 +3,7 @@ package by.edik.car_api.service;
 import by.edik.car_api.model.Ad;
 import by.edik.car_api.web.dto.AdDto;
 import by.edik.car_api.web.dto.CreatedAdDto;
+import by.edik.car_api.web.dto.UpdatedAdDto;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ public interface AdService {
 
     List<AdDto> getAll();
 
-    void update(Ad ad);
+    AdDto update(UpdatedAdDto updatedAdDto);
 
     void delete(Long id);
 }

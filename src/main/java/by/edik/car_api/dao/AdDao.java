@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,8 +66,8 @@ public class AdDao extends AbstractDao<Ad> {
             "WHERE ad_id = ?";
     private static final String DELETE_QUERY = "DELETE FROM ads WHERE ad_id = ?";
     private static final String UPDATE_ALLOWED_FIELDS_QUERY = "UPDATE ads SET (" +
-            "year, brand, model, engine_volume, mileage, engine_power) " +
-            "= (?, ?, ?, ?, ?, ?) " +
+            "year, brand, model, engine_volume, mileage, engine_power, editing_time) " +
+            "= (?, ?, ?, ?, ?, ?, ?) " +
             "WHERE ad_id = ?";
 
 
@@ -267,8 +268,7 @@ public class AdDao extends AbstractDao<Ad> {
             preparedStatement.setLong(1, id);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                pictureReferences.add(resultSet.getString("reference")
-                );
+                pictureReferences.add(resultSet.getString("reference"));
             }
         } catch (SQLException e) {
             throw new DaoSqlException(e);
@@ -288,6 +288,7 @@ public class AdDao extends AbstractDao<Ad> {
             preparedStatement.setLong(5, ad.getMileage());
             preparedStatement.setInt(6, ad.getEnginePower());
             preparedStatement.setLong(7, ad.getAdId());
+            preparedStatement.setObject(8, ad.getEditingTime());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DaoSqlException(e);

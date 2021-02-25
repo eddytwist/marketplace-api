@@ -3,10 +3,7 @@ package by.edik.car_api.service.impl;
 import by.edik.car_api.dao.AdDao;
 import by.edik.car_api.model.Ad;
 import by.edik.car_api.service.AdService;
-import by.edik.car_api.web.dto.AdDto;
-import by.edik.car_api.web.dto.AdFullInformationDto;
-import by.edik.car_api.web.dto.AdShortInformationDto;
-import by.edik.car_api.web.dto.CreatedAdDto;
+import by.edik.car_api.web.dto.*;
 import by.edik.car_api.web.mapper.AdMapper;
 
 import java.util.List;
@@ -20,7 +17,7 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public AdDto create(CreatedAdDto createdAdDto) {
-        Ad ad = AdMapper.adCreatedDtoToAd(createdAdDto);
+        Ad ad = AdMapper.createdAdDtoToAd(createdAdDto);
         return AdMapper.adToAdDto(adDao.create(ad));
     }
 
@@ -45,8 +42,9 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
-    public void update(Ad ad) {
-        adDao.update(ad);
+    public AdDto update(UpdatedAdDto updatedAdDto) {
+        adDao.update(AdMapper.updatedAdDtoToAd(updatedAdDto));
+        return getById(updatedAdDto.getAdId());
     }
 
     @Override
@@ -54,8 +52,9 @@ public class AdServiceImpl implements AdService {
         adDao.delete(id);
     }
 
-    public void updateAllowedFields (Ad ad) {
-        adDao.updateAllowedFields(ad);
+    public AdDto updateAllowedFields (PatchedAdDto patchedAdDto) {
+        adDao.updateAllowedFields(AdMapper.patchedAdDtoToAd(patchedAdDto));
+        return getById(patchedAdDto.getAdId());
     }
 
     public static AdServiceImpl getInstance() {

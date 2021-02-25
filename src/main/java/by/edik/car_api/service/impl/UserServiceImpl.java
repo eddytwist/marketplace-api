@@ -4,6 +4,8 @@ import by.edik.car_api.dao.UserDao;
 import by.edik.car_api.model.User;
 import by.edik.car_api.service.UserService;
 import by.edik.car_api.web.dto.CreatedUserDto;
+import by.edik.car_api.web.dto.UpdatedAdDto;
+import by.edik.car_api.web.dto.UpdatedUserDto;
 import by.edik.car_api.web.dto.UserDto;
 import by.edik.car_api.web.mapper.UserMapper;
 
@@ -34,8 +36,9 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-    public void update(User user) {
-        userDao.update(user);
+    public UserDto update(UpdatedUserDto updatedUserDto) {
+        userDao.update(UserMapper.updatedUserDtoToUser(updatedUserDto));
+        return getById(updatedUserDto.getUserId());
     }
 
     @Override
