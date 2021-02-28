@@ -8,7 +8,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PatchedAdDto {
+public class AdPatchedDto {
     private Long adId;
     private Integer year;
     private String brand;

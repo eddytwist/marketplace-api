@@ -1,11 +1,10 @@
 package by.edik.car_api.web.controller;
 
 import by.edik.car_api.service.impl.UserServiceImpl;
-import by.edik.car_api.web.dto.CreatedUserDto;
-import by.edik.car_api.web.dto.UpdatedUserDto;
+import by.edik.car_api.web.dto.UserCreatedDto;
+import by.edik.car_api.web.dto.UserUpdatedDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -39,12 +38,12 @@ public class UsersController extends HttpServlet {
         resp.setCharacterEncoding(CHARACTER_ENCODING);
         PrintWriter writer = resp.getWriter();
         ObjectMapper mapper = new ObjectMapper();
-        CreatedUserDto createdUserDto = CreatedUserDto.builder()
+        UserCreatedDto userCreatedDto = UserCreatedDto.builder()
                 .username(req.getParameter("username"))
                 .password(req.getParameter("password"))
                 .email(req.getParameter("email"))
                 .build();
-        String jsonStr = mapper.writeValueAsString(userService.create(createdUserDto));
+        String jsonStr = mapper.writeValueAsString(userService.create(userCreatedDto));
         writer.write(jsonStr);
         writer.flush();
         writer.close();
@@ -56,13 +55,13 @@ public class UsersController extends HttpServlet {
         resp.setCharacterEncoding(CHARACTER_ENCODING);
         PrintWriter writer = resp.getWriter();
         ObjectMapper mapper = new ObjectMapper();
-        UpdatedUserDto updatedUserDto = UpdatedUserDto.builder()
+        UserUpdatedDto userUpdatedDto = UserUpdatedDto.builder()
                 .userId(Long.parseLong(req.getParameter("userId")))
                 .username(req.getParameter("username"))
                 .password(req.getParameter("password"))
                 .email(req.getParameter("email"))
                 .build();
-        String jsonStr = mapper.writeValueAsString(userService.update(updatedUserDto));
+        String jsonStr = mapper.writeValueAsString(userService.update(userUpdatedDto));
         writer.write(jsonStr);
         writer.flush();
         writer.close();

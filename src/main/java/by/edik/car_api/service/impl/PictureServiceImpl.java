@@ -3,6 +3,7 @@ package by.edik.car_api.service.impl;
 import by.edik.car_api.dao.PictureDao;
 import by.edik.car_api.model.Picture;
 import by.edik.car_api.service.PictureService;
+import by.edik.car_api.web.dto.PictureCreatedDto;
 import by.edik.car_api.web.dto.PictureDto;
 import by.edik.car_api.web.mapper.PictureMapper;
 
@@ -16,7 +17,8 @@ public class PictureServiceImpl implements PictureService {
     private final PictureDao pictureDao = PictureDao.getInstance();
 
     @Override
-    public PictureDto create(Picture picture) {
+    public PictureDto create(PictureCreatedDto pictureCreatedDto) {
+        Picture picture = PictureMapper.pictureCreatedDtoToPicture(pictureCreatedDto);
         return PictureMapper.pictureToPictureDto(pictureDao.create(picture));
     }
 

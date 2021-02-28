@@ -62,7 +62,7 @@ public class AdDao extends AbstractDao<Ad> {
             "VALUES (DEFAULT, ?, ?, ?, ?, ?, ?::\"conditions\", ?, ?, ?, ?)";
     private static final String UPDATE_QUERY = "UPDATE ads SET (" +
             "year, brand, model, engine_volume, condition, mileage, engine_power, creation_time, editing_time) " +
-            "= (?, ?, ?, ?, ?::\"conditions\", ?, ?, ?, ?) " +
+            "= (?, ?, ?, ?, ?::\"conditions\", ?, ?, ?) " +
             "WHERE ad_id = ?";
     private static final String DELETE_QUERY = "DELETE FROM ads WHERE ad_id = ?";
     private static final String UPDATE_ALLOWED_FIELDS_QUERY = "UPDATE ads SET (" +
@@ -86,8 +86,8 @@ public class AdDao extends AbstractDao<Ad> {
             preparedStatement.setString(6, ad.getCondition().name().toLowerCase());
             preparedStatement.setLong(7, ad.getMileage());
             preparedStatement.setInt(8, ad.getEnginePower());
-            preparedStatement.setObject(9, ad.getCreationTime());
-            preparedStatement.setObject(10, ad.getEditingTime());
+            preparedStatement.setObject(9, LocalDateTime.now());
+            preparedStatement.setObject(10, LocalDateTime.now());
             preparedStatement.executeUpdate();
             resultSet = preparedStatement.getGeneratedKeys();
             if (resultSet != null && resultSet.next()) {
@@ -172,9 +172,8 @@ public class AdDao extends AbstractDao<Ad> {
             preparedStatement.setString(5, ad.getCondition().name().toLowerCase());
             preparedStatement.setLong(6, ad.getMileage());
             preparedStatement.setInt(7, ad.getEnginePower());
-            preparedStatement.setObject(8, ad.getCreationTime());
-            preparedStatement.setObject(9, ad.getEditingTime());
-            preparedStatement.setLong(10, ad.getAdId());
+            preparedStatement.setObject(8, LocalDateTime.now());
+            preparedStatement.setLong(9, ad.getAdId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DaoSqlException(e);
@@ -248,10 +247,8 @@ public class AdDao extends AbstractDao<Ad> {
             while (resultSet.next()) {
                 phones.add(resultSet.getString("phone_number"));
             }
-            adFullInformationDto.builder()
-                    .ownerPhoneNumbers(phones)
-                    .pictureReferences(getAllPicturesByAdId(adFullInformationDto.getAdId()))
-                    .build();
+            adFullInformationDto.setOwnerPhoneNumbers(phones);
+            adFullInformationDto.setPictureReferences(getAllPicturesByAdId(adFullInformationDto.getAdId()));
         } catch (SQLException e) {
             throw new DaoSqlException(e);
         }
@@ -287,8 +284,8 @@ public class AdDao extends AbstractDao<Ad> {
             preparedStatement.setInt(4, ad.getEngineVolume());
             preparedStatement.setLong(5, ad.getMileage());
             preparedStatement.setInt(6, ad.getEnginePower());
-            preparedStatement.setLong(7, ad.getAdId());
-            preparedStatement.setObject(8, ad.getEditingTime());
+            preparedStatement.setObject(7, LocalDateTime.now());
+            preparedStatement.setLong(8, ad.getAdId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DaoSqlException(e);

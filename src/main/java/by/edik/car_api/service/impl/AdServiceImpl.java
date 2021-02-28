@@ -16,8 +16,8 @@ public class AdServiceImpl implements AdService {
     private final AdDao adDao = AdDao.getInstance();
 
     @Override
-    public AdDto create(CreatedAdDto createdAdDto) {
-        Ad ad = AdMapper.createdAdDtoToAd(createdAdDto);
+    public AdDto create(AdCreatedDto adCreatedDto) {
+        Ad ad = AdMapper.createdAdDtoToAd(adCreatedDto);
         return AdMapper.adToAdDto(adDao.create(ad));
     }
 
@@ -42,9 +42,9 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
-    public AdDto update(UpdatedAdDto updatedAdDto) {
-        adDao.update(AdMapper.updatedAdDtoToAd(updatedAdDto));
-        return getById(updatedAdDto.getAdId());
+    public AdDto update(AdUpdatedDto adUpdatedDto) {
+        adDao.update(AdMapper.updatedAdDtoToAd(adUpdatedDto));
+        return getById(adUpdatedDto.getAdId());
     }
 
     @Override
@@ -52,9 +52,9 @@ public class AdServiceImpl implements AdService {
         adDao.delete(id);
     }
 
-    public AdDto updateAllowedFields (PatchedAdDto patchedAdDto) {
-        adDao.updateAllowedFields(AdMapper.patchedAdDtoToAd(patchedAdDto));
-        return getById(patchedAdDto.getAdId());
+    public AdDto updateAllowedFields(AdPatchedDto adPatchedDto) {
+        adDao.updateAllowedFields(AdMapper.patchedAdDtoToAd(adPatchedDto));
+        return getById(adPatchedDto.getAdId());
     }
 
     public static AdServiceImpl getInstance() {

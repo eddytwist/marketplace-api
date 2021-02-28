@@ -3,10 +3,9 @@ package by.edik.car_api.service.impl;
 import by.edik.car_api.dao.UserDao;
 import by.edik.car_api.model.User;
 import by.edik.car_api.service.UserService;
-import by.edik.car_api.web.dto.CreatedUserDto;
-import by.edik.car_api.web.dto.UpdatedAdDto;
-import by.edik.car_api.web.dto.UpdatedUserDto;
+import by.edik.car_api.web.dto.UserCreatedDto;
 import by.edik.car_api.web.dto.UserDto;
+import by.edik.car_api.web.dto.UserUpdatedDto;
 import by.edik.car_api.web.mapper.UserMapper;
 
 import java.util.List;
@@ -19,8 +18,8 @@ public class UserServiceImpl implements UserService {
     private final UserDao userDao = UserDao.getInstance();
 
     @Override
-    public UserDto create(CreatedUserDto createdUserDto) {
-        User user = UserMapper.createdUserDtoToUser(createdUserDto);
+    public UserDto create(UserCreatedDto userCreatedDto) {
+        User user = UserMapper.createdUserDtoToUser(userCreatedDto);
         return UserMapper.userToUserDto(userDao.create(user));
     }
 
@@ -36,9 +35,9 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-    public UserDto update(UpdatedUserDto updatedUserDto) {
-        userDao.update(UserMapper.updatedUserDtoToUser(updatedUserDto));
-        return getById(updatedUserDto.getUserId());
+    public UserDto update(UserUpdatedDto userUpdatedDto) {
+        userDao.update(UserMapper.updatedUserDtoToUser(userUpdatedDto));
+        return getById(userUpdatedDto.getUserId());
     }
 
     @Override

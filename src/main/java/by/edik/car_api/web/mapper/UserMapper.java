@@ -1,9 +1,9 @@
 package by.edik.car_api.web.mapper;
 
 import by.edik.car_api.model.User;
-import by.edik.car_api.web.dto.CreatedUserDto;
-import by.edik.car_api.web.dto.UpdatedUserDto;
+import by.edik.car_api.web.dto.UserCreatedDto;
 import by.edik.car_api.web.dto.UserDto;
+import by.edik.car_api.web.dto.UserUpdatedDto;
 
 public class UserMapper {
 
@@ -15,20 +15,20 @@ public class UserMapper {
                 .build();
     }
 
-    public static User createdUserDtoToUser(CreatedUserDto createdUserDto) {
+    public static User createdUserDtoToUser(UserCreatedDto userCreatedDto) {
         return User.builder()
-                .username(createdUserDto.getUsername())
-                .password(createdUserDto.getPassword())
-                .email(createdUserDto.getEmail())
+                .username(userCreatedDto.getUsername())
+                .password(userCreatedDto.getPassword())
+                .email(userCreatedDto.getEmail())
                 .build();
     }
 
-    public static User updatedUserDtoToUser(UpdatedUserDto updatedUserDto) {
+    public static User updatedUserDtoToUser(UserUpdatedDto userUpdatedDto) {
         return User.builder()
-                .userId(updatedUserDto.getUserId())
-                .username(updatedUserDto.getUsername())
-                .password(updatedUserDto.getPassword())
-                .email(updatedUserDto.getEmail())
+                .userId(userUpdatedDto.getUserId())
+                .username(userUpdatedDto.getUsername())
+                .password(userUpdatedDto.getPassword())
+                .email(userUpdatedDto.getEmail())
                 .build();
     }
 }

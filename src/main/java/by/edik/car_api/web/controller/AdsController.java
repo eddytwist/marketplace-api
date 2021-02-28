@@ -2,9 +2,9 @@ package by.edik.car_api.web.controller;
 
 import by.edik.car_api.model.Condition;
 import by.edik.car_api.service.impl.AdServiceImpl;
-import by.edik.car_api.web.dto.CreatedAdDto;
-import by.edik.car_api.web.dto.PatchedAdDto;
-import by.edik.car_api.web.dto.UpdatedAdDto;
+import by.edik.car_api.web.dto.AdCreatedDto;
+import by.edik.car_api.web.dto.AdPatchedDto;
+import by.edik.car_api.web.dto.AdUpdatedDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.servlet.ServletException;
@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 
 import static by.edik.car_api.config.ServletConstants.CHARACTER_ENCODING;
@@ -43,7 +42,8 @@ public class AdsController extends HttpServletWithPatch {
         resp.setCharacterEncoding(CHARACTER_ENCODING);
         PrintWriter writer = resp.getWriter();
         ObjectMapper mapper = new ObjectMapper();
-        CreatedAdDto createdAdDto = CreatedAdDto.builder()
+        mapper.findAndRegisterModules();
+        AdCreatedDto adCreatedDto = AdCreatedDto.builder()
                 .userId(Long.parseLong(req.getParameter("userId")))
                 .year(Integer.parseInt(req.getParameter("year")))
                 .brand(req.getParameter("brand"))
@@ -52,13 +52,10 @@ public class AdsController extends HttpServletWithPatch {
                 .condition(Condition.valueOf(req.getParameter("condition")))
                 .mileage(Long.parseLong(req.getParameter("mileage")))
                 .enginePower(Integer.parseInt(req.getParameter("enginePower")))
-                .ownerName(req.getParameter("ownerName"))
                 .ownerPhoneNumbers(Arrays.asList(req.getParameterValues("ownerPhoneNumbers")))
                 .pictureReferences(Arrays.asList(req.getParameterValues("pictureReferences")))
-                .creationTime(LocalDateTime.now())
-                .editingTime(LocalDateTime.now())
                 .build();
-        String jsonStr = mapper.writeValueAsString(adService.create(createdAdDto));
+        String jsonStr = mapper.writeValueAsString(adService.create(adCreatedDto));
         writer.write(jsonStr);
         writer.flush();
         writer.close();
@@ -70,7 +67,8 @@ public class AdsController extends HttpServletWithPatch {
         resp.setCharacterEncoding(CHARACTER_ENCODING);
         PrintWriter writer = resp.getWriter();
         ObjectMapper mapper = new ObjectMapper();
-        UpdatedAdDto updatedAdDto = UpdatedAdDto.builder()
+        mapper.findAndRegisterModules();
+        AdUpdatedDto adUpdatedDto = AdUpdatedDto.builder()
                 .adId(Long.parseLong(req.getParameter("adId")))
                 .userId(Long.parseLong(req.getParameter("userId")))
                 .year(Integer.parseInt(req.getParameter("year")))
@@ -83,10 +81,8 @@ public class AdsController extends HttpServletWithPatch {
                 .ownerName(req.getParameter("ownerName"))
                 .ownerPhoneNumbers(Arrays.asList(req.getParameterValues("ownerPhoneNumbers")))
                 .pictureReferences(Arrays.asList(req.getParameterValues("pictureReferences")))
-                .creationTime(adService.getById(Long.parseLong(req.getParameter("adId"))).getCreationTime())
-                .editingTime(LocalDateTime.now())
                 .build();
-        String jsonStr = mapper.writeValueAsString( adService.update(updatedAdDto));
+        String jsonStr = mapper.writeValueAsString(adService.update(adUpdatedDto));
         writer.write(jsonStr);
         writer.flush();
         writer.close();
@@ -98,7 +94,8 @@ public class AdsController extends HttpServletWithPatch {
         resp.setCharacterEncoding(CHARACTER_ENCODING);
         PrintWriter writer = resp.getWriter();
         ObjectMapper mapper = new ObjectMapper();
-        PatchedAdDto patchedAdDto = PatchedAdDto.builder()
+        mapper.findAndRegisterModules();
+        AdPatchedDto adPatchedDto = AdPatchedDto.builder()
                 .adId(Long.parseLong(req.getParameter("adId")))
                 .year(Integer.parseInt(req.getParameter("year")))
                 .brand(req.getParameter("brand"))
@@ -107,7 +104,7 @@ public class AdsController extends HttpServletWithPatch {
                 .mileage(Long.parseLong(req.getParameter("mileage")))
                 .enginePower(Integer.parseInt(req.getParameter("enginePower")))
                 .build();
-        String jsonStr = mapper.writeValueAsString(adService.updateAllowedFields(patchedAdDto));
+        String jsonStr = mapper.writeValueAsString(adService.updateAllowedFields(adPatchedDto));
         writer.write(jsonStr);
         writer.flush();
         writer.close();

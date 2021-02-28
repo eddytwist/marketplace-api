@@ -1,9 +1,10 @@
 package by.edik.car_api.web.mapper;
 
 import by.edik.car_api.model.Ad;
-import by.edik.car_api.web.dto.*;
-
-import java.time.LocalDateTime;
+import by.edik.car_api.web.dto.AdCreatedDto;
+import by.edik.car_api.web.dto.AdDto;
+import by.edik.car_api.web.dto.AdPatchedDto;
+import by.edik.car_api.web.dto.AdUpdatedDto;
 
 public class AdMapper {
 
@@ -22,47 +23,42 @@ public class AdMapper {
                 .build();
     }
 
-    public static Ad createdAdDtoToAd(CreatedAdDto createdAdDto) {
+    public static Ad createdAdDtoToAd(AdCreatedDto adCreatedDto) {
         return Ad.builder()
-                .userId(createdAdDto.getUserId())
-                .year(createdAdDto.getYear())
-                .brand(createdAdDto.getBrand())
-                .model(createdAdDto.getModel())
-                .engineVolume(createdAdDto.getEngineVolume())
-                .condition(createdAdDto.getCondition())
-                .mileage(createdAdDto.getMileage())
-                .enginePower(createdAdDto.getEnginePower())
-                .creationTime(createdAdDto.getCreationTime())
-                .editingTime(createdAdDto.getEditingTime())
+                .userId(adCreatedDto.getUserId())
+                .year(adCreatedDto.getYear())
+                .brand(adCreatedDto.getBrand())
+                .model(adCreatedDto.getModel())
+                .engineVolume(adCreatedDto.getEngineVolume())
+                .condition(adCreatedDto.getCondition())
+                .mileage(adCreatedDto.getMileage())
+                .enginePower(adCreatedDto.getEnginePower())
                 .build();
     }
 
-    public static Ad updatedAdDtoToAd(UpdatedAdDto updatedAdDto) {
+    public static Ad updatedAdDtoToAd(AdUpdatedDto adUpdatedDto) {
         return Ad.builder()
-                .adId(updatedAdDto.getAdId())
-                .userId(updatedAdDto.getUserId())
-                .year(updatedAdDto.getYear())
-                .brand(updatedAdDto.getBrand())
-                .model(updatedAdDto.getModel())
-                .engineVolume(updatedAdDto.getEngineVolume())
-                .condition(updatedAdDto.getCondition())
-                .mileage(updatedAdDto.getMileage())
-                .enginePower(updatedAdDto.getEnginePower())
-                .creationTime(updatedAdDto.getCreationTime())
-                .editingTime(updatedAdDto.getEditingTime())
+                .adId(adUpdatedDto.getAdId())
+                .userId(adUpdatedDto.getUserId())
+                .year(adUpdatedDto.getYear())
+                .brand(adUpdatedDto.getBrand())
+                .model(adUpdatedDto.getModel())
+                .engineVolume(adUpdatedDto.getEngineVolume())
+                .condition(adUpdatedDto.getCondition())
+                .mileage(adUpdatedDto.getMileage())
+                .enginePower(adUpdatedDto.getEnginePower())
                 .build();
     }
 
-    public static Ad patchedAdDtoToAd(PatchedAdDto patchedAdDto) {
+    public static Ad patchedAdDtoToAd(AdPatchedDto adPatchedDto) {
         return Ad.builder()
-                .adId(patchedAdDto.getAdId())
-                .year(patchedAdDto.getYear())
-                .brand(patchedAdDto.getBrand())
-                .model(patchedAdDto.getModel())
-                .engineVolume(patchedAdDto.getEngineVolume())
-                .mileage(patchedAdDto.getMileage())
-                .enginePower(patchedAdDto.getEnginePower())
-                .editingTime(LocalDateTime.now())
+                .adId(adPatchedDto.getAdId())
+                .year(adPatchedDto.getYear())
+                .brand(adPatchedDto.getBrand())
+                .model(adPatchedDto.getModel())
+                .engineVolume(adPatchedDto.getEngineVolume())
+                .mileage(adPatchedDto.getMileage())
+                .enginePower(adPatchedDto.getEnginePower())
                 .build();
     }
 }
