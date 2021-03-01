@@ -13,6 +13,8 @@ public class AdServiceImpl implements AdService {
 
     private static volatile AdServiceImpl adServiceImplInstance;
 
+    private final PictureServiceImpl pictureService = PictureServiceImpl.getInstance();
+
     private final AdDao adDao = AdDao.getInstance();
 
     @Override
@@ -25,7 +27,7 @@ public class AdServiceImpl implements AdService {
     public AdDto getById(Long id) {
         return AdMapper.adToAdDto(adDao.getById(id));
     }
-    
+
     public AdFullInformationDto getFullInformationAdById(Long id) {
         return adDao.getFullInformationAdById(id);
     }
@@ -36,10 +38,9 @@ public class AdServiceImpl implements AdService {
                 .map(AdMapper::adToAdDto)
                 .collect(Collectors.toList());
     }
-    
+
     public List<AdShortInformationDto> getAllShortInformationAds(int pageNumber, int adsPerPage) {
-        int offset = (pageNumber-1) * adsPerPage;
-        return adDao.getAllShortInformationAds(adsPerPage,offset);
+        return adDao.getAllShortInformationAds(pageNumber, adsPerPage);
     }
 
     @Override
@@ -51,6 +52,11 @@ public class AdServiceImpl implements AdService {
     @Override
     public void delete(Long id) {
         adDao.delete(id);
+    }
+
+    public void deletePictureFromAdById(Long id) {
+        adDao.updateEditingTimeByPictureId(id);
+        pictureService.delete(id);
     }
 
     public AdDto updateAllowedFields(AdPatchedDto adPatchedDto) {

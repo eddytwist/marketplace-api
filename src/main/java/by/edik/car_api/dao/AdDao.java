@@ -23,37 +23,37 @@ public class AdDao extends AbstractDao<Ad> {
 
     private static final String GET_ALL_QUERY = "SELECT * FROM ads";
     private static final String GET_ALL_SHORT_INFO_QUERY = "SELECT " +
-                "ads.ad_id, " +
-                "ads.year, " +
-                "ads.brand, " +
-                "ads.model, " +
-                "ads.condition, " +
-                "ads.mileage, " +
-                "ads.creation_time, " +
-                "ui.name, " +
-                "COUNT(p.reference) as pics " +
+            "ads.ad_id, " +
+            "ads.year, " +
+            "ads.brand, " +
+            "ads.model, " +
+            "ads.condition, " +
+            "ads.mileage, " +
+            "ads.creation_time, " +
+            "ui.name, " +
+            "COUNT(p.reference) as pics " +
             "FROM ads " +
-                "INNER JOIN user_information ui on ads.user_id = ui.user_id " +
-                "LEFT JOIN pictures p on ads.ad_id = p.ad_id " +
+            "INNER JOIN user_information ui on ads.user_id = ui.user_id " +
+            "LEFT JOIN pictures p on ads.ad_id = p.ad_id " +
             "GROUP BY ads.ad_id, ui.name, ads.creation_time " +
             "ORDER BY ads.creation_time DESC " +
             "LIMIT ? OFFSET ?";
     private static final String GET_BY_ID_FULL_INFO_QUERY = "SELECT " +
-                "ads.ad_id, " +
-                "ads.year, " +
-                "ads.brand, " +
-                "ads.model, " +
-                "ads.engine_volume, " +
-                "ads.engine_power, " +
-                "ads.condition, " +
-                "ads.mileage, " +
-                "ui.name, " +
-                "up.phone_number, " +
-                "ads.creation_time, " +
-                "ads.editing_time " +
+            "ads.ad_id, " +
+            "ads.year, " +
+            "ads.brand, " +
+            "ads.model, " +
+            "ads.engine_volume, " +
+            "ads.engine_power, " +
+            "ads.condition, " +
+            "ads.mileage, " +
+            "ui.name, " +
+            "up.phone_number, " +
+            "ads.creation_time, " +
+            "ads.editing_time " +
             "FROM ads " +
-                "INNER JOIN user_information ui on ads.user_id = ui.user_id " +
-                "LEFT JOIN user_phones up on ui.user_id = up.user_id " +
+            "INNER JOIN user_information ui on ads.user_id = ui.user_id " +
+            "LEFT JOIN user_phones up on ui.user_id = up.user_id " +
             "WHERE ads.ad_id = ?";
     private static final String GET_ALL_PICTURES_BY_ID_QUERY = "SELECT reference " +
             "FROM pictures " +
@@ -66,6 +66,11 @@ public class AdDao extends AbstractDao<Ad> {
             "= (?, ?, ?, ?, ?::\"conditions\", ?, ?, ?) " +
             "WHERE ad_id = ?";
     private static final String DELETE_QUERY = "DELETE FROM ads WHERE ad_id = ?";
+    private static final String UPDATE_EDITING_TIME_BY_PICTURE_ID_QUERY = "UPDATE ads SET editing_time = ? " +
+            "WHERE ad_id = (" +
+            "SELECT ad_id " +
+            "FROM pictures " +
+            "WHERE picture_id = ?)";
     private static final String UPDATE_ALLOWED_FIELDS_QUERY = "UPDATE ads SET (" +
             "year, brand, model, engine_volume, mileage, engine_power, editing_time) " +
             "= (?, ?, ?, ?, ?, ?, ?) " +
@@ -193,10 +198,11 @@ public class AdDao extends AbstractDao<Ad> {
         }
     }
 
-    public List<AdShortInformationDto> getAllShortInformationAds(int limit, int offset) {
+    public List<AdShortInformationDto> getAllShortInformationAds(int pageNumber, int limit) {
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         List<AdShortInformationDto> ads = new ArrayList<>();
+        int offset = (pageNumber - 1) * limit;
         try {
             preparedStatement = prepareStatement(GET_ALL_SHORT_INFO_QUERY);
             preparedStatement.setInt(1, limit);
@@ -250,8 +256,10 @@ public class AdDao extends AbstractDao<Ad> {
             while (resultSet.next()) {
                 phones.add(resultSet.getString("phone_number"));
             }
-            adFullInformationDto.setOwnerPhoneNumbers(phones);
-            adFullInformationDto.setPictureReferences(getAllPicturesByAdId(adFullInformationDto.getAdId()));
+            if (adFullInformationDto != null) {
+                adFullInformationDto.setOwnerPhoneNumbers(phones);
+                adFullInformationDto.setPictureReferences(getAllPicturesByAdId(adFullInformationDto.getAdId()));
+            }
         } catch (SQLException e) {
             throw new DaoSqlException(e);
         }
@@ -275,6 +283,18 @@ public class AdDao extends AbstractDao<Ad> {
         }
         close(resultSet);
         return pictureReferences;
+    }
+
+    public void updateEditingTimeByPictureId(Long id) {
+        PreparedStatement preparedStatement;
+        try {
+            preparedStatement = prepareStatement(UPDATE_EDITING_TIME_BY_PICTURE_ID_QUERY);
+            preparedStatement.setObject(1, LocalDateTime.now());
+            preparedStatement.setLong(2, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoSqlException(e);
+        }
     }
 
     public void updateAllowedFields(Ad ad) {

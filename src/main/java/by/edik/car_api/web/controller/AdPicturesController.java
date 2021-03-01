@@ -1,5 +1,6 @@
 package by.edik.car_api.web.controller;
 
+import by.edik.car_api.service.impl.AdServiceImpl;
 import by.edik.car_api.service.impl.PictureServiceImpl;
 import by.edik.car_api.web.utils.UriUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,13 +16,14 @@ import java.io.PrintWriter;
 import static by.edik.car_api.config.ServletConstants.CHARACTER_ENCODING;
 import static by.edik.car_api.config.ServletConstants.CONTENT_TYPE;
 
-@WebServlet("/api/v1/pictures/*")
-public class PicturesController extends HttpServlet {
+@WebServlet("/api/v1/ads/picture/*")
+public class AdPicturesController extends HttpServlet {
 
     private final PictureServiceImpl pictureService = PictureServiceImpl.getInstance();
+    private final AdServiceImpl adService = AdServiceImpl.getInstance();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType(CONTENT_TYPE);
         resp.setCharacterEncoding(CHARACTER_ENCODING);
         PrintWriter writer = resp.getWriter();
@@ -41,7 +43,7 @@ public class PicturesController extends HttpServlet {
         PrintWriter writer = resp.getWriter();
         Long pictureId = UriUtils.getId(req.getPathInfo());
         try {
-            pictureService.delete(pictureId);
+            adService.deletePictureFromAdById(pictureId);
             String output = "Picture id=" + pictureId + " successfully deleted.";
             writer.write(output);
         } catch (Exception e) {

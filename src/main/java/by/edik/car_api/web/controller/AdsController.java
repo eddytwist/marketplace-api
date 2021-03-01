@@ -7,7 +7,6 @@ import by.edik.car_api.web.dto.AdPatchedDto;
 import by.edik.car_api.web.dto.AdUpdatedDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +23,7 @@ public class AdsController extends HttpServletWithPatch {
     private final AdServiceImpl adService = AdServiceImpl.getInstance();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType(CONTENT_TYPE);
         resp.setCharacterEncoding(CHARACTER_ENCODING);
         PrintWriter writer = resp.getWriter();
@@ -39,7 +38,7 @@ public class AdsController extends HttpServletWithPatch {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType(CONTENT_TYPE);
         resp.setCharacterEncoding(CHARACTER_ENCODING);
         PrintWriter writer = resp.getWriter();

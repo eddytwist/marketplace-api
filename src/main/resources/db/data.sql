@@ -78,6 +78,8 @@ VALUES (1, 'reference1', 1),
        (2, 'reference2', 1);
 
 
+-- QUERIES FROM DAO --
+
 SELECT ads.ad_id,
        ads.year,
        ads.brand,
