@@ -76,3 +76,20 @@ VALUES (1, 1, 1999, 'ww', 'jj', 1400, 'new', 150000, 200, '2016-06-22 19:10:25-0
 INSERT INTO pictures
 VALUES (1, 'reference1', 1),
        (2, 'reference2', 1);
+
+
+SELECT ads.ad_id,
+       ads.year,
+       ads.brand,
+       ads.model,
+       ads.condition,
+       ads.mileage,
+       ads.creation_time,
+       ui.name,
+       COUNT(p.reference) as pics
+FROM ads
+         INNER JOIN user_information ui on ads.user_id = ui.user_id
+         LEFT JOIN pictures p on ads.ad_id = p.ad_id
+GROUP BY ads.ad_id, ui.name, ads.creation_time
+ORDER BY ads.creation_time DESC
+LIMIT 2 OFFSET 1

@@ -23,37 +23,38 @@ public class AdDao extends AbstractDao<Ad> {
 
     private static final String GET_ALL_QUERY = "SELECT * FROM ads";
     private static final String GET_ALL_SHORT_INFO_QUERY = "SELECT " +
-        "ads.ad_id, " +
-        "ads.year, " +
-        "ads.brand, " +
-        "ads.model, " +
-        "ads.condition, " +
-        "ads.mileage, " +
-        "ads.creation_time, " +
-        "ui.name, " +
-        "COUNT(p.reference) as pics " +
+                "ads.ad_id, " +
+                "ads.year, " +
+                "ads.brand, " +
+                "ads.model, " +
+                "ads.condition, " +
+                "ads.mileage, " +
+                "ads.creation_time, " +
+                "ui.name, " +
+                "COUNT(p.reference) as pics " +
             "FROM ads " +
                 "INNER JOIN user_information ui on ads.user_id = ui.user_id " +
                 "LEFT JOIN pictures p on ads.ad_id = p.ad_id " +
-        "GROUP BY ads.ad_id, ui.name " +
-        "ORDER BY ads.ad_id";
+            "GROUP BY ads.ad_id, ui.name, ads.creation_time " +
+            "ORDER BY ads.creation_time DESC " +
+            "LIMIT ? OFFSET ?";
     private static final String GET_BY_ID_FULL_INFO_QUERY = "SELECT " +
-        "ads.ad_id, " +
-        "ads.year, " +
-        "ads.brand, " +
-        "ads.model, " +
-        "ads.engine_volume, " +
-        "ads.engine_power, " +
-        "ads.condition, " +
-        "ads.mileage, " +
-        "ui.name, " +
-        "up.phone_number, " +
-        "ads.creation_time, " +
-        "ads.editing_time " +
+                "ads.ad_id, " +
+                "ads.year, " +
+                "ads.brand, " +
+                "ads.model, " +
+                "ads.engine_volume, " +
+                "ads.engine_power, " +
+                "ads.condition, " +
+                "ads.mileage, " +
+                "ui.name, " +
+                "up.phone_number, " +
+                "ads.creation_time, " +
+                "ads.editing_time " +
             "FROM ads " +
                 "INNER JOIN user_information ui on ads.user_id = ui.user_id " +
                 "LEFT JOIN user_phones up on ui.user_id = up.user_id " +
-        "WHERE ads.ad_id = ?";
+            "WHERE ads.ad_id = ?";
     private static final String GET_ALL_PICTURES_BY_ID_QUERY = "SELECT reference " +
             "FROM pictures " +
             "WHERE ad_id = ?";
@@ -192,12 +193,14 @@ public class AdDao extends AbstractDao<Ad> {
         }
     }
 
-    public List<AdShortInformationDto> getAllShortInformationAds() {
+    public List<AdShortInformationDto> getAllShortInformationAds(int limit, int offset) {
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         List<AdShortInformationDto> ads = new ArrayList<>();
         try {
             preparedStatement = prepareStatement(GET_ALL_SHORT_INFO_QUERY);
+            preparedStatement.setInt(1, limit);
+            preparedStatement.setInt(2, offset);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 ads.add(AdShortInformationDto.builder()

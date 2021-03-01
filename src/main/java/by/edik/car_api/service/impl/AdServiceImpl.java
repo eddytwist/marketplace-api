@@ -37,8 +37,9 @@ public class AdServiceImpl implements AdService {
                 .collect(Collectors.toList());
     }
     
-    public List<AdShortInformationDto> getAllShortInformationAds() {
-        return adDao.getAllShortInformationAds();
+    public List<AdShortInformationDto> getAllShortInformationAds(int pageNumber, int adsPerPage) {
+        int offset = (pageNumber-1) * adsPerPage;
+        return adDao.getAllShortInformationAds(adsPerPage,offset);
     }
 
     @Override

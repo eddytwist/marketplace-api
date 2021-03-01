@@ -30,7 +30,9 @@ public class AdsController extends HttpServletWithPatch {
         PrintWriter writer = resp.getWriter();
         ObjectMapper mapper = new ObjectMapper();
         mapper.findAndRegisterModules();
-        String jsonStr = mapper.writeValueAsString(adService.getAllShortInformationAds());
+        int page = Integer.parseInt(req.getParameter("page"));
+        int size = Integer.parseInt(req.getParameter("size"));
+        String jsonStr = mapper.writeValueAsString(adService.getAllShortInformationAds(page, size));
         writer.write(jsonStr);
         writer.flush();
         writer.close();
