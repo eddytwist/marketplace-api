@@ -2,6 +2,7 @@ package by.edik.car_api.web.controller;
 
 import by.edik.car_api.web.controller.error.ApiErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.log4j.Logger;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,8 +19,11 @@ import static javax.servlet.RequestDispatcher.*;
 @WebServlet(urlPatterns = "/errorHandler")
 public class ErrorHandlerController extends HttpServlet {
 
+    private static final Logger LOG = Logger.getLogger(ErrorHandlerController.class);
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        LOG.info("GET method running.");
         resp.setContentType(CONTENT_TYPE);
         resp.setCharacterEncoding(CHARACTER_ENCODING);
         ObjectMapper mapper = new ObjectMapper();
@@ -33,6 +37,7 @@ public class ErrorHandlerController extends HttpServlet {
             apiErrorResponse.setErrorMessage((String) req.getAttribute(ERROR_MESSAGE));
             json = mapper.writeValueAsString(apiErrorResponse);
             writer.write(json);
+            LOG.info("Data returned to the client:\n" + json);
         }
     }
 }
