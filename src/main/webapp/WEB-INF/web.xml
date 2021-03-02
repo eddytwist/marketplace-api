@@ -9,7 +9,7 @@
         <location>/errorHandler</location>
     </error-page>
 
-    <display-name>Log4jWebDemo1</display-name>
+    <display-name>Log4jWeb</display-name>
 
     <context-param>
         <param-name>log4j-config-location</param-name>
