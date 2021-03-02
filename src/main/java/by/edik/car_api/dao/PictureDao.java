@@ -46,7 +46,7 @@ public class PictureDao extends AbstractDao<Picture> {
     }
 
     @Override
-    public Picture getById(long id) {
+    public Picture getById(Long id) {
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         Picture picture = null;
@@ -104,7 +104,7 @@ public class PictureDao extends AbstractDao<Picture> {
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         PreparedStatement preparedStatement;
         try {
             preparedStatement = prepareStatement(DELETE_QUERY);

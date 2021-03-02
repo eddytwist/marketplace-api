@@ -1,6 +1,7 @@
 package by.edik.car_api.web.controller;
 
-import by.edik.car_api.service.impl.UserServiceImpl;
+import by.edik.car_api.service.impl.AdServiceImpl;
+import by.edik.car_api.service.impl.PictureServiceImpl;
 import by.edik.car_api.web.utils.UriUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
@@ -16,11 +17,12 @@ import java.io.PrintWriter;
 import static by.edik.car_api.config.ServletConstants.CHARACTER_ENCODING;
 import static by.edik.car_api.config.ServletConstants.CONTENT_TYPE;
 
-@WebServlet("/api/v1/users/*")
-public class UserByIdController extends HttpServlet {
+@WebServlet("/api/v1/ads/picture/*")
+public class AdPicturesController extends HttpServlet {
 
-    private final UserServiceImpl userService = UserServiceImpl.getInstance();
-    private static final Logger LOG = Logger.getLogger(UserByIdController.class);
+    private final PictureServiceImpl pictureService = PictureServiceImpl.getInstance();
+    private final AdServiceImpl adService = AdServiceImpl.getInstance();
+    private static final Logger LOG = Logger.getLogger(AdPicturesController.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -29,8 +31,9 @@ public class UserByIdController extends HttpServlet {
         resp.setCharacterEncoding(CHARACTER_ENCODING);
         PrintWriter writer = resp.getWriter();
         ObjectMapper mapper = new ObjectMapper();
-        Long userId = UriUtils.getId(req.getPathInfo());
-        String json = mapper.writeValueAsString(userService.getById(userId));
+        mapper.findAndRegisterModules();
+        Long pictureId = UriUtils.getId(req.getPathInfo());
+        String json = mapper.writeValueAsString(pictureService.getById(pictureId));
         writer.write(json);
         LOG.info("Data returned to the client:\n" + json);
         writer.flush();
@@ -43,12 +46,12 @@ public class UserByIdController extends HttpServlet {
         resp.setContentType(CONTENT_TYPE);
         resp.setCharacterEncoding(CHARACTER_ENCODING);
         PrintWriter writer = resp.getWriter();
-        Long userId = UriUtils.getId(req.getPathInfo());
+        Long pictureId = UriUtils.getId(req.getPathInfo());
         try {
-            userService.delete(userId);
-            LOG.info("User id = " + userId + " successfully deleted.");
+            adService.deletePictureFromAdById(pictureId);
+            LOG.info("Picture id = " + pictureId + " successfully deleted.");
         } catch (Exception e) {
-            LOG.error("User wasn't found: " + e);
+            LOG.error("Picture wasn't found: " + e);
             throw new ServletException();
         }
         writer.flush();

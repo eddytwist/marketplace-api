@@ -46,7 +46,7 @@ public class UserPhoneDao extends AbstractDao<UserPhone> {
     }
 
     @Override
-    public UserPhone getById(long id) {
+    public UserPhone getById(Long id) {
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         UserPhone userPhone = null;
@@ -104,7 +104,7 @@ public class UserPhoneDao extends AbstractDao<UserPhone> {
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         PreparedStatement preparedStatement;
         try {
             preparedStatement = prepareStatement(DELETE_QUERY);

@@ -21,7 +21,7 @@ public class UserPhoneServiceImpl implements UserPhoneService {
     }
 
     @Override
-    public UserPhoneDto getById(long id) {
+    public UserPhoneDto getById(Long id) {
         return UserPhoneMapper.userPhoneToUserPhoneDto(userPhoneDao.getById(id));
     }
 
@@ -38,7 +38,7 @@ public class UserPhoneServiceImpl implements UserPhoneService {
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         userPhoneDao.delete(id);
     }
 

@@ -3,7 +3,7 @@ package by.edik.car_api.service.impl;
 import by.edik.car_api.dao.AdDao;
 import by.edik.car_api.model.Ad;
 import by.edik.car_api.service.AdService;
-import by.edik.car_api.web.dto.AdDto;
+import by.edik.car_api.web.dto.*;
 import by.edik.car_api.web.mapper.AdMapper;
 
 import java.util.List;
@@ -13,16 +13,23 @@ public class AdServiceImpl implements AdService {
 
     private static volatile AdServiceImpl adServiceImplInstance;
 
+    private final PictureServiceImpl pictureService = PictureServiceImpl.getInstance();
+
     private final AdDao adDao = AdDao.getInstance();
 
     @Override
-    public AdDto create(Ad ad) {
+    public AdDto create(AdCreatedDto adCreatedDto) {
+        Ad ad = AdMapper.createdAdDtoToAd(adCreatedDto);
         return AdMapper.adToAdDto(adDao.create(ad));
     }
 
     @Override
-    public AdDto getById(long id) {
+    public AdDto getById(Long id) {
         return AdMapper.adToAdDto(adDao.getById(id));
+    }
+
+    public AdFullInformationDto getFullInformationAdById(Long id) {
+        return adDao.getFullInformationAdById(id);
     }
 
     @Override
@@ -32,18 +39,29 @@ public class AdServiceImpl implements AdService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public void update(Ad ad) {
-        adDao.update(ad);
+    public List<AdShortInformationDto> getAllShortInformationAds(int pageNumber, int adsPerPage) {
+        return adDao.getAllShortInformationAds(pageNumber, adsPerPage);
     }
 
     @Override
-    public void delete(long id) {
+    public AdDto update(AdUpdatedDto adUpdatedDto) {
+        adDao.update(AdMapper.updatedAdDtoToAd(adUpdatedDto));
+        return getById(adUpdatedDto.getAdId());
+    }
+
+    @Override
+    public void delete(Long id) {
         adDao.delete(id);
     }
 
-    public void updateAllowedFields (Ad ad) {
-        adDao.updateAllowedFields(ad);
+    public void deletePictureFromAdById(Long id) {
+        adDao.updateEditingTimeByPictureId(id);
+        pictureService.delete(id);
+    }
+
+    public AdDto updateAllowedFields(AdPatchedDto adPatchedDto) {
+        adDao.updateAllowedFields(AdMapper.patchedAdDtoToAd(adPatchedDto));
+        return getById(adPatchedDto.getAdId());
     }
 
     public static AdServiceImpl getInstance() {

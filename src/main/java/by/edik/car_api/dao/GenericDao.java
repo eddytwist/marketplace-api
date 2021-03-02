@@ -5,11 +5,11 @@ import java.util.List;
 public interface GenericDao<T> {
     T create(T t);
 
-    T getById(long id);
+    T getById(Long id);
 
     List<T> getAll();
 
     void update(T t);
 
-    void delete(long id);
+    void delete(Long id);
 }
