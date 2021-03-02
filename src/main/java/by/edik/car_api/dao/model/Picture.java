@@ -1,6 +1,10 @@
-package by.edik.car_api.model;
+package by.edik.car_api.dao.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Accessors(chain = true)
@@ -13,5 +17,4 @@ public class Picture {
     private Long pictureId;
     private String reference;
     private Long adId;
-
 }

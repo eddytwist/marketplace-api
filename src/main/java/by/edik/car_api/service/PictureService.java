@@ -1,6 +1,6 @@
 package by.edik.car_api.service;
 
-import by.edik.car_api.model.Picture;
+import by.edik.car_api.dao.model.Picture;
 import by.edik.car_api.web.dto.PictureCreatedDto;
 import by.edik.car_api.web.dto.PictureDto;
 

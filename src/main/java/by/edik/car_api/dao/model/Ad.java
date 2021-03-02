@@ -1,6 +1,12 @@
-package by.edik.car_api.model;
+package by.edik.car_api.dao.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
@@ -8,7 +14,7 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 @Setter
 @Getter
-@Builder (toBuilder = true)
+@Builder(toBuilder = true)
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor
@@ -25,5 +31,4 @@ public class Ad {
     private Integer enginePower;
     private LocalDateTime creationTime;
     private LocalDateTime editingTime;
-
 }

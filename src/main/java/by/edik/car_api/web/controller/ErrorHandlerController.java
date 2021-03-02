@@ -12,32 +12,33 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 
-import static by.edik.car_api.config.ServletConstants.CHARACTER_ENCODING;
-import static by.edik.car_api.config.ServletConstants.CONTENT_TYPE;
-import static javax.servlet.RequestDispatcher.*;
+import static by.edik.car_api.config.ServletConstants.APPLICATION_JSON;
+import static by.edik.car_api.config.ServletConstants.UTF_8;
+import static javax.servlet.RequestDispatcher.ERROR_EXCEPTION_TYPE;
+import static javax.servlet.RequestDispatcher.ERROR_MESSAGE;
+import static javax.servlet.RequestDispatcher.ERROR_STATUS_CODE;
 
 @WebServlet(urlPatterns = "/errorHandler")
 public class ErrorHandlerController extends HttpServlet {
 
-    private static final Logger LOG = Logger.getLogger(ErrorHandlerController.class);
+    private final Logger log = Logger.getLogger(ErrorHandlerController.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        LOG.info("GET method running.");
-        resp.setContentType(CONTENT_TYPE);
-        resp.setCharacterEncoding(CHARACTER_ENCODING);
+        log.info("GET method running.");
+        resp.setContentType(APPLICATION_JSON);
+        resp.setCharacterEncoding(UTF_8);
         ObjectMapper mapper = new ObjectMapper();
-        String json;
         try (PrintWriter writer = resp.getWriter()) {
             Arrays.asList(ERROR_STATUS_CODE, ERROR_EXCEPTION_TYPE)
-                    .forEach(e ->
-                            writer.write(e + ": " + req.getAttribute(e) + "\n")
-                    );
+                .forEach(e ->
+                    writer.write(e + ": " + req.getAttribute(e) + '\n')
+                );
             ApiErrorResponse apiErrorResponse = new ApiErrorResponse();
             apiErrorResponse.setErrorMessage((String) req.getAttribute(ERROR_MESSAGE));
-            json = mapper.writeValueAsString(apiErrorResponse);
+            String json = mapper.writeValueAsString(apiErrorResponse);
             writer.write(json);
-            LOG.info("Data returned to the client:\n" + json);
+            log.info("Data returned to the client: " + json);
         }
     }
 }

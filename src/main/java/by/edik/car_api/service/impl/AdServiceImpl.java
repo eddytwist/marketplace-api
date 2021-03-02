@@ -1,9 +1,14 @@
 package by.edik.car_api.service.impl;
 
 import by.edik.car_api.dao.AdDao;
-import by.edik.car_api.model.Ad;
+import by.edik.car_api.dao.model.Ad;
 import by.edik.car_api.service.AdService;
-import by.edik.car_api.web.dto.*;
+import by.edik.car_api.web.dto.AdCreatedDto;
+import by.edik.car_api.web.dto.AdDto;
+import by.edik.car_api.web.dto.AdFullInformationDto;
+import by.edik.car_api.web.dto.AdPatchedDto;
+import by.edik.car_api.web.dto.AdShortInformationDto;
+import by.edik.car_api.web.dto.AdUpdatedDto;
 import by.edik.car_api.web.mapper.AdMapper;
 
 import java.util.List;
@@ -35,8 +40,8 @@ public class AdServiceImpl implements AdService {
     @Override
     public List<AdDto> getAll() {
         return adDao.getAll().stream()
-                .map(AdMapper::adToAdDto)
-                .collect(Collectors.toList());
+            .map(AdMapper::adToAdDto)
+            .collect(Collectors.toList());
     }
 
     public List<AdShortInformationDto> getAllShortInformationAds(int pageNumber, int adsPerPage) {

@@ -9,7 +9,7 @@ import java.io.IOException;
 public abstract class HttpServletWithPatch extends HttpServlet {
 
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getMethod().equalsIgnoreCase("PATCH")){
+        if ("PATCH".equalsIgnoreCase(request.getMethod())) {
             doPatch(request, response);
         } else {
             super.service(request, response);
@@ -17,5 +17,4 @@ public abstract class HttpServletWithPatch extends HttpServlet {
     }
 
     protected abstract void doPatch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException;
-    
 }

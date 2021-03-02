@@ -13,43 +13,43 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static by.edik.car_api.config.ServletConstants.CHARACTER_ENCODING;
-import static by.edik.car_api.config.ServletConstants.CONTENT_TYPE;
+import static by.edik.car_api.config.ServletConstants.APPLICATION_JSON;
+import static by.edik.car_api.config.ServletConstants.UTF_8;
 
 @WebServlet("/api/v1/users/*")
 public class UserByIdController extends HttpServlet {
 
     private final UserServiceImpl userService = UserServiceImpl.getInstance();
-    private static final Logger LOG = Logger.getLogger(UserByIdController.class);
+    private final Logger log = Logger.getLogger(UserByIdController.class);
+    private final ObjectMapper mapper = new ObjectMapper();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        LOG.info("GET method running.");
-        resp.setContentType(CONTENT_TYPE);
-        resp.setCharacterEncoding(CHARACTER_ENCODING);
+        log.info("GET method running.");
+        resp.setContentType(APPLICATION_JSON);
+        resp.setCharacterEncoding(UTF_8);
         PrintWriter writer = resp.getWriter();
-        ObjectMapper mapper = new ObjectMapper();
         Long userId = UriUtils.getId(req.getPathInfo());
         String json = mapper.writeValueAsString(userService.getById(userId));
         writer.write(json);
-        LOG.info("Data returned to the client:\n" + json);
+        log.info("Data returned to the client: " + json);
         writer.flush();
         writer.close();
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        LOG.info("DELETE method running.");
-        resp.setContentType(CONTENT_TYPE);
-        resp.setCharacterEncoding(CHARACTER_ENCODING);
+        log.info("DELETE method running.");
+        resp.setContentType(APPLICATION_JSON);
+        resp.setCharacterEncoding(UTF_8);
         PrintWriter writer = resp.getWriter();
         Long userId = UriUtils.getId(req.getPathInfo());
         try {
             userService.delete(userId);
-            LOG.info("User id = " + userId + " successfully deleted.");
+            log.info("User id = " + userId + " successfully deleted.");
         } catch (Exception e) {
-            LOG.error("User wasn't found: " + e);
-            throw new ServletException();
+            log.error("User wasn't found: " + e);
+            throw new ServletException("Entity doesn't exist.");
         }
         writer.flush();
         writer.close();

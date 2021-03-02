@@ -1,8 +1,8 @@
 package by.edik.car_api.dao;
 
-import by.edik.car_api.db.DataSource;
-import by.edik.car_api.model.User;
-import by.edik.car_api.model.UserPhone;
+import by.edik.car_api.dao.db.DataSource;
+import by.edik.car_api.dao.model.User;
+import by.edik.car_api.dao.model.UserPhone;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +12,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class UserPhoneDaoTest {
 

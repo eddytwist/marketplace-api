@@ -1,7 +1,7 @@
 package by.edik.car_api.service.impl;
 
 import by.edik.car_api.dao.UserDao;
-import by.edik.car_api.model.User;
+import by.edik.car_api.dao.model.User;
 import by.edik.car_api.service.UserService;
 import by.edik.car_api.web.dto.UserCreatedDto;
 import by.edik.car_api.web.dto.UserDto;
@@ -31,8 +31,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> getAll() {
         return userDao.getAll().stream()
-                .map(UserMapper::userToUserDto)
-                .collect(Collectors.toList());
+            .map(UserMapper::userToUserDto)
+            .collect(Collectors.toList());
     }
 
     public UserDto update(UserUpdatedDto userUpdatedDto) {

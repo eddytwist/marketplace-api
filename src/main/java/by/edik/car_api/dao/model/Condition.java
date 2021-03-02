@@ -1,4 +1,4 @@
-package by.edik.car_api.model;
+package by.edik.car_api.dao.model;
 
 public enum Condition {
     NEW,

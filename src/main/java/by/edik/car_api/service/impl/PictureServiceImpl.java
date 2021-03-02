@@ -1,7 +1,7 @@
 package by.edik.car_api.service.impl;
 
 import by.edik.car_api.dao.PictureDao;
-import by.edik.car_api.model.Picture;
+import by.edik.car_api.dao.model.Picture;
 import by.edik.car_api.service.PictureService;
 import by.edik.car_api.web.dto.PictureCreatedDto;
 import by.edik.car_api.web.dto.PictureDto;
@@ -30,8 +30,8 @@ public class PictureServiceImpl implements PictureService {
     @Override
     public List<PictureDto> getAll() {
         return pictureDao.getAll().stream()
-                .map(PictureMapper::pictureToPictureDto)
-                .collect(Collectors.toList());
+            .map(PictureMapper::pictureToPictureDto)
+            .collect(Collectors.toList());
     }
 
     @Override

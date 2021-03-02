@@ -1,7 +1,7 @@
 package by.edik.car_api.service.impl;
 
 import by.edik.car_api.dao.UserInformationDao;
-import by.edik.car_api.model.UserInformation;
+import by.edik.car_api.dao.model.UserInformation;
 import by.edik.car_api.service.UserInformationService;
 import by.edik.car_api.web.dto.UserInformationDto;
 import by.edik.car_api.web.mapper.UserInformationMapper;
@@ -28,8 +28,8 @@ public class UserInformationServiceImpl implements UserInformationService {
     @Override
     public List<UserInformationDto> getAll() {
         return userInformationDao.getAll().stream()
-                .map(UserInformationMapper::userInformationToUserInformationDto)
-                .collect(Collectors.toList());
+            .map(UserInformationMapper::userInformationToUserInformationDto)
+            .collect(Collectors.toList());
     }
 
     @Override

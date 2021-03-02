@@ -1,7 +1,11 @@
 package by.edik.car_api.web.dto;
 
-import by.edik.car_api.model.Condition;
-import lombok.*;
+import by.edik.car_api.dao.model.Condition;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
