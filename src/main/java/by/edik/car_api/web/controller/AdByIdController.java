@@ -28,14 +28,13 @@ public class AdByIdController extends HttpServlet {
         log.info("GET method running.");
         resp.setContentType(APPLICATION_JSON);
         resp.setCharacterEncoding(UTF_8);
-        PrintWriter writer = resp.getWriter();
         mapper.findAndRegisterModules();
-        Long adId = UriUtils.getId(req.getPathInfo());
-        String json = mapper.writeValueAsString(adService.getFullInformationAdById(adId));
-        log.info("Data returned to the client: " + json);
-        writer.write(json);
-        writer.flush();
-        writer.close();
+        try (PrintWriter writer = resp.getWriter()) {
+            Long adId = UriUtils.getId(req.getPathInfo());
+            String json = mapper.writeValueAsString(adService.getFullInformationAdById(adId));
+            log.info("Data returned to the client: " + json);
+            writer.write(json);
+        }
     }
 
     @Override
