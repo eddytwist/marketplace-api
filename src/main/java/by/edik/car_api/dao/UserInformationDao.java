@@ -18,10 +18,8 @@ public final class UserInformationDao extends AbstractDao<UserInformation> {
 
     private static final String GET_ALL_QUERY = "SELECT * FROM user_information";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM user_information WHERE user_id = ?";
-    private static final String CREATE_QUERY = "INSERT INTO user_information " +
-        "VALUES (?, ?)";
-    private static final String UPDATE_QUERY = "UPDATE user_information SET name = ? " +
-        "WHERE user_id = ?";
+    private static final String CREATE_QUERY = "INSERT INTO user_information VALUES (?, ?)";
+    private static final String UPDATE_QUERY = "UPDATE user_information SET name = ? WHERE user_id = ?";
     private static final String DELETE_QUERY = "DELETE FROM user_information WHERE user_id = ?";
 
     @Override

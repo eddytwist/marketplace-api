@@ -19,10 +19,8 @@ public final class UserPhoneDao extends AbstractDao<UserPhone> {
 
     private static final String GET_ALL_QUERY = "SELECT * FROM user_phones";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM user_phones WHERE phone_number_id = ?";
-    private static final String CREATE_QUERY = "INSERT INTO user_phones " +
-        "VALUES (DEFAULT, ?, ?)";
-    private static final String UPDATE_QUERY = "UPDATE user_phones SET phone_number = ? " +
-        "WHERE phone_number_id = ?";
+    private static final String CREATE_QUERY = "INSERT INTO user_phones VALUES (DEFAULT, ?, ?)";
+    private static final String UPDATE_QUERY = "UPDATE user_phones SET phone_number = ? WHERE phone_number_id = ?";
     private static final String DELETE_QUERY = "DELETE FROM user_phones WHERE phone_number_id = ?";
 
     @Override

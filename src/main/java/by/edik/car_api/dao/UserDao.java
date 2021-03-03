@@ -19,11 +19,8 @@ public final class UserDao extends AbstractDao<User> {
 
     private static final String GET_ALL_QUERY = "SELECT * FROM users";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM users WHERE user_id = ?";
-    private static final String CREATE_QUERY = "INSERT INTO users " +
-        "VALUES (DEFAULT, ?, ?, ?)";
-    private static final String UPDATE_QUERY = "UPDATE users SET (username, email, password) " +
-        "= (?, ?, ?) " +
-        "WHERE user_id = ?";
+    private static final String CREATE_QUERY = "INSERT INTO users VALUES (DEFAULT, ?, ?, ?)";
+    private static final String UPDATE_QUERY = "UPDATE users SET (username, email, password) = (?, ?, ?) WHERE user_id = ?";
     private static final String DELETE_QUERY = "DELETE FROM users WHERE user_id = ?";
 
     @Override
@@ -49,11 +46,10 @@ public final class UserDao extends AbstractDao<User> {
 
     @Override
     public User getById(Long id) {
-        PreparedStatement preparedStatement;
         ResultSet resultSet;
         User user = null;
         try {
-            preparedStatement = prepareStatement(GET_BY_ID_QUERY);
+            PreparedStatement preparedStatement = prepareStatement(GET_BY_ID_QUERY);
             preparedStatement.setLong(1, id);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
