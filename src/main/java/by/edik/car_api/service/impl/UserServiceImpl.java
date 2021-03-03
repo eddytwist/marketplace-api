@@ -20,6 +20,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto create(UserCreatedDto userCreatedDto) {
         User user = UserMapper.createdUserDtoToUser(userCreatedDto);
+
         return UserMapper.userToUserDto(userDao.create(user));
     }
 
@@ -37,6 +38,7 @@ public class UserServiceImpl implements UserService {
 
     public UserDto update(UserUpdatedDto userUpdatedDto) {
         userDao.update(UserMapper.updatedUserDtoToUser(userUpdatedDto));
+
         return getById(userUpdatedDto.getUserId());
     }
 
@@ -47,14 +49,18 @@ public class UserServiceImpl implements UserService {
 
     public static UserServiceImpl getInstance() {
         UserServiceImpl localInstance = userServiceInstance;
+
         if (localInstance == null) {
+
             synchronized (UserServiceImpl.class) {
                 localInstance = userServiceInstance;
+
                 if (localInstance == null) {
                     userServiceInstance = localInstance = new UserServiceImpl();
                 }
             }
         }
+
         return localInstance;
     }
 }

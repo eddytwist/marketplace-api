@@ -5,8 +5,11 @@ import by.edik.car_api.web.dto.AdCreatedDto;
 import by.edik.car_api.web.dto.AdDto;
 import by.edik.car_api.web.dto.AdPatchedDto;
 import by.edik.car_api.web.dto.AdUpdatedDto;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-public class AdMapper {
+@NoArgsConstructor (access = AccessLevel.PRIVATE)
+public final class AdMapper {
 
     public static AdDto adToAdDto(Ad ad) {
         return AdDto.builder()

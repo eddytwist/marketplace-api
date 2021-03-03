@@ -3,8 +3,11 @@ package by.edik.car_api.web.mapper;
 import by.edik.car_api.dao.model.Picture;
 import by.edik.car_api.web.dto.PictureCreatedDto;
 import by.edik.car_api.web.dto.PictureDto;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-public class PictureMapper {
+@NoArgsConstructor (access = AccessLevel.PRIVATE)
+public final class PictureMapper {
 
     public static PictureDto pictureToPictureDto(Picture picture) {
         return PictureDto.builder()

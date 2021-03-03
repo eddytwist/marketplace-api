@@ -7,6 +7,7 @@ import by.edik.car_api.web.dto.PictureDto;
 import java.util.List;
 
 public interface PictureService {
+
     PictureDto create(PictureCreatedDto pictureCreatedDto);
 
     PictureDto getById(Long id);

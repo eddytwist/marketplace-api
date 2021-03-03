@@ -44,14 +44,18 @@ public class UserInformationServiceImpl implements UserInformationService {
 
     public static UserInformationServiceImpl getInstance() {
         UserInformationServiceImpl localInstance = userInformationServiceImplInstance;
+
         if (localInstance == null) {
+
             synchronized (UserInformationServiceImpl.class) {
                 localInstance = userInformationServiceImplInstance;
+
                 if (localInstance == null) {
                     userInformationServiceImplInstance = localInstance = new UserInformationServiceImpl();
                 }
             }
         }
+
         return localInstance;
     }
 }

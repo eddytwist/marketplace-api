@@ -278,7 +278,7 @@ public final class AdDao extends AbstractDao<Ad> {
         return pictureReferences;
     }
 
-    public void updateEditingTimeByPictureId(Long id) {
+    public void updateAdEditingTimeByPictureId(Long id) {
         try {
             PreparedStatement preparedStatement = prepareStatement(UPDATE_EDITING_TIME_BY_PICTURE_ID_QUERY);
             preparedStatement.setObject(1, LocalDateTime.now());

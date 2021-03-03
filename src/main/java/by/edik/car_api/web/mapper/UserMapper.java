@@ -4,8 +4,11 @@ import by.edik.car_api.dao.model.User;
 import by.edik.car_api.web.dto.UserCreatedDto;
 import by.edik.car_api.web.dto.UserDto;
 import by.edik.car_api.web.dto.UserUpdatedDto;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-public class UserMapper {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class UserMapper {
 
     public static UserDto userToUserDto(User user) {
         return UserDto.builder()

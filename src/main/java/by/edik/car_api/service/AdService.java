@@ -7,6 +7,7 @@ import by.edik.car_api.web.dto.AdUpdatedDto;
 import java.util.List;
 
 public interface AdService {
+
     AdDto create(AdCreatedDto adCreatedDto);
 
     AdDto getById(Long id);

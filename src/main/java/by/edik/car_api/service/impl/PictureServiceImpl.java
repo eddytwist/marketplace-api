@@ -19,6 +19,7 @@ public class PictureServiceImpl implements PictureService {
     @Override
     public PictureDto create(PictureCreatedDto pictureCreatedDto) {
         Picture picture = PictureMapper.pictureCreatedDtoToPicture(pictureCreatedDto);
+
         return PictureMapper.pictureToPictureDto(pictureDao.create(picture));
     }
 
@@ -46,14 +47,18 @@ public class PictureServiceImpl implements PictureService {
 
     public static PictureServiceImpl getInstance() {
         PictureServiceImpl localInstance = pictureServiceImplInstance;
+
         if (localInstance == null) {
+
             synchronized (PictureServiceImpl.class) {
                 localInstance = pictureServiceImplInstance;
+
                 if (localInstance == null) {
                     pictureServiceImplInstance = localInstance = new PictureServiceImpl();
                 }
             }
         }
+
         return localInstance;
     }
 }

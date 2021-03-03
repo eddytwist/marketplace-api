@@ -25,6 +25,7 @@ public class AdServiceImpl implements AdService {
     @Override
     public AdDto create(AdCreatedDto adCreatedDto) {
         Ad ad = AdMapper.createdAdDtoToAd(adCreatedDto);
+
         return AdMapper.adToAdDto(adDao.create(ad));
     }
 
@@ -51,6 +52,7 @@ public class AdServiceImpl implements AdService {
     @Override
     public AdDto update(AdUpdatedDto adUpdatedDto) {
         adDao.update(AdMapper.updatedAdDtoToAd(adUpdatedDto));
+
         return getById(adUpdatedDto.getAdId());
     }
 
@@ -60,25 +62,31 @@ public class AdServiceImpl implements AdService {
     }
 
     public void deletePictureFromAdById(Long id) {
-        adDao.updateEditingTimeByPictureId(id);
+        adDao.updateAdEditingTimeByPictureId(id);
+
         pictureService.delete(id);
     }
 
     public AdDto updateAllowedFields(AdPatchedDto adPatchedDto) {
         adDao.updateAllowedFields(AdMapper.patchedAdDtoToAd(adPatchedDto));
+
         return getById(adPatchedDto.getAdId());
     }
 
     public static AdServiceImpl getInstance() {
         AdServiceImpl localInstance = adServiceImplInstance;
+
         if (localInstance == null) {
+
             synchronized (AdServiceImpl.class) {
                 localInstance = adServiceImplInstance;
+
                 if (localInstance == null) {
                     adServiceImplInstance = localInstance = new AdServiceImpl();
                 }
             }
         }
+
         return localInstance;
     }
 }

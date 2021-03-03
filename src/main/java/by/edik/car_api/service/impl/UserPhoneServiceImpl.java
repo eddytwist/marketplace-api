@@ -44,14 +44,18 @@ public class UserPhoneServiceImpl implements UserPhoneService {
 
     public static UserPhoneServiceImpl getInstance() {
         UserPhoneServiceImpl localInstance = userPhoneServiceImplInstance;
+
         if (localInstance == null) {
+
             synchronized (UserPhoneServiceImpl.class) {
                 localInstance = userPhoneServiceImplInstance;
+
                 if (localInstance == null) {
                     userPhoneServiceImplInstance = localInstance = new UserPhoneServiceImpl();
                 }
             }
         }
+
         return localInstance;
     }
 }
