@@ -5,11 +5,14 @@ import by.edik.car_api.dao.model.UserPhone;
 import by.edik.car_api.service.UserPhoneService;
 import by.edik.car_api.web.dto.UserPhoneDto;
 import by.edik.car_api.web.mapper.UserPhoneMapper;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class UserPhoneServiceImpl implements UserPhoneService {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class UserPhoneServiceImpl implements UserPhoneService {
 
     private static volatile UserPhoneServiceImpl userPhoneServiceImplInstance;
 

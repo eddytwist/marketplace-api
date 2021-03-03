@@ -5,11 +5,14 @@ import by.edik.car_api.dao.model.UserInformation;
 import by.edik.car_api.service.UserInformationService;
 import by.edik.car_api.web.dto.UserInformationDto;
 import by.edik.car_api.web.mapper.UserInformationMapper;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class UserInformationServiceImpl implements UserInformationService {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class UserInformationServiceImpl implements UserInformationService {
 
     private static volatile UserInformationServiceImpl userInformationServiceImplInstance;
 

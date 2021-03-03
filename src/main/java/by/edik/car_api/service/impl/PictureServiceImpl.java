@@ -6,11 +6,14 @@ import by.edik.car_api.service.PictureService;
 import by.edik.car_api.web.dto.PictureCreatedDto;
 import by.edik.car_api.web.dto.PictureDto;
 import by.edik.car_api.web.mapper.PictureMapper;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PictureServiceImpl implements PictureService {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class PictureServiceImpl implements PictureService {
 
     private static volatile PictureServiceImpl pictureServiceImplInstance;
 

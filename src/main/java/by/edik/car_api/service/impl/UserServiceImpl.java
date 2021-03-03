@@ -7,11 +7,14 @@ import by.edik.car_api.web.dto.UserCreatedDto;
 import by.edik.car_api.web.dto.UserDto;
 import by.edik.car_api.web.dto.UserUpdatedDto;
 import by.edik.car_api.web.mapper.UserMapper;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class UserServiceImpl implements UserService {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class UserServiceImpl implements UserService {
 
     private static volatile UserServiceImpl userServiceInstance;
 

@@ -10,11 +10,14 @@ import by.edik.car_api.web.dto.AdPatchedDto;
 import by.edik.car_api.web.dto.AdShortInformationDto;
 import by.edik.car_api.web.dto.AdUpdatedDto;
 import by.edik.car_api.web.mapper.AdMapper;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AdServiceImpl implements AdService {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class AdServiceImpl implements AdService {
 
     private static volatile AdServiceImpl adServiceImplInstance;
 
