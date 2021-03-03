@@ -27,6 +27,7 @@ public final class UserDao extends AbstractDao<User> {
     public User create(User user) {
         ResultSet resultSet;
         long key = -1L;
+
         try {
             PreparedStatement preparedStatement = prepareStatement(CREATE_QUERY, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, user.getUsername());
@@ -34,13 +35,16 @@ public final class UserDao extends AbstractDao<User> {
             preparedStatement.setString(3, user.getPassword());
             preparedStatement.executeUpdate();
             resultSet = preparedStatement.getGeneratedKeys();
+
             if (resultSet != null && resultSet.next()) {
                 key = resultSet.getLong("user_id");
             }
         } catch (SQLException e) {
             throw new DaoSqlException(e);
         }
+
         close(resultSet);
+
         return user.setUserId(key);
     }
 
@@ -48,10 +52,12 @@ public final class UserDao extends AbstractDao<User> {
     public User getById(Long id) {
         ResultSet resultSet;
         User user = null;
+
         try {
             PreparedStatement preparedStatement = prepareStatement(GET_BY_ID_QUERY);
             preparedStatement.setLong(1, id);
             resultSet = preparedStatement.executeQuery();
+
             if (resultSet.next()) {
                 user = new User(
                     resultSet.getLong("user_id"),
@@ -63,7 +69,9 @@ public final class UserDao extends AbstractDao<User> {
         } catch (SQLException e) {
             throw new DaoSqlException(e);
         }
+
         close(resultSet);
+
         return user;
     }
 
@@ -71,21 +79,20 @@ public final class UserDao extends AbstractDao<User> {
     public List<User> getAll() {
         ResultSet resultSet;
         List<User> users = new ArrayList<>();
+
         try {
             PreparedStatement preparedStatement = prepareStatement(GET_ALL_QUERY);
             resultSet = preparedStatement.executeQuery();
+
             while (resultSet.next()) {
-                users.add(new User(
-                    resultSet.getLong("user_id"),
-                    resultSet.getString("username"),
-                    resultSet.getString("email"),
-                    resultSet.getString("password"))
-                );
+                users.add(buildUserFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             throw new DaoSqlException(e);
         }
+
         close(resultSet);
+
         return users;
     }
 
@@ -114,16 +121,37 @@ public final class UserDao extends AbstractDao<User> {
         }
     }
 
+    private static User buildUserFromResultSet(ResultSet resultSet) {
+        User user;
+
+        try {
+            user = User.builder()
+                .userId(resultSet.getLong("user_id"))
+                .username(resultSet.getString("username"))
+                .email(resultSet.getString("email"))
+                .password(resultSet.getString("password"))
+                .build();
+        } catch (SQLException e) {
+            throw new DaoSqlException(e);
+        }
+
+        return user;
+    }
+
     public static UserDao getInstance() {
         UserDao localInstance = userDaoInstance;
+
         if (localInstance == null) {
+
             synchronized (UserDao.class) {
                 localInstance = userDaoInstance;
+
                 if (localInstance == null) {
                     userDaoInstance = localInstance = new UserDao();
                 }
             }
         }
+
         return localInstance;
     }
 }

@@ -80,6 +80,7 @@ public final class AdDao extends AbstractDao<Ad> {
     public Ad create(Ad ad) {
         long key = -1L;
         ResultSet resultSet;
+
         try {
             PreparedStatement preparedStatement = prepareStatement(CREATE_QUERY, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setLong(1, ad.getUserId());
@@ -94,13 +95,16 @@ public final class AdDao extends AbstractDao<Ad> {
             preparedStatement.setObject(10, LocalDateTime.now());
             preparedStatement.executeUpdate();
             resultSet = preparedStatement.getGeneratedKeys();
+
             if (resultSet != null && resultSet.next()) {
                 key = resultSet.getLong("ad_id");
             }
         } catch (SQLException e) {
             throw new DaoSqlException(e);
         }
+
         close(resultSet);
+
         return ad.setAdId(key);
     }
 
@@ -108,29 +112,21 @@ public final class AdDao extends AbstractDao<Ad> {
     public Ad getById(Long id) {
         ResultSet resultSet;
         Ad ad = null;
+
         try {
             PreparedStatement preparedStatement = prepareStatement(GET_BY_ID_QUERY);
             preparedStatement.setLong(1, id);
             resultSet = preparedStatement.executeQuery();
+
             if (resultSet.next()) {
-                ad = Ad.builder()
-                    .adId(resultSet.getLong("ad_id"))
-                    .userId(resultSet.getLong("user_id"))
-                    .year(resultSet.getInt("year"))
-                    .brand(resultSet.getString("brand"))
-                    .model(resultSet.getString("model"))
-                    .engineVolume(resultSet.getInt("engine_volume"))
-                    .condition(Condition.valueOf(resultSet.getString("condition").toUpperCase()))
-                    .mileage(resultSet.getLong("mileage"))
-                    .enginePower(resultSet.getInt("engine_power"))
-                    .creationTime(resultSet.getTimestamp("creation_time").toLocalDateTime())
-                    .editingTime(resultSet.getTimestamp("editing_time").toLocalDateTime())
-                    .build();
+                ad = buildAdFromResultSet(resultSet);
             }
         } catch (SQLException e) {
             throw new DaoSqlException(e);
         }
+
         close(resultSet);
+
         return ad;
     }
 
@@ -138,28 +134,20 @@ public final class AdDao extends AbstractDao<Ad> {
     public List<Ad> getAll() {
         ResultSet resultSet;
         List<Ad> ads = new ArrayList<>();
+
         try {
             PreparedStatement preparedStatement = prepareStatement(GET_ALL_QUERY);
             resultSet = preparedStatement.executeQuery();
+
             while (resultSet.next()) {
-                ads.add(Ad.builder()
-                    .adId(resultSet.getLong("ad_id"))
-                    .userId(resultSet.getLong("user_id"))
-                    .year(resultSet.getInt("year"))
-                    .brand(resultSet.getString("brand"))
-                    .model(resultSet.getString("model"))
-                    .engineVolume(resultSet.getInt("engine_volume"))
-                    .condition(Condition.valueOf(resultSet.getString("condition").toUpperCase()))
-                    .mileage(resultSet.getLong("mileage"))
-                    .enginePower(resultSet.getInt("engine_power"))
-                    .creationTime(resultSet.getTimestamp("creation_time").toLocalDateTime())
-                    .editingTime(resultSet.getTimestamp("editing_time").toLocalDateTime())
-                    .build());
+                ads.add(buildAdFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             throw new DaoSqlException(e);
         }
+
         close(resultSet);
+
         return ads;
     }
 
@@ -196,12 +184,13 @@ public final class AdDao extends AbstractDao<Ad> {
     public List<AdShortInformationDto> getAllShortInformationAds(int pageNumber, int limit) {
         ResultSet resultSet;
         List<AdShortInformationDto> ads = new ArrayList<>();
+
         try {
             PreparedStatement preparedStatement = prepareStatement(GET_ALL_SHORT_INFO_QUERY);
             preparedStatement.setInt(1, limit);
-            int offset = (pageNumber - 1) * limit;
-            preparedStatement.setInt(2, offset);
+            preparedStatement.setInt(2, (pageNumber - 1) * limit);
             resultSet = preparedStatement.executeQuery();
+
             while (resultSet.next()) {
                 ads.add(AdShortInformationDto.builder()
                     .adId(resultSet.getLong("ad_id"))
@@ -218,18 +207,22 @@ public final class AdDao extends AbstractDao<Ad> {
         } catch (SQLException e) {
             throw new DaoSqlException(e);
         }
+
         close(resultSet);
+
         return ads;
     }
 
     public AdFullInformationDto getFullInformationAdById(long id) {
         ResultSet resultSet;
         AdFullInformationDto adFullInformationDto = null;
+
         try {
             PreparedStatement preparedStatement = prepareStatement(GET_BY_ID_FULL_INFO_QUERY);
             preparedStatement.setLong(1, id);
             resultSet = preparedStatement.executeQuery();
             List<String> phones = new ArrayList<>();
+
             if (resultSet.next()) {
                 phones.add(resultSet.getString("phone_number"));
                 adFullInformationDto = AdFullInformationDto.builder()
@@ -246,9 +239,11 @@ public final class AdDao extends AbstractDao<Ad> {
                     .editingTime(resultSet.getTimestamp("editing_time").toLocalDateTime())
                     .build();
             }
+
             while (resultSet.next()) {
                 phones.add(resultSet.getString("phone_number"));
             }
+
             if (adFullInformationDto != null) {
                 adFullInformationDto.setOwnerPhoneNumbers(phones);
                 adFullInformationDto.setPictureReferences(getAllPicturesByAdId(adFullInformationDto.getAdId()));
@@ -256,24 +251,30 @@ public final class AdDao extends AbstractDao<Ad> {
         } catch (SQLException e) {
             throw new DaoSqlException(e);
         }
+
         close(resultSet);
+
         return adFullInformationDto;
     }
 
     public List<String> getAllPicturesByAdId(Long id) {
         ResultSet resultSet;
         List<String> pictureReferences = new ArrayList<>();
+
         try {
             PreparedStatement preparedStatement = prepareStatement(GET_ALL_PICTURES_BY_ID_QUERY);
             preparedStatement.setLong(1, id);
             resultSet = preparedStatement.executeQuery();
+
             while (resultSet.next()) {
                 pictureReferences.add(resultSet.getString("reference"));
             }
         } catch (SQLException e) {
             throw new DaoSqlException(e);
         }
+
         close(resultSet);
+
         return pictureReferences;
     }
 
@@ -305,16 +306,44 @@ public final class AdDao extends AbstractDao<Ad> {
         }
     }
 
+    private static Ad buildAdFromResultSet(ResultSet resultSet) {
+        Ad ad;
+
+        try {
+            ad = Ad.builder()
+                .adId(resultSet.getLong("ad_id"))
+                .userId(resultSet.getLong("user_id"))
+                .year(resultSet.getInt("year"))
+                .brand(resultSet.getString("brand"))
+                .model(resultSet.getString("model"))
+                .engineVolume(resultSet.getInt("engine_volume"))
+                .condition(Condition.valueOf(resultSet.getString("condition").toUpperCase()))
+                .mileage(resultSet.getLong("mileage"))
+                .enginePower(resultSet.getInt("engine_power"))
+                .creationTime(resultSet.getTimestamp("creation_time").toLocalDateTime())
+                .editingTime(resultSet.getTimestamp("editing_time").toLocalDateTime())
+                .build();
+        } catch (SQLException e) {
+            throw new DaoSqlException(e);
+        }
+
+        return ad;
+    }
+
     public static AdDao getInstance() {
         AdDao localInstance = adDaoInstance;
+
         if (localInstance == null) {
+
             synchronized (AdDao.class) {
                 localInstance = adDaoInstance;
+
                 if (localInstance == null) {
                     adDaoInstance = localInstance = new AdDao();
                 }
             }
         }
+
         return localInstance;
     }
 }

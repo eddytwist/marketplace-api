@@ -27,19 +27,23 @@ public final class UserPhoneDao extends AbstractDao<UserPhone> {
     public UserPhone create(UserPhone userPhone) {
         ResultSet resultSet;
         long key = -1L;
+
         try {
             PreparedStatement preparedStatement = prepareStatement(CREATE_QUERY, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, userPhone.getPhoneNumber());
             preparedStatement.setLong(2, userPhone.getUserId());
             preparedStatement.executeUpdate();
             resultSet = preparedStatement.getGeneratedKeys();
+
             if (resultSet != null && resultSet.next()) {
                 key = resultSet.getLong("phone_number_id");
             }
         } catch (SQLException e) {
             throw new DaoSqlException(e);
         }
+
         close(resultSet);
+
         return userPhone.setPhoneNumberId(key);
     }
 
@@ -47,21 +51,21 @@ public final class UserPhoneDao extends AbstractDao<UserPhone> {
     public UserPhone getById(Long id) {
         ResultSet resultSet;
         UserPhone userPhone = null;
+
         try {
             PreparedStatement preparedStatement = prepareStatement(GET_BY_ID_QUERY);
             preparedStatement.setLong(1, id);
             resultSet = preparedStatement.executeQuery();
+
             if (resultSet.next()) {
-                userPhone = new UserPhone(
-                    resultSet.getLong("phone_number_id"),
-                    resultSet.getString("phone_number"),
-                    resultSet.getLong("user_id")
-                );
+                userPhone = buildUserPhoneFromResultSet(resultSet);
             }
         } catch (SQLException e) {
             throw new DaoSqlException(e);
         }
+
         close(resultSet);
+
         return userPhone;
     }
 
@@ -69,20 +73,20 @@ public final class UserPhoneDao extends AbstractDao<UserPhone> {
     public List<UserPhone> getAll() {
         ResultSet resultSet;
         List<UserPhone> usersPhones = new ArrayList<>();
+
         try {
             PreparedStatement preparedStatement = prepareStatement(GET_ALL_QUERY);
             resultSet = preparedStatement.executeQuery();
+
             while (resultSet.next()) {
-                usersPhones.add(new UserPhone(
-                    resultSet.getLong("phone_number_id"),
-                    resultSet.getString("phone_number"),
-                    resultSet.getLong("user_id"))
-                );
+                usersPhones.add(buildUserPhoneFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             throw new DaoSqlException(e);
         }
+
         close(resultSet);
+
         return usersPhones;
     }
 
@@ -109,16 +113,36 @@ public final class UserPhoneDao extends AbstractDao<UserPhone> {
         }
     }
 
+    private static UserPhone buildUserPhoneFromResultSet(ResultSet resultSet) {
+        UserPhone userPhone;
+
+        try {
+            userPhone = UserPhone.builder()
+                .phoneNumberId(resultSet.getLong("phone_number_id"))
+                .phoneNumber(resultSet.getString("phone_number"))
+                .userId(resultSet.getLong("user_id"))
+                .build();
+        } catch (SQLException e) {
+            throw new DaoSqlException(e);
+        }
+
+        return userPhone;
+    }
+
     public static UserPhoneDao getInstance() {
         UserPhoneDao localInstance = userPhoneDaoInstance;
+
         if (localInstance == null) {
+
             synchronized (UserPhoneDao.class) {
                 localInstance = userPhoneDaoInstance;
+
                 if (localInstance == null) {
                     userPhoneDaoInstance = localInstance = new UserPhoneDao();
                 }
             }
         }
+
         return localInstance;
     }
 }

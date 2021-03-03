@@ -24,6 +24,7 @@ public final class UserInformationDao extends AbstractDao<UserInformation> {
 
     @Override
     public UserInformation create(UserInformation userInformation) {
+
         try {
             PreparedStatement preparedStatement = prepareStatement(CREATE_QUERY);
             preparedStatement.setLong(1, userInformation.getUserId());
@@ -32,6 +33,7 @@ public final class UserInformationDao extends AbstractDao<UserInformation> {
         } catch (SQLException e) {
             throw new DaoSqlException(e);
         }
+
         return userInformation;
     }
 
@@ -39,20 +41,21 @@ public final class UserInformationDao extends AbstractDao<UserInformation> {
     public UserInformation getById(Long id) {
         ResultSet resultSet;
         UserInformation userInformation = null;
+
         try {
             PreparedStatement preparedStatement = prepareStatement(GET_BY_ID_QUERY);
             preparedStatement.setLong(1, id);
             resultSet = preparedStatement.executeQuery();
+
             if (resultSet.next()) {
-                userInformation = new UserInformation(
-                    resultSet.getLong("user_id"),
-                    resultSet.getString("name")
-                );
+                userInformation = buildUserInformationFromResultSet(resultSet);
             }
         } catch (SQLException e) {
             throw new DaoSqlException(e);
         }
+
         close(resultSet);
+
         return userInformation;
     }
 
@@ -60,19 +63,20 @@ public final class UserInformationDao extends AbstractDao<UserInformation> {
     public List<UserInformation> getAll() {
         ResultSet resultSet;
         List<UserInformation> usersInformation = new ArrayList<>();
+
         try {
             PreparedStatement preparedStatement = prepareStatement(GET_ALL_QUERY);
             resultSet = preparedStatement.executeQuery();
+
             while (resultSet.next()) {
-                usersInformation.add(new UserInformation(
-                    resultSet.getLong("user_id"),
-                    resultSet.getString("name"))
-                );
+                usersInformation.add(buildUserInformationFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             throw new DaoSqlException(e);
         }
+
         close(resultSet);
+
         return usersInformation;
     }
 
@@ -99,16 +103,35 @@ public final class UserInformationDao extends AbstractDao<UserInformation> {
         }
     }
 
+    private static UserInformation buildUserInformationFromResultSet(ResultSet resultSet) {
+        UserInformation userInformation;
+
+        try {
+            userInformation = UserInformation.builder()
+                .userId(resultSet.getLong("user_id"))
+                .name(resultSet.getString("name"))
+                .build();
+        } catch (SQLException e) {
+            throw new DaoSqlException(e);
+        }
+
+        return userInformation;
+    }
+
     public static UserInformationDao getInstance() {
         UserInformationDao localInstance = userInformationDaoInstance;
+
         if (localInstance == null) {
+
             synchronized (UserInformationDao.class) {
                 localInstance = userInformationDaoInstance;
+
                 if (localInstance == null) {
                     userInformationDaoInstance = localInstance = new UserInformationDao();
                 }
             }
         }
+
         return localInstance;
     }
 }

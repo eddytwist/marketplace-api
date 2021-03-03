@@ -27,19 +27,23 @@ public final class PictureDao extends AbstractDao<Picture> {
     public Picture create(Picture picture) {
         ResultSet resultSet;
         long key = -1L;
+
         try {
             PreparedStatement preparedStatement = prepareStatement(CREATE_QUERY, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, picture.getReference());
             preparedStatement.setLong(2, picture.getAdId());
             preparedStatement.executeUpdate();
             resultSet = preparedStatement.getGeneratedKeys();
+
             if (resultSet != null && resultSet.next()) {
                 key = resultSet.getLong("picture_id");
             }
         } catch (SQLException e) {
             throw new DaoSqlException(e);
         }
+
         close(resultSet);
+
         return picture.setPictureId(key);
     }
 
@@ -47,21 +51,21 @@ public final class PictureDao extends AbstractDao<Picture> {
     public Picture getById(Long id) {
         ResultSet resultSet;
         Picture picture = null;
+
         try {
             PreparedStatement preparedStatement = prepareStatement(GET_BY_ID_QUERY);
             preparedStatement.setLong(1, id);
             resultSet = preparedStatement.executeQuery();
+
             if (resultSet.next()) {
-                picture = new Picture(
-                    resultSet.getLong("picture_id"),
-                    resultSet.getString("reference"),
-                    resultSet.getLong("ad_id")
-                );
+                picture = buildPictureFromResultSet(resultSet);
             }
         } catch (SQLException e) {
             throw new DaoSqlException(e);
         }
+
         close(resultSet);
+
         return picture;
     }
 
@@ -69,20 +73,20 @@ public final class PictureDao extends AbstractDao<Picture> {
     public List<Picture> getAll() {
         ResultSet resultSet;
         List<Picture> pictures = new ArrayList<>();
+
         try {
             PreparedStatement preparedStatement = prepareStatement(GET_ALL_QUERY);
             resultSet = preparedStatement.executeQuery();
+
             while (resultSet.next()) {
-                pictures.add(new Picture(
-                    resultSet.getLong("picture_id"),
-                    resultSet.getString("reference"),
-                    resultSet.getLong("ad_id"))
-                );
+                pictures.add(buildPictureFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             throw new DaoSqlException(e);
         }
+
         close(resultSet);
+
         return pictures;
     }
 
@@ -109,16 +113,36 @@ public final class PictureDao extends AbstractDao<Picture> {
         }
     }
 
+    private static Picture buildPictureFromResultSet(ResultSet resultSet) {
+        Picture picture;
+
+        try {
+            picture = Picture.builder()
+                .pictureId(resultSet.getLong("picture_id"))
+                .reference(resultSet.getString("reference"))
+                .adId(resultSet.getLong("ad_id"))
+                .build();
+        } catch (SQLException e) {
+            throw new DaoSqlException(e);
+        }
+
+        return picture;
+    }
+
     public static PictureDao getInstance() {
         PictureDao localInstance = pictureDaoInstance;
+
         if (localInstance == null) {
+
             synchronized (PictureDao.class) {
                 localInstance = pictureDaoInstance;
+
                 if (localInstance == null) {
                     pictureDaoInstance = localInstance = new PictureDao();
                 }
             }
         }
+
         return localInstance;
     }
 }
