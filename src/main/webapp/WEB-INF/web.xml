@@ -5,7 +5,11 @@
          version="4.0">
 
     <error-page>
-        <exception-type>java.lang.Exception</exception-type>
+        <error-code>404</error-code>
+        <location>/errorHandler</location>
+    </error-page>
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
         <location>/errorHandler</location>
     </error-page>
 

@@ -1,6 +1,7 @@
 package by.edik.car_api.dao;
 
 import by.edik.car_api.dao.db.ConnectionManager;
+import by.edik.car_api.dao.exception.DaoSqlException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,7 +21,7 @@ public abstract class AbstractDao<T> implements GenericDao<T> {
             try {
                 rs.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new DaoSqlException(e);
             }
         }
     }
