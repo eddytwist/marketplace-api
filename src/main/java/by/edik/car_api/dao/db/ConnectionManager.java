@@ -18,7 +18,7 @@ public final class ConnectionManager {
             }
             return THREAD_LOCAL.get();
         } catch (Exception e) {
-            throw new DbManagerException();
+            throw new DbManagerException("Getting connection failed.", e);
         }
     }
 }

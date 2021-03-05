@@ -14,7 +14,7 @@ public interface PictureService {
 
     List<PictureDto> getAll();
 
-    void update(Picture Picture);
+    void update(Picture picture);
 
     void delete(Long id);
 }
