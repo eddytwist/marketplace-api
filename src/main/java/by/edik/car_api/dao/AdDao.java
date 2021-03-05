@@ -76,30 +76,6 @@ public final class AdDao extends AbstractDao<Ad> {
         "= (?, ?, ?, ?, ?, ?, ?) " +
         "WHERE ad_id = ?";
 
-    private static Ad buildAdFromResultSet(ResultSet resultSet) {
-        Ad ad;
-
-        try {
-            ad = Ad.builder()
-                .adId(resultSet.getLong("ad_id"))
-                .userId(resultSet.getLong("user_id"))
-                .year(resultSet.getInt("year"))
-                .brand(resultSet.getString("brand"))
-                .model(resultSet.getString("model"))
-                .engineVolume(resultSet.getInt("engine_volume"))
-                .condition(Condition.valueOf(resultSet.getString("condition").toUpperCase()))
-                .mileage(resultSet.getLong("mileage"))
-                .enginePower(resultSet.getInt("engine_power"))
-                .creationTime(resultSet.getTimestamp("creation_time").toLocalDateTime())
-                .editingTime(resultSet.getTimestamp("editing_time").toLocalDateTime())
-                .build();
-        } catch (SQLException e) {
-            throw new DaoSqlException("Troubles with getting params from ResultSet.", e);
-        }
-
-        return ad;
-    }
-
     @Override
     public Ad create(Ad ad) {
         long key = -1L;
@@ -330,6 +306,30 @@ public final class AdDao extends AbstractDao<Ad> {
         } catch (SQLException e) {
             throw new DaoSqlException("SQL failed.", e);
         }
+    }
+
+    private static Ad buildAdFromResultSet(ResultSet resultSet) {
+        Ad ad;
+
+        try {
+            ad = Ad.builder()
+                .adId(resultSet.getLong("ad_id"))
+                .userId(resultSet.getLong("user_id"))
+                .year(resultSet.getInt("year"))
+                .brand(resultSet.getString("brand"))
+                .model(resultSet.getString("model"))
+                .engineVolume(resultSet.getInt("engine_volume"))
+                .condition(Condition.valueOf(resultSet.getString("condition").toUpperCase()))
+                .mileage(resultSet.getLong("mileage"))
+                .enginePower(resultSet.getInt("engine_power"))
+                .creationTime(resultSet.getTimestamp("creation_time").toLocalDateTime())
+                .editingTime(resultSet.getTimestamp("editing_time").toLocalDateTime())
+                .build();
+        } catch (SQLException e) {
+            throw new DaoSqlException("Troubles with getting params from ResultSet.", e);
+        }
+
+        return ad;
     }
 
     public static AdDao getInstance() {
