@@ -23,6 +23,23 @@ public final class UserDao extends AbstractDao<User> {
     private static final String UPDATE_QUERY = "UPDATE users SET (username, email, password) = (?, ?, ?) WHERE user_id = ?";
     private static final String DELETE_QUERY = "DELETE FROM users WHERE user_id = ?";
 
+    private static User buildUserFromResultSet(ResultSet resultSet) {
+        User user;
+
+        try {
+            user = User.builder()
+                .userId(resultSet.getLong("user_id"))
+                .username(resultSet.getString("username"))
+                .email(resultSet.getString("email"))
+                .password(resultSet.getString("password"))
+                .build();
+        } catch (SQLException e) {
+            throw new DaoSqlException("Troubles with getting params from ResultSet.", e);
+        }
+
+        return user;
+    }
+
     @Override
     public User create(User user) {
         ResultSet resultSet;
@@ -40,7 +57,7 @@ public final class UserDao extends AbstractDao<User> {
                 key = resultSet.getLong("user_id");
             }
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
 
         close(resultSet);
@@ -62,7 +79,7 @@ public final class UserDao extends AbstractDao<User> {
                 user = buildUserFromResultSet(resultSet);
             }
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
 
         close(resultSet);
@@ -83,7 +100,7 @@ public final class UserDao extends AbstractDao<User> {
                 users.add(buildUserFromResultSet(resultSet));
             }
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
 
         close(resultSet);
@@ -101,7 +118,7 @@ public final class UserDao extends AbstractDao<User> {
             preparedStatement.setLong(4, user.getUserId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
     }
 
@@ -112,25 +129,8 @@ public final class UserDao extends AbstractDao<User> {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
-    }
-
-    private static User buildUserFromResultSet(ResultSet resultSet) {
-        User user;
-
-        try {
-            user = User.builder()
-                .userId(resultSet.getLong("user_id"))
-                .username(resultSet.getString("username"))
-                .email(resultSet.getString("email"))
-                .password(resultSet.getString("password"))
-                .build();
-        } catch (SQLException e) {
-            throw new DaoSqlException(e);
-        }
-
-        return user;
     }
 
     public static UserDao getInstance() {

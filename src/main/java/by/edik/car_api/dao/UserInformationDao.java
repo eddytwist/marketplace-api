@@ -22,6 +22,21 @@ public final class UserInformationDao extends AbstractDao<UserInformation> {
     private static final String UPDATE_QUERY = "UPDATE user_information SET name = ? WHERE user_id = ?";
     private static final String DELETE_QUERY = "DELETE FROM user_information WHERE user_id = ?";
 
+    private static UserInformation buildUserInformationFromResultSet(ResultSet resultSet) {
+        UserInformation userInformation;
+
+        try {
+            userInformation = UserInformation.builder()
+                .userId(resultSet.getLong("user_id"))
+                .name(resultSet.getString("name"))
+                .build();
+        } catch (SQLException e) {
+            throw new DaoSqlException("Troubles with getting params from ResultSet.", e);
+        }
+
+        return userInformation;
+    }
+
     @Override
     public UserInformation create(UserInformation userInformation) {
 
@@ -31,7 +46,7 @@ public final class UserInformationDao extends AbstractDao<UserInformation> {
             preparedStatement.setString(2, userInformation.getName());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
 
         return userInformation;
@@ -51,7 +66,7 @@ public final class UserInformationDao extends AbstractDao<UserInformation> {
                 userInformation = buildUserInformationFromResultSet(resultSet);
             }
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
 
         close(resultSet);
@@ -72,7 +87,7 @@ public final class UserInformationDao extends AbstractDao<UserInformation> {
                 usersInformation.add(buildUserInformationFromResultSet(resultSet));
             }
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
 
         close(resultSet);
@@ -88,7 +103,7 @@ public final class UserInformationDao extends AbstractDao<UserInformation> {
             preparedStatement.setLong(2, userInformation.getUserId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
     }
 
@@ -99,23 +114,8 @@ public final class UserInformationDao extends AbstractDao<UserInformation> {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
-    }
-
-    private static UserInformation buildUserInformationFromResultSet(ResultSet resultSet) {
-        UserInformation userInformation;
-
-        try {
-            userInformation = UserInformation.builder()
-                .userId(resultSet.getLong("user_id"))
-                .name(resultSet.getString("name"))
-                .build();
-        } catch (SQLException e) {
-            throw new DaoSqlException(e);
-        }
-
-        return userInformation;
     }
 
     public static UserInformationDao getInstance() {

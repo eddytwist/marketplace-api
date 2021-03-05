@@ -76,6 +76,30 @@ public final class AdDao extends AbstractDao<Ad> {
         "= (?, ?, ?, ?, ?, ?, ?) " +
         "WHERE ad_id = ?";
 
+    private static Ad buildAdFromResultSet(ResultSet resultSet) {
+        Ad ad;
+
+        try {
+            ad = Ad.builder()
+                .adId(resultSet.getLong("ad_id"))
+                .userId(resultSet.getLong("user_id"))
+                .year(resultSet.getInt("year"))
+                .brand(resultSet.getString("brand"))
+                .model(resultSet.getString("model"))
+                .engineVolume(resultSet.getInt("engine_volume"))
+                .condition(Condition.valueOf(resultSet.getString("condition").toUpperCase()))
+                .mileage(resultSet.getLong("mileage"))
+                .enginePower(resultSet.getInt("engine_power"))
+                .creationTime(resultSet.getTimestamp("creation_time").toLocalDateTime())
+                .editingTime(resultSet.getTimestamp("editing_time").toLocalDateTime())
+                .build();
+        } catch (SQLException e) {
+            throw new DaoSqlException("Troubles with getting params from ResultSet.", e);
+        }
+
+        return ad;
+    }
+
     @Override
     public Ad create(Ad ad) {
         long key = -1L;
@@ -100,7 +124,7 @@ public final class AdDao extends AbstractDao<Ad> {
                 key = resultSet.getLong("ad_id");
             }
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
 
         close(resultSet);
@@ -122,7 +146,7 @@ public final class AdDao extends AbstractDao<Ad> {
                 ad = buildAdFromResultSet(resultSet);
             }
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
 
         close(resultSet);
@@ -143,7 +167,7 @@ public final class AdDao extends AbstractDao<Ad> {
                 ads.add(buildAdFromResultSet(resultSet));
             }
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
 
         close(resultSet);
@@ -166,7 +190,7 @@ public final class AdDao extends AbstractDao<Ad> {
             preparedStatement.setLong(9, ad.getAdId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
     }
 
@@ -177,7 +201,7 @@ public final class AdDao extends AbstractDao<Ad> {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
     }
 
@@ -205,7 +229,7 @@ public final class AdDao extends AbstractDao<Ad> {
                     .build());
             }
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("Troubles with getting params from ResultSet.", e);
         }
 
         close(resultSet);
@@ -251,7 +275,7 @@ public final class AdDao extends AbstractDao<Ad> {
                 throw new NullPointerException("Ad doesn't exist.");
             }
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("Troubles with getting params from ResultSet.", e);
         }
 
         close(resultSet);
@@ -272,7 +296,7 @@ public final class AdDao extends AbstractDao<Ad> {
                 pictureReferences.add(resultSet.getString("reference"));
             }
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
 
         close(resultSet);
@@ -287,7 +311,7 @@ public final class AdDao extends AbstractDao<Ad> {
             preparedStatement.setLong(2, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
     }
 
@@ -304,32 +328,8 @@ public final class AdDao extends AbstractDao<Ad> {
             preparedStatement.setLong(8, ad.getAdId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
-    }
-
-    private static Ad buildAdFromResultSet(ResultSet resultSet) {
-        Ad ad;
-
-        try {
-            ad = Ad.builder()
-                .adId(resultSet.getLong("ad_id"))
-                .userId(resultSet.getLong("user_id"))
-                .year(resultSet.getInt("year"))
-                .brand(resultSet.getString("brand"))
-                .model(resultSet.getString("model"))
-                .engineVolume(resultSet.getInt("engine_volume"))
-                .condition(Condition.valueOf(resultSet.getString("condition").toUpperCase()))
-                .mileage(resultSet.getLong("mileage"))
-                .enginePower(resultSet.getInt("engine_power"))
-                .creationTime(resultSet.getTimestamp("creation_time").toLocalDateTime())
-                .editingTime(resultSet.getTimestamp("editing_time").toLocalDateTime())
-                .build();
-        } catch (SQLException e) {
-            throw new DaoSqlException(e);
-        }
-
-        return ad;
     }
 
     public static AdDao getInstance() {

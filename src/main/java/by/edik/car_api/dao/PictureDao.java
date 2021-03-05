@@ -23,6 +23,22 @@ public final class PictureDao extends AbstractDao<Picture> {
     private static final String UPDATE_QUERY = "UPDATE pictures SET reference = ? WHERE picture_id = ?";
     private static final String DELETE_QUERY = "DELETE FROM pictures WHERE picture_id = ?";
 
+    private static Picture buildPictureFromResultSet(ResultSet resultSet) {
+        Picture picture;
+
+        try {
+            picture = Picture.builder()
+                .pictureId(resultSet.getLong("picture_id"))
+                .reference(resultSet.getString("reference"))
+                .adId(resultSet.getLong("ad_id"))
+                .build();
+        } catch (SQLException e) {
+            throw new DaoSqlException("Troubles with getting params from ResultSet.", e);
+        }
+
+        return picture;
+    }
+
     @Override
     public Picture create(Picture picture) {
         ResultSet resultSet;
@@ -39,7 +55,7 @@ public final class PictureDao extends AbstractDao<Picture> {
                 key = resultSet.getLong("picture_id");
             }
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
 
         close(resultSet);
@@ -61,7 +77,7 @@ public final class PictureDao extends AbstractDao<Picture> {
                 picture = buildPictureFromResultSet(resultSet);
             }
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
 
         close(resultSet);
@@ -82,7 +98,7 @@ public final class PictureDao extends AbstractDao<Picture> {
                 pictures.add(buildPictureFromResultSet(resultSet));
             }
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
 
         close(resultSet);
@@ -98,7 +114,7 @@ public final class PictureDao extends AbstractDao<Picture> {
             preparedStatement.setLong(2, picture.getPictureId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
     }
 
@@ -109,24 +125,8 @@ public final class PictureDao extends AbstractDao<Picture> {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
-    }
-
-    private static Picture buildPictureFromResultSet(ResultSet resultSet) {
-        Picture picture;
-
-        try {
-            picture = Picture.builder()
-                .pictureId(resultSet.getLong("picture_id"))
-                .reference(resultSet.getString("reference"))
-                .adId(resultSet.getLong("ad_id"))
-                .build();
-        } catch (SQLException e) {
-            throw new DaoSqlException(e);
-        }
-
-        return picture;
     }
 
     public static PictureDao getInstance() {

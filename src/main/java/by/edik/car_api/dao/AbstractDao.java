@@ -21,7 +21,7 @@ public abstract class AbstractDao<T> implements GenericDao<T> {
             try {
                 rs.close();
             } catch (SQLException e) {
-                throw new DaoSqlException(e);
+                throw new DaoSqlException("Closing ResultSet failed.", e);
             }
         }
     }
