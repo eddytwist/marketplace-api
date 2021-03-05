@@ -1,15 +1,18 @@
 package by.edik.car_api.service.impl;
 
 import by.edik.car_api.dao.UserPhoneDao;
-import by.edik.car_api.model.UserPhone;
+import by.edik.car_api.dao.model.UserPhone;
 import by.edik.car_api.service.UserPhoneService;
 import by.edik.car_api.web.dto.UserPhoneDto;
 import by.edik.car_api.web.mapper.UserPhoneMapper;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class UserPhoneServiceImpl implements UserPhoneService {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class UserPhoneServiceImpl implements UserPhoneService {
 
     private static volatile UserPhoneServiceImpl userPhoneServiceImplInstance;
 
@@ -28,8 +31,8 @@ public class UserPhoneServiceImpl implements UserPhoneService {
     @Override
     public List<UserPhoneDto> getAll() {
         return userPhoneDao.getAll().stream()
-                .map(UserPhoneMapper::userPhoneToUserPhoneDto)
-                .collect(Collectors.toList());
+            .map(UserPhoneMapper::userPhoneToUserPhoneDto)
+            .collect(Collectors.toList());
     }
 
     @Override
@@ -44,14 +47,18 @@ public class UserPhoneServiceImpl implements UserPhoneService {
 
     public static UserPhoneServiceImpl getInstance() {
         UserPhoneServiceImpl localInstance = userPhoneServiceImplInstance;
+
         if (localInstance == null) {
+
             synchronized (UserPhoneServiceImpl.class) {
                 localInstance = userPhoneServiceImplInstance;
+
                 if (localInstance == null) {
                     userPhoneServiceImplInstance = localInstance = new UserPhoneServiceImpl();
                 }
             }
         }
+
         return localInstance;
     }
 }

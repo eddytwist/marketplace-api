@@ -1,6 +1,10 @@
 package by.edik.car_api.web.controller.error;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Setter
 @Getter
@@ -8,5 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApiErrorResponse {
-    private String errorMessage = "";
+    private String errorMessage;
+    private Integer errorStatusCode;
+    private String errorExceptionType;
 }

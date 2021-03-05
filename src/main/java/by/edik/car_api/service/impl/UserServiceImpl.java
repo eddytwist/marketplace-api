@@ -1,17 +1,20 @@
 package by.edik.car_api.service.impl;
 
 import by.edik.car_api.dao.UserDao;
-import by.edik.car_api.model.User;
+import by.edik.car_api.dao.model.User;
 import by.edik.car_api.service.UserService;
 import by.edik.car_api.web.dto.UserCreatedDto;
 import by.edik.car_api.web.dto.UserDto;
 import by.edik.car_api.web.dto.UserUpdatedDto;
 import by.edik.car_api.web.mapper.UserMapper;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class UserServiceImpl implements UserService {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class UserServiceImpl implements UserService {
 
     private static volatile UserServiceImpl userServiceInstance;
 
@@ -20,6 +23,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto create(UserCreatedDto userCreatedDto) {
         User user = UserMapper.createdUserDtoToUser(userCreatedDto);
+
         return UserMapper.userToUserDto(userDao.create(user));
     }
 
@@ -31,12 +35,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> getAll() {
         return userDao.getAll().stream()
-                .map(UserMapper::userToUserDto)
-                .collect(Collectors.toList());
+            .map(UserMapper::userToUserDto)
+            .collect(Collectors.toList());
     }
 
     public UserDto update(UserUpdatedDto userUpdatedDto) {
         userDao.update(UserMapper.updatedUserDtoToUser(userUpdatedDto));
+
         return getById(userUpdatedDto.getUserId());
     }
 
@@ -47,14 +52,18 @@ public class UserServiceImpl implements UserService {
 
     public static UserServiceImpl getInstance() {
         UserServiceImpl localInstance = userServiceInstance;
+
         if (localInstance == null) {
+
             synchronized (UserServiceImpl.class) {
                 localInstance = userServiceInstance;
+
                 if (localInstance == null) {
                     userServiceInstance = localInstance = new UserServiceImpl();
                 }
             }
         }
+
         return localInstance;
     }
 }

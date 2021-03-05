@@ -1,6 +1,10 @@
 package by.edik.car_api.config;
 
-public class ServletConstants {
-    public static final String CONTENT_TYPE = "application/json";
-    public static final String CHARACTER_ENCODING = "UTF-8";
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class ServletConstants {
+    public static final String APPLICATION_JSON = "application/json";
+    public static final String UTF_8 = "UTF-8";
 }

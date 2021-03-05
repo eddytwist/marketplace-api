@@ -1,15 +1,18 @@
 package by.edik.car_api.web.mapper;
 
-import by.edik.car_api.model.UserPhone;
+import by.edik.car_api.dao.model.UserPhone;
 import by.edik.car_api.web.dto.UserPhoneDto;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-public class UserPhoneMapper {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class UserPhoneMapper {
 
     public static UserPhoneDto userPhoneToUserPhoneDto(UserPhone userPhone) {
         return UserPhoneDto.builder()
-                .phoneNumberId(userPhone.getPhoneNumberId())
-                .phoneNumber(userPhone.getPhoneNumber())
-                .build();
+            .phoneNumberId(userPhone.getPhoneNumberId())
+            .phoneNumber(userPhone.getPhoneNumber())
+            .build();
     }
 }
 

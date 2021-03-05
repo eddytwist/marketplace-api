@@ -5,11 +5,15 @@
          version="4.0">
 
     <error-page>
-        <exception-type>java.lang.Exception</exception-type>
+        <error-code>404</error-code>
+        <location>/errorHandler</location>
+    </error-page>
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
         <location>/errorHandler</location>
     </error-page>
 
-    <display-name>Log4jWebDemo1</display-name>
+    <display-name>Log4jWeb</display-name>
 
     <context-param>
         <param-name>log4j-config-location</param-name>

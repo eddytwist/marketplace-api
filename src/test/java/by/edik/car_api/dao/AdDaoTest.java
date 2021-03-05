@@ -1,9 +1,9 @@
 package by.edik.car_api.dao;
 
-import by.edik.car_api.db.DataSource;
-import by.edik.car_api.model.Ad;
-import by.edik.car_api.model.Condition;
-import by.edik.car_api.model.User;
+import by.edik.car_api.dao.db.DataSource;
+import by.edik.car_api.dao.model.Ad;
+import by.edik.car_api.dao.model.Condition;
+import by.edik.car_api.dao.model.User;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +14,9 @@ import java.sql.PreparedStatement;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AdDaoTest {
 

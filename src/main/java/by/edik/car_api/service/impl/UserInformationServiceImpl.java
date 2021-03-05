@@ -1,15 +1,18 @@
 package by.edik.car_api.service.impl;
 
 import by.edik.car_api.dao.UserInformationDao;
-import by.edik.car_api.model.UserInformation;
+import by.edik.car_api.dao.model.UserInformation;
 import by.edik.car_api.service.UserInformationService;
 import by.edik.car_api.web.dto.UserInformationDto;
 import by.edik.car_api.web.mapper.UserInformationMapper;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class UserInformationServiceImpl implements UserInformationService {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class UserInformationServiceImpl implements UserInformationService {
 
     private static volatile UserInformationServiceImpl userInformationServiceImplInstance;
 
@@ -28,8 +31,8 @@ public class UserInformationServiceImpl implements UserInformationService {
     @Override
     public List<UserInformationDto> getAll() {
         return userInformationDao.getAll().stream()
-                .map(UserInformationMapper::userInformationToUserInformationDto)
-                .collect(Collectors.toList());
+            .map(UserInformationMapper::userInformationToUserInformationDto)
+            .collect(Collectors.toList());
     }
 
     @Override
@@ -44,14 +47,18 @@ public class UserInformationServiceImpl implements UserInformationService {
 
     public static UserInformationServiceImpl getInstance() {
         UserInformationServiceImpl localInstance = userInformationServiceImplInstance;
+
         if (localInstance == null) {
+
             synchronized (UserInformationServiceImpl.class) {
                 localInstance = userInformationServiceImplInstance;
+
                 if (localInstance == null) {
                     userInformationServiceImplInstance = localInstance = new UserInformationServiceImpl();
                 }
             }
         }
+
         return localInstance;
     }
 }

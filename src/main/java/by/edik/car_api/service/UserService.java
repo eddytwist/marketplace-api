@@ -7,6 +7,7 @@ import by.edik.car_api.web.dto.UserUpdatedDto;
 import java.util.List;
 
 public interface UserService {
+
     UserDto create(UserCreatedDto userCreatedDto);
 
     UserDto getById(Long id);

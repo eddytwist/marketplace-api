@@ -1,43 +1,35 @@
 package by.edik.car_api.web.controller;
 
 import by.edik.car_api.web.controller.error.ApiErrorResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
 
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Arrays;
 
-import static by.edik.car_api.config.ServletConstants.CHARACTER_ENCODING;
-import static by.edik.car_api.config.ServletConstants.CONTENT_TYPE;
-import static javax.servlet.RequestDispatcher.*;
+import static javax.servlet.RequestDispatcher.ERROR_EXCEPTION;
+import static javax.servlet.RequestDispatcher.ERROR_EXCEPTION_TYPE;
+import static javax.servlet.RequestDispatcher.ERROR_MESSAGE;
+import static javax.servlet.RequestDispatcher.ERROR_STATUS_CODE;
 
-@WebServlet(urlPatterns = "/errorHandler")
-public class ErrorHandlerController extends HttpServlet {
+@WebServlet("/errorHandler")
+public class ErrorHandlerController extends BaseController {
 
-    private static final Logger LOG = Logger.getLogger(ErrorHandlerController.class);
+    private final Logger log = Logger.getLogger(ErrorHandlerController.class);
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        LOG.info("GET method running.");
-        resp.setContentType(CONTENT_TYPE);
-        resp.setCharacterEncoding(CHARACTER_ENCODING);
-        ObjectMapper mapper = new ObjectMapper();
-        String json;
-        try (PrintWriter writer = resp.getWriter()) {
-            Arrays.asList(ERROR_STATUS_CODE, ERROR_EXCEPTION_TYPE)
-                    .forEach(e ->
-                            writer.write(e + ": " + req.getAttribute(e) + "\n")
-                    );
-            ApiErrorResponse apiErrorResponse = new ApiErrorResponse();
-            apiErrorResponse.setErrorMessage((String) req.getAttribute(ERROR_MESSAGE));
-            json = mapper.writeValueAsString(apiErrorResponse);
-            writer.write(json);
-            LOG.info("Data returned to the client:\n" + json);
-        }
+    public void service(HttpServletRequest request, HttpServletResponse response) {
+        log.info("ERROR SERVICE method running.");
+        log.warn("SERVICE got exception: " + request.getAttribute(ERROR_EXCEPTION));
+
+        Object errorMessage = request.getAttribute(ERROR_MESSAGE);
+        Object errorStatusCode = request.getAttribute(ERROR_STATUS_CODE);
+        Object errorExceptionType = request.getAttribute(ERROR_EXCEPTION_TYPE);
+
+        executeWithResult(response, () -> ApiErrorResponse.builder()
+            .errorMessage((errorMessage != null) ? errorMessage.toString() : null)
+            .errorStatusCode((errorStatusCode != null) ? (Integer) errorStatusCode : null)
+            .errorExceptionType((errorExceptionType != null) ? errorExceptionType.toString() : null)
+            .build());
     }
 }
