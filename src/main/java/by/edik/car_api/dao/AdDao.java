@@ -247,6 +247,8 @@ public final class AdDao extends AbstractDao<Ad> {
             if (adFullInformationDto != null) {
                 adFullInformationDto.setOwnerPhoneNumbers(phones);
                 adFullInformationDto.setPictureReferences(getAllPicturesByAdId(adFullInformationDto.getAdId()));
+            } else {
+                throw new NullPointerException("Ad doesn't exist.");
             }
         } catch (SQLException e) {
             throw new DaoSqlException(e);

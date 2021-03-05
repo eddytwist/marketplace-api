@@ -9,7 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/api/v1/users/")
+@WebServlet("/api/v1/users")
 public class UsersController extends BaseController {
 
     private final UserServiceImpl userService = UserServiceImpl.getInstance();

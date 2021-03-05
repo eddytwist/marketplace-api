@@ -59,12 +59,7 @@ public final class UserDao extends AbstractDao<User> {
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                user = new User(
-                    resultSet.getLong("user_id"),
-                    resultSet.getString("username"),
-                    resultSet.getString("email"),
-                    resultSet.getString("password")
-                );
+                user = buildUserFromResultSet(resultSet);
             }
         } catch (SQLException e) {
             throw new DaoSqlException(e);

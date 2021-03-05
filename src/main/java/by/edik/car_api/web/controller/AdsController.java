@@ -12,9 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 
-@WebServlet("/api/v1/ads/")
+@WebServlet("/api/v1/ads")
 public class AdsController extends BaseController {
 
+    public static final int DEFAULT_ADS_PER_PAGE = 10;
     private final AdServiceImpl adService = AdServiceImpl.getInstance();
     private final Logger log = Logger.getLogger(AdsController.class);
 
@@ -25,7 +26,7 @@ public class AdsController extends BaseController {
 
         executeWithResult(resp, () -> {
             int page = Integer.parseInt(req.getParameter("page"));
-            int size = Integer.parseInt(req.getParameter("size"));
+            int size = (req.getParameter("size") == null) ? DEFAULT_ADS_PER_PAGE : Integer.parseInt(req.getParameter("size"));
 
             return adService.getAllShortInformationAds(page, size);
         });

@@ -21,11 +21,6 @@ public abstract class BaseController extends HttpServlet {
     private final Logger log = Logger.getLogger(BaseController.class.getName());
     private final ObjectMapper mapper = new ObjectMapper();
 
-    protected static void setResponseConfiguration(HttpServletResponse resp) {
-        resp.setContentType(APPLICATION_JSON);
-        resp.setCharacterEncoding(UTF_8);
-    }
-
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if ("PATCH".equalsIgnoreCase(request.getMethod())) {
             doPatch(request, response);
@@ -37,22 +32,9 @@ public abstract class BaseController extends HttpServlet {
     protected void doPatch(HttpServletRequest req, HttpServletResponse resp) {
     }
 
-    protected void executeWithResult(HttpServletResponse resp,
-                                     Supplier<Object> getResult) {
-        setResponseConfiguration(resp);
-
-        try (PrintWriter writer = resp.getWriter()) {
-            log.info("writer created");
-            Object o = getResult.get();
-            log.info("after lambda " + o);
-            String json = writeAsString(o);
-            writer.write(json);
-            writer.flush();
-            log.info("Data returned to the client: " + json);
-        } catch (IOException e) {
-            log.warn("Server failed.", e);
-            throw new ServerFailedException("Server failed.", e);
-        }
+    protected static void setResponseConfiguration(HttpServletResponse resp) {
+        resp.setContentType(APPLICATION_JSON);
+        resp.setCharacterEncoding(UTF_8);
     }
 
     protected String writeAsString(Object o) {
@@ -61,6 +43,26 @@ public abstract class BaseController extends HttpServlet {
             return mapper.writeValueAsString(o);
         } catch (JsonProcessingException e) {
             throw new ServerFailedException("Mapping process failed.", e);
+        }
+    }
+
+    protected void executeWithResult(HttpServletResponse resp,
+                                     Supplier<Object> getResult) {
+        log.info("Executing.");
+        setResponseConfiguration(resp);
+
+        try {
+            Object o = getResult.get();
+            log.info("Object for mapping: " + o);
+            String json = writeAsString(o);
+            PrintWriter writer = resp.getWriter();
+            writer.write(json);
+            log.info("Data returned to the client: " + json);
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            log.warn("Server failed.", e);
+            throw new ServerFailedException("Server failed.", e);
         }
     }
 }
