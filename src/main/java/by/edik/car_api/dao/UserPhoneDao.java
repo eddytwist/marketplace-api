@@ -23,6 +23,22 @@ public final class UserPhoneDao extends AbstractDao<UserPhone> {
     private static final String UPDATE_QUERY = "UPDATE user_phones SET phone_number = ? WHERE phone_number_id = ?";
     private static final String DELETE_QUERY = "DELETE FROM user_phones WHERE phone_number_id = ?";
 
+    private static UserPhone buildUserPhoneFromResultSet(ResultSet resultSet) {
+        UserPhone userPhone;
+
+        try {
+            userPhone = UserPhone.builder()
+                .phoneNumberId(resultSet.getLong("phone_number_id"))
+                .phoneNumber(resultSet.getString("phone_number"))
+                .userId(resultSet.getLong("user_id"))
+                .build();
+        } catch (SQLException e) {
+            throw new DaoSqlException("Troubles with getting params from ResultSet.", e);
+        }
+
+        return userPhone;
+    }
+
     @Override
     public UserPhone create(UserPhone userPhone) {
         ResultSet resultSet;
@@ -39,7 +55,7 @@ public final class UserPhoneDao extends AbstractDao<UserPhone> {
                 key = resultSet.getLong("phone_number_id");
             }
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
 
         close(resultSet);
@@ -61,7 +77,7 @@ public final class UserPhoneDao extends AbstractDao<UserPhone> {
                 userPhone = buildUserPhoneFromResultSet(resultSet);
             }
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
 
         close(resultSet);
@@ -82,7 +98,7 @@ public final class UserPhoneDao extends AbstractDao<UserPhone> {
                 usersPhones.add(buildUserPhoneFromResultSet(resultSet));
             }
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
 
         close(resultSet);
@@ -98,7 +114,7 @@ public final class UserPhoneDao extends AbstractDao<UserPhone> {
             preparedStatement.setLong(2, userPhone.getPhoneNumberId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
     }
 
@@ -109,24 +125,8 @@ public final class UserPhoneDao extends AbstractDao<UserPhone> {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoSqlException(e);
+            throw new DaoSqlException("SQL failed.", e);
         }
-    }
-
-    private static UserPhone buildUserPhoneFromResultSet(ResultSet resultSet) {
-        UserPhone userPhone;
-
-        try {
-            userPhone = UserPhone.builder()
-                .phoneNumberId(resultSet.getLong("phone_number_id"))
-                .phoneNumber(resultSet.getString("phone_number"))
-                .userId(resultSet.getLong("user_id"))
-                .build();
-        } catch (SQLException e) {
-            throw new DaoSqlException(e);
-        }
-
-        return userPhone;
     }
 
     public static UserPhoneDao getInstance() {
