@@ -54,12 +54,14 @@ public abstract class BaseController extends HttpServlet {
         try {
             Object o = getResult.get();
             log.info("Object for mapping: " + o);
+
             String json = writeAsString(o);
+
             PrintWriter writer = resp.getWriter();
             writer.write(json);
-            log.info("Data returned to the client: " + json);
             writer.flush();
             writer.close();
+            log.info("Data returned to the client: " + json);
         } catch (IOException e) {
             log.warn("Server failed.", e);
             throw new ServerFailedException("Server failed.", e);
