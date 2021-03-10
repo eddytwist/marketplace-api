@@ -1,4 +1,4 @@
-package by.edik.car_api.web.dto;
+package by.edik.car_api.web.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,6 +13,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class UserInformationDto {
-    private String name;
+public class PictureResponse {
+    private Long pictureId;
+    private String reference;
 }

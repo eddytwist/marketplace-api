@@ -1,27 +1,34 @@
 package by.edik.car_api.web.mapper;
 
 import by.edik.car_api.dao.model.Picture;
-import by.edik.car_api.web.dto.PictureCreatedDto;
-import by.edik.car_api.web.dto.PictureDto;
+import by.edik.car_api.web.dto.request.CreatePictureRequest;
+import by.edik.car_api.web.dto.request.UpdatePictureRequest;
+import by.edik.car_api.web.dto.response.PictureResponse;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor (access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PictureMapper {
 
-    public static PictureDto pictureToPictureDto(Picture picture) {
-        return PictureDto.builder()
+    public static PictureResponse pictureToPictureResponse(Picture picture) {
+        return PictureResponse.builder()
             .pictureId(picture.getPictureId())
             .reference(picture.getReference())
             .build();
     }
 
-    public static Picture pictureCreatedDtoToPicture(PictureCreatedDto pictureCreatedDto) {
+    public static Picture createPictureRequestToPicture(CreatePictureRequest createPictureRequest) {
         return Picture.builder()
-            .adId(pictureCreatedDto.getAdId())
-            .reference(pictureCreatedDto.getReference())
+            .adId(createPictureRequest.getAdId())
+            .reference(createPictureRequest.getReference())
+            .build();
+    }
+
+    public static Picture updatePictureRequestToPicture(UpdatePictureRequest updatePictureRequest) {
+        return Picture.builder()
+            .adId(updatePictureRequest.getAdId())
+            .pictureId(updatePictureRequest.getPictureId())
+            .reference(updatePictureRequest.getReference())
             .build();
     }
 }
-
-

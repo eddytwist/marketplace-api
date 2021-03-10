@@ -1,31 +1,31 @@
 package by.edik.car_api.service;
 
-import by.edik.car_api.web.dto.AdCreatedDto;
-import by.edik.car_api.web.dto.AdDto;
-import by.edik.car_api.web.dto.AdFullInformationDto;
-import by.edik.car_api.web.dto.AdPatchedDto;
-import by.edik.car_api.web.dto.AdShortInformationDto;
-import by.edik.car_api.web.dto.AdUpdatedDto;
+import by.edik.car_api.web.dto.request.CreateAdRequest;
+import by.edik.car_api.web.dto.request.PatchAdRequest;
+import by.edik.car_api.web.dto.request.UpdateAdRequest;
+import by.edik.car_api.web.dto.response.AdFullInformationResponse;
+import by.edik.car_api.web.dto.response.AdResponse;
+import by.edik.car_api.web.dto.response.AdShortInformationResponse;
 
 import java.util.List;
 
 public interface AdService {
 
-    AdDto create(AdCreatedDto adCreatedDto);
+    AdResponse create(CreateAdRequest adCreatedDto);
 
-    AdDto getById(Long id);
+    AdResponse getById(Long id);
 
-    AdFullInformationDto getFullInformationAdById(Long id);
+    AdFullInformationResponse getFullInformationAdById(Long id);
 
-    List<AdDto> getAll();
+    List<AdResponse> getAll();
 
-    List<AdShortInformationDto> getAllShortInformationAds(int pageNumber, int adsPerPage);
+    List<AdShortInformationResponse> getAllShortInformationAds(int pageNumber, int adsPerPage);
 
-    AdDto update(AdUpdatedDto adUpdatedDto);
+    AdResponse update(UpdateAdRequest updateAdRequest);
 
     void delete(Long id);
 
     void deletePictureFromAdById(Long id);
 
-    AdDto updateAllowedFields(AdPatchedDto adPatchedDto);
+    AdResponse updateAllowedFields(PatchAdRequest patchAdRequest);
 }

@@ -3,9 +3,9 @@ package by.edik.car_api.web.controller;
 import by.edik.car_api.dao.model.Condition;
 import by.edik.car_api.service.AdService;
 import by.edik.car_api.service.impl.AdServiceImpl;
-import by.edik.car_api.web.dto.AdCreatedDto;
-import by.edik.car_api.web.dto.AdPatchedDto;
-import by.edik.car_api.web.dto.AdUpdatedDto;
+import by.edik.car_api.web.dto.request.CreateAdRequest;
+import by.edik.car_api.web.dto.request.PatchAdRequest;
+import by.edik.car_api.web.dto.request.UpdateAdRequest;
 import org.apache.log4j.Logger;
 
 import javax.servlet.annotation.WebServlet;
@@ -39,7 +39,7 @@ public class AdsController extends BaseController {
         log.info("Transferred params: " + req.getQueryString());
 
         executeWithResult(resp, () -> {
-            AdCreatedDto adCreatedDto = AdCreatedDto.builder()
+            CreateAdRequest createAdRequest = CreateAdRequest.builder()
                 .userId(Long.parseLong(req.getParameter("userId")))
                 .year(Integer.parseInt(req.getParameter("year")))
                 .brand(req.getParameter("brand"))
@@ -52,7 +52,7 @@ public class AdsController extends BaseController {
                 .pictureReferences(Arrays.asList(req.getParameterValues("pictureReferences")))
                 .build();
 
-            return adService.create(adCreatedDto);
+            return adService.create(createAdRequest);
         });
     }
 
@@ -62,7 +62,7 @@ public class AdsController extends BaseController {
         log.info("Transferred params: " + req.getQueryString());
 
         executeWithResult(resp, () -> {
-            AdUpdatedDto adUpdatedDto = AdUpdatedDto.builder()
+            UpdateAdRequest updateAdRequest = UpdateAdRequest.builder()
                 .adId(Long.parseLong(req.getParameter("adId")))
                 .userId(Long.parseLong(req.getParameter("userId")))
                 .year(Integer.parseInt(req.getParameter("year")))
@@ -77,7 +77,7 @@ public class AdsController extends BaseController {
                 .pictureReferences(Arrays.asList(req.getParameterValues("pictureReferences")))
                 .build();
 
-            return adService.update(adUpdatedDto);
+            return adService.update(updateAdRequest);
         });
     }
 
@@ -87,7 +87,7 @@ public class AdsController extends BaseController {
         log.info("Transferred params: " + req.getQueryString());
 
         executeWithResult(resp, () -> {
-            AdPatchedDto adPatchedDto = AdPatchedDto.builder()
+            PatchAdRequest patchAdRequest = PatchAdRequest.builder()
                 .adId(Long.parseLong(req.getParameter("adId")))
                 .year(Integer.parseInt(req.getParameter("year")))
                 .brand(req.getParameter("brand"))
@@ -97,7 +97,7 @@ public class AdsController extends BaseController {
                 .enginePower(Integer.parseInt(req.getParameter("enginePower")))
                 .build();
 
-            return adService.updateAllowedFields(adPatchedDto);
+            return adService.updateAllowedFields(patchAdRequest);
         });
     }
 }

@@ -5,12 +5,12 @@ import by.edik.car_api.dao.model.Ad;
 import by.edik.car_api.service.AbstractService;
 import by.edik.car_api.service.AdService;
 import by.edik.car_api.service.exception.ServiceFailedException;
-import by.edik.car_api.web.dto.AdCreatedDto;
-import by.edik.car_api.web.dto.AdDto;
-import by.edik.car_api.web.dto.AdFullInformationDto;
-import by.edik.car_api.web.dto.AdPatchedDto;
-import by.edik.car_api.web.dto.AdShortInformationDto;
-import by.edik.car_api.web.dto.AdUpdatedDto;
+import by.edik.car_api.web.dto.request.CreateAdRequest;
+import by.edik.car_api.web.dto.request.PatchAdRequest;
+import by.edik.car_api.web.dto.request.UpdateAdRequest;
+import by.edik.car_api.web.dto.response.AdFullInformationResponse;
+import by.edik.car_api.web.dto.response.AdResponse;
+import by.edik.car_api.web.dto.response.AdShortInformationResponse;
 import by.edik.car_api.web.mapper.AdMapper;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -29,75 +29,75 @@ public final class AdServiceImpl extends AbstractService implements AdService {
     private final AdDao adDao = AdDao.getInstance();
 
     @Override
-    public AdDto create(AdCreatedDto adCreatedDto) {
-        Ad adToCreate = AdMapper.createdAdDtoToAd(adCreatedDto);
-        Ad adToReturn;
+    public AdResponse create(CreateAdRequest adCreatedDto) {
+        Ad adToCreate = AdMapper.createAdRequestToAd(adCreatedDto);
+        Ad createdAd;
 
         try {
             startTransaction();
-            adToReturn = adDao.create(adToCreate);
+            createdAd = adDao.create(adToCreate);
             commit();
         } catch (SQLException e) {
             rollback();
             throw new ServiceFailedException("Creating failed: " + adCreatedDto, e);
         }
 
-        return AdMapper.adToAdDto(adToReturn);
+        return AdMapper.adToAdResponse(createdAd);
     }
 
     @Override
-    public AdDto getById(Long id) {
-        Ad adToReturn;
+    public AdResponse getById(Long id) {
+        Ad ad;
 
         try {
             startTransaction();
-            adToReturn = adDao.getById(id);
+            ad = adDao.getById(id);
             commit();
         } catch (SQLException e) {
             rollback();
             throw new ServiceFailedException("Can't find Ad with id: " + id, e);
         }
 
-        return AdMapper.adToAdDto(adToReturn);
+        return AdMapper.adToAdResponse(ad);
     }
 
     @Override
-    public AdFullInformationDto getFullInformationAdById(Long id) {
-        AdFullInformationDto adFullInformationDto;
+    public AdFullInformationResponse getFullInformationAdById(Long id) {
+        AdFullInformationResponse adFullInformationResponse;
 
         try {
             startTransaction();
-            adFullInformationDto = adDao.getFullInformationAdById(id);
+            adFullInformationResponse = adDao.getFullInformationAdById(id);
             commit();
         } catch (SQLException e) {
             rollback();
             throw new ServiceFailedException("Can't find Ad with id: " + id, e);
         }
 
-        return adFullInformationDto;
+        return adFullInformationResponse;
     }
 
     @Override
-    public List<AdDto> getAll() {
-        List<Ad> adsToReturn;
+    public List<AdResponse> getAll() {
+        List<Ad> ads;
 
         try {
             startTransaction();
-            adsToReturn = adDao.getAll();
+            ads = adDao.getAll();
             commit();
         } catch (SQLException e) {
             rollback();
             throw new ServiceFailedException("Can't find Ads.", e);
         }
 
-        return adsToReturn.stream()
-            .map(AdMapper::adToAdDto)
+        return ads.stream()
+            .map(AdMapper::adToAdResponse)
             .collect(Collectors.toList());
     }
 
     @Override
-    public List<AdShortInformationDto> getAllShortInformationAds(int pageNumber, int adsPerPage) {
-        List<AdShortInformationDto> paginatedAds;
+    public List<AdShortInformationResponse> getAllShortInformationAds(int pageNumber, int adsPerPage) {
+        List<AdShortInformationResponse> paginatedAds;
 
         try {
             startTransaction();
@@ -112,24 +112,23 @@ public final class AdServiceImpl extends AbstractService implements AdService {
     }
 
     @Override
-    public AdDto update(AdUpdatedDto adUpdatedDto) {
-        Ad adToUpdate = AdMapper.updatedAdDtoToAd(adUpdatedDto);
+    public AdResponse update(UpdateAdRequest updateAdRequest) {
+        Ad ad = AdMapper.updateAdRequestToAd(updateAdRequest);
 
         try {
             startTransaction();
-            adDao.update(adToUpdate);
+            adDao.update(ad);
             commit();
         } catch (SQLException e) {
             rollback();
-            throw new ServiceFailedException("Can't update Ad: " + adUpdatedDto, e);
+            throw new ServiceFailedException("Can't update Ad: " + updateAdRequest, e);
         }
 
-        return getById(adToUpdate.getAdId());
+        return getById(ad.getAdId());
     }
 
     @Override
     public void delete(Long id) {
-
         try {
             startTransaction();
             adDao.delete(id);
@@ -142,7 +141,6 @@ public final class AdServiceImpl extends AbstractService implements AdService {
 
     @Override
     public void deletePictureFromAdById(Long id) {
-
         try {
             startTransaction();
 
@@ -157,19 +155,19 @@ public final class AdServiceImpl extends AbstractService implements AdService {
     }
 
     @Override
-    public AdDto updateAllowedFields(AdPatchedDto adPatchedDto) {
-        Ad adToUpdate = AdMapper.patchedAdDtoToAd(adPatchedDto);
+    public AdResponse updateAllowedFields(PatchAdRequest patchAdRequest) {
+        Ad ad = AdMapper.patchAdRequestToAd(patchAdRequest);
 
         try {
             startTransaction();
-            adDao.updateAllowedFields(adToUpdate);
+            adDao.updateAllowedFields(ad);
             commit();
         } catch (SQLException e) {
             rollback();
-            throw new ServiceFailedException("Can't update Ad: " + adPatchedDto, e);
+            throw new ServiceFailedException("Can't update Ad: " + patchAdRequest, e);
         }
 
-        return getById(adPatchedDto.getAdId());
+        return getById(patchAdRequest.getAdId());
     }
 
     public static AdServiceImpl getInstance() {

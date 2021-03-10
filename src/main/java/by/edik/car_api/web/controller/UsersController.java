@@ -2,8 +2,8 @@ package by.edik.car_api.web.controller;
 
 import by.edik.car_api.service.UserService;
 import by.edik.car_api.service.impl.UserServiceImpl;
-import by.edik.car_api.web.dto.UserCreatedDto;
-import by.edik.car_api.web.dto.UserUpdatedDto;
+import by.edik.car_api.web.dto.request.CreateUserRequest;
+import by.edik.car_api.web.dto.request.UpdateUserRequest;
 import org.apache.log4j.Logger;
 
 import javax.servlet.annotation.WebServlet;
@@ -29,13 +29,13 @@ public class UsersController extends BaseController {
         log.info("Transferred params: " + req.getQueryString());
 
         executeWithResult(resp, () -> {
-            UserCreatedDto userCreatedDto = UserCreatedDto.builder()
+            CreateUserRequest createUserRequest = CreateUserRequest.builder()
                 .username(req.getParameter("username"))
                 .password(req.getParameter("password"))
                 .email(req.getParameter("email"))
                 .build();
 
-            return userService.create(userCreatedDto);
+            return userService.create(createUserRequest);
         });
     }
 
@@ -45,14 +45,14 @@ public class UsersController extends BaseController {
         log.info("Transferred params: " + req.getQueryString());
 
         executeWithResult(resp, () -> {
-            UserUpdatedDto userUpdatedDto = UserUpdatedDto.builder()
+            UpdateUserRequest updateUserRequest = UpdateUserRequest.builder()
                 .userId(Long.parseLong(req.getParameter("userId")))
                 .username(req.getParameter("username"))
                 .password(req.getParameter("password"))
                 .email(req.getParameter("email"))
                 .build();
 
-            return userService.update(userUpdatedDto);
+            return userService.update(updateUserRequest);
         });
     }
 }

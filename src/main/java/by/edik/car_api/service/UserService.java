@@ -1,20 +1,20 @@
 package by.edik.car_api.service;
 
-import by.edik.car_api.web.dto.UserCreatedDto;
-import by.edik.car_api.web.dto.UserDto;
-import by.edik.car_api.web.dto.UserUpdatedDto;
+import by.edik.car_api.web.dto.request.CreateUserRequest;
+import by.edik.car_api.web.dto.request.UpdateUserRequest;
+import by.edik.car_api.web.dto.response.UserResponse;
 
 import java.util.List;
 
 public interface UserService {
 
-    UserDto create(UserCreatedDto userCreatedDto);
+    UserResponse create(CreateUserRequest createUserRequest);
 
-    UserDto getById(Long id);
+    UserResponse getById(Long id);
 
-    List<UserDto> getAll();
+    List<UserResponse> getAll();
 
-    UserDto update(UserUpdatedDto userUpdatedDto);
+    UserResponse update(UpdateUserRequest updateUserRequest);
 
     void delete(Long id);
 }

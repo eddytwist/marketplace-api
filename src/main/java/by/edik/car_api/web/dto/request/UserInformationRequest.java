@@ -1,4 +1,4 @@
-package by.edik.car_api.web.dto;
+package by.edik.car_api.web.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +13,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class UserPhoneDto {
-    private Long phoneNumberId;
-    private String phoneNumber;
+public class UserInformationRequest {
+    private Long userId;
+    private String name;
 }

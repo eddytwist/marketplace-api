@@ -3,8 +3,8 @@ package by.edik.car_api.dao;
 import by.edik.car_api.dao.exception.DaoSqlException;
 import by.edik.car_api.dao.model.Ad;
 import by.edik.car_api.dao.model.Condition;
-import by.edik.car_api.web.dto.AdFullInformationDto;
-import by.edik.car_api.web.dto.AdShortInformationDto;
+import by.edik.car_api.web.dto.response.AdFullInformationResponse;
+import by.edik.car_api.web.dto.response.AdShortInformationResponse;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -181,9 +181,9 @@ public final class AdDao extends AbstractDao<Ad> {
         }
     }
 
-    public List<AdShortInformationDto> getAllShortInformationAds(int pageNumber, int limit) {
+    public List<AdShortInformationResponse> getAllShortInformationAds(int pageNumber, int limit) {
         ResultSet resultSet;
-        List<AdShortInformationDto> ads = new ArrayList<>();
+        List<AdShortInformationResponse> ads = new ArrayList<>();
 
         try {
             PreparedStatement preparedStatement = prepareStatement(GET_ALL_SHORT_INFO_QUERY);
@@ -192,7 +192,7 @@ public final class AdDao extends AbstractDao<Ad> {
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                ads.add(AdShortInformationDto.builder()
+                ads.add(AdShortInformationResponse.builder()
                     .adId(resultSet.getLong("ad_id"))
                     .year(resultSet.getInt("year"))
                     .brand(resultSet.getString("brand"))
@@ -213,9 +213,9 @@ public final class AdDao extends AbstractDao<Ad> {
         return ads;
     }
 
-    public AdFullInformationDto getFullInformationAdById(long id) {
+    public AdFullInformationResponse getFullInformationAdById(long id) {
         ResultSet resultSet;
-        AdFullInformationDto adFullInformationDto = null;
+        AdFullInformationResponse adFullInformationResponse = null;
 
         try {
             PreparedStatement preparedStatement = prepareStatement(GET_BY_ID_FULL_INFO_QUERY);
@@ -225,7 +225,7 @@ public final class AdDao extends AbstractDao<Ad> {
 
             if (resultSet.next()) {
                 phones.add(resultSet.getString("phone_number"));
-                adFullInformationDto = AdFullInformationDto.builder()
+                adFullInformationResponse = AdFullInformationResponse.builder()
                     .adId(resultSet.getLong("ad_id"))
                     .year(resultSet.getInt("year"))
                     .brand(resultSet.getString("brand"))
@@ -244,9 +244,9 @@ public final class AdDao extends AbstractDao<Ad> {
                 phones.add(resultSet.getString("phone_number"));
             }
 
-            if (adFullInformationDto != null) {
-                adFullInformationDto.setOwnerPhoneNumbers(phones);
-                adFullInformationDto.setPictureReferences(getAllPicturesByAdId(adFullInformationDto.getAdId()));
+            if (adFullInformationResponse != null) {
+                adFullInformationResponse.setOwnerPhoneNumbers(phones);
+                adFullInformationResponse.setPictureReferences(getAllPicturesByAdId(adFullInformationResponse.getAdId()));
             } else {
                 throw new NullPointerException("Ad doesn't exist.");
             }
@@ -256,7 +256,7 @@ public final class AdDao extends AbstractDao<Ad> {
 
         close(resultSet);
 
-        return adFullInformationDto;
+        return adFullInformationResponse;
     }
 
     public List<String> getAllPicturesByAdId(Long id) {
