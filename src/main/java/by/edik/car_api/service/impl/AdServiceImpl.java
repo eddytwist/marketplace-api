@@ -30,39 +30,35 @@ public final class AdServiceImpl extends AbstractService implements AdService {
 
     @Override
     public AdDto create(AdCreatedDto adCreatedDto) {
-        AdDto adDto;
+        Ad adToCreate = AdMapper.createdAdDtoToAd(adCreatedDto);
+        Ad adToReturn;
 
         try {
             startTransaction();
-
-            Ad ad = AdMapper.createdAdDtoToAd(adCreatedDto);
-            adDto = AdMapper.adToAdDto(adDao.create(ad));
-
+            adToReturn = adDao.create(adToCreate);
             commit();
         } catch (SQLException e) {
             rollback();
             throw new ServiceFailedException("Creating failed: " + adCreatedDto, e);
         }
 
-        return adDto;
+        return AdMapper.adToAdDto(adToReturn);
     }
 
     @Override
     public AdDto getById(Long id) {
-        AdDto adDto;
+        Ad adToReturn;
 
         try {
             startTransaction();
-
-            adDto = AdMapper.adToAdDto(adDao.getById(id));
-
+            adToReturn = adDao.getById(id);
             commit();
         } catch (SQLException e) {
             rollback();
             throw new ServiceFailedException("Can't find Ad with id: " + id, e);
         }
 
-        return adDto;
+        return AdMapper.adToAdDto(adToReturn);
     }
 
     @Override
@@ -71,9 +67,7 @@ public final class AdServiceImpl extends AbstractService implements AdService {
 
         try {
             startTransaction();
-
             adFullInformationDto = adDao.getFullInformationAdById(id);
-
             commit();
         } catch (SQLException e) {
             rollback();
@@ -85,22 +79,20 @@ public final class AdServiceImpl extends AbstractService implements AdService {
 
     @Override
     public List<AdDto> getAll() {
-        List<AdDto> ads;
+        List<Ad> adsToReturn;
 
         try {
             startTransaction();
-
-            ads = adDao.getAll().stream()
-                .map(AdMapper::adToAdDto)
-                .collect(Collectors.toList());
-
+            adsToReturn = adDao.getAll();
             commit();
         } catch (SQLException e) {
             rollback();
             throw new ServiceFailedException("Can't find Ads.", e);
         }
 
-        return ads;
+        return adsToReturn.stream()
+            .map(AdMapper::adToAdDto)
+            .collect(Collectors.toList());
     }
 
     @Override
@@ -109,9 +101,7 @@ public final class AdServiceImpl extends AbstractService implements AdService {
 
         try {
             startTransaction();
-
             paginatedAds = adDao.getAllShortInformationAds(pageNumber, adsPerPage);
-
             commit();
         } catch (SQLException e) {
             rollback();
@@ -123,21 +113,18 @@ public final class AdServiceImpl extends AbstractService implements AdService {
 
     @Override
     public AdDto update(AdUpdatedDto adUpdatedDto) {
-        AdDto adDto;
+        Ad adToUpdate = AdMapper.updatedAdDtoToAd(adUpdatedDto);
 
         try {
             startTransaction();
-
-            adDao.update(AdMapper.updatedAdDtoToAd(adUpdatedDto));
-            adDto = getById(adUpdatedDto.getAdId());
-
+            adDao.update(adToUpdate);
             commit();
         } catch (SQLException e) {
             rollback();
             throw new ServiceFailedException("Can't update Ad: " + adUpdatedDto, e);
         }
 
-        return adDto;
+        return getById(adToUpdate.getAdId());
     }
 
     @Override
@@ -145,9 +132,7 @@ public final class AdServiceImpl extends AbstractService implements AdService {
 
         try {
             startTransaction();
-
             adDao.delete(id);
-
             commit();
         } catch (SQLException e) {
             rollback();
@@ -173,21 +158,18 @@ public final class AdServiceImpl extends AbstractService implements AdService {
 
     @Override
     public AdDto updateAllowedFields(AdPatchedDto adPatchedDto) {
-        AdDto adDto;
+        Ad adToUpdate = AdMapper.patchedAdDtoToAd(adPatchedDto);
 
         try {
             startTransaction();
-
-            adDao.updateAllowedFields(AdMapper.patchedAdDtoToAd(adPatchedDto));
-            adDto = getById(adPatchedDto.getAdId());
-
+            adDao.updateAllowedFields(adToUpdate);
             commit();
         } catch (SQLException e) {
             rollback();
             throw new ServiceFailedException("Can't update Ad: " + adPatchedDto, e);
         }
 
-        return adDto;
+        return getById(adPatchedDto.getAdId());
     }
 
     public static AdServiceImpl getInstance() {
