@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -18,6 +19,7 @@ import static by.edik.car_api.config.DateConstants.UTC_TIME_ZONE;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class AdDto {
     private Long adId;
     private Integer year;
