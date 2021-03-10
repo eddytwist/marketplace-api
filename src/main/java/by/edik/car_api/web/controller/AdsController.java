@@ -1,6 +1,7 @@
 package by.edik.car_api.web.controller;
 
 import by.edik.car_api.dao.model.Condition;
+import by.edik.car_api.service.AdService;
 import by.edik.car_api.service.impl.AdServiceImpl;
 import by.edik.car_api.web.dto.AdCreatedDto;
 import by.edik.car_api.web.dto.AdPatchedDto;
@@ -16,7 +17,7 @@ import java.util.Arrays;
 public class AdsController extends BaseController {
 
     public static final int DEFAULT_ADS_PER_PAGE = 10;
-    private final AdServiceImpl adService = AdServiceImpl.getInstance();
+    private final AdService adService = AdServiceImpl.getInstance();
     private final Logger log = Logger.getLogger(AdsController.class);
 
     @Override

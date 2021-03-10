@@ -37,6 +37,7 @@ public final class AdServiceImpl implements AdService {
         return AdMapper.adToAdDto(adDao.getById(id));
     }
 
+    @Override
     public AdFullInformationDto getFullInformationAdById(Long id) {
         return adDao.getFullInformationAdById(id);
     }
@@ -48,6 +49,7 @@ public final class AdServiceImpl implements AdService {
             .collect(Collectors.toList());
     }
 
+    @Override
     public List<AdShortInformationDto> getAllShortInformationAds(int pageNumber, int adsPerPage) {
         return adDao.getAllShortInformationAds(pageNumber, adsPerPage);
     }
@@ -64,12 +66,14 @@ public final class AdServiceImpl implements AdService {
         adDao.delete(id);
     }
 
+    @Override
     public void deletePictureFromAdById(Long id) {
         adDao.updateAdEditingTimeByPictureId(id);
 
         pictureService.delete(id);
     }
 
+    @Override
     public AdDto updateAllowedFields(AdPatchedDto adPatchedDto) {
         adDao.updateAllowedFields(AdMapper.patchedAdDtoToAd(adPatchedDto));
 

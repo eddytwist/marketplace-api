@@ -1,5 +1,6 @@
 package by.edik.car_api.web.controller;
 
+import by.edik.car_api.service.UserService;
 import by.edik.car_api.service.impl.UserServiceImpl;
 import by.edik.car_api.web.dto.UserCreatedDto;
 import by.edik.car_api.web.dto.UserUpdatedDto;
@@ -12,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/api/v1/users")
 public class UsersController extends BaseController {
 
-    private final UserServiceImpl userService = UserServiceImpl.getInstance();
+    private final UserService userService = UserServiceImpl.getInstance();
     private final Logger log = Logger.getLogger(UsersController.class);
 
     @Override

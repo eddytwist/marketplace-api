@@ -39,6 +39,7 @@ public final class UserServiceImpl implements UserService {
             .collect(Collectors.toList());
     }
 
+    @Override
     public UserDto update(UserUpdatedDto userUpdatedDto) {
         userDao.update(UserMapper.updatedUserDtoToUser(userUpdatedDto));
 
