@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 @Setter
 @Getter
-@Builder(toBuilder = true)
+@Builder
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor

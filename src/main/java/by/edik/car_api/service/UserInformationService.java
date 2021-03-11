@@ -1,19 +1,19 @@
 package by.edik.car_api.service;
 
-import by.edik.car_api.dao.model.UserInformation;
-import by.edik.car_api.web.dto.UserInformationDto;
+import by.edik.car_api.web.dto.request.UserInformationRequest;
+import by.edik.car_api.web.dto.response.UserInformationResponse;
 
 import java.util.List;
 
 public interface UserInformationService {
 
-    UserInformationDto create(UserInformation userInformation);
+    UserInformationResponse create(UserInformationRequest userInformationRequest);
 
-    UserInformationDto getById(Long id);
+    UserInformationResponse getById(Long id);
 
-    List<UserInformationDto> getAll();
+    List<UserInformationResponse> getAll();
 
-    void update(UserInformation userInformation);
+    void update(UserInformationRequest userInformationRequest);
 
     void delete(Long id);
 }

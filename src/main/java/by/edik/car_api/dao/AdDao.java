@@ -1,10 +1,11 @@
 package by.edik.car_api.dao;
 
 import by.edik.car_api.dao.exception.DaoSqlException;
+import by.edik.car_api.dao.exception.ObjectNotFoundException;
 import by.edik.car_api.dao.model.Ad;
 import by.edik.car_api.dao.model.Condition;
-import by.edik.car_api.web.dto.AdFullInformationDto;
-import by.edik.car_api.web.dto.AdShortInformationDto;
+import by.edik.car_api.web.dto.response.AdFullInformationResponse;
+import by.edik.car_api.web.dto.response.AdShortInformationResponse;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -76,30 +77,6 @@ public final class AdDao extends AbstractDao<Ad> {
         "= (?, ?, ?, ?, ?, ?, ?) " +
         "WHERE ad_id = ?";
 
-    private static Ad buildAdFromResultSet(ResultSet resultSet) {
-        Ad ad;
-
-        try {
-            ad = Ad.builder()
-                .adId(resultSet.getLong("ad_id"))
-                .userId(resultSet.getLong("user_id"))
-                .year(resultSet.getInt("year"))
-                .brand(resultSet.getString("brand"))
-                .model(resultSet.getString("model"))
-                .engineVolume(resultSet.getInt("engine_volume"))
-                .condition(Condition.valueOf(resultSet.getString("condition").toUpperCase()))
-                .mileage(resultSet.getLong("mileage"))
-                .enginePower(resultSet.getInt("engine_power"))
-                .creationTime(resultSet.getTimestamp("creation_time").toLocalDateTime())
-                .editingTime(resultSet.getTimestamp("editing_time").toLocalDateTime())
-                .build();
-        } catch (SQLException e) {
-            throw new DaoSqlException("Troubles with getting params from ResultSet.", e);
-        }
-
-        return ad;
-    }
-
     @Override
     public Ad create(Ad ad) {
         long key = -1L;
@@ -135,7 +112,7 @@ public final class AdDao extends AbstractDao<Ad> {
     @Override
     public Ad getById(Long id) {
         ResultSet resultSet;
-        Ad ad = null;
+        Ad ad;
 
         try {
             PreparedStatement preparedStatement = prepareStatement(GET_BY_ID_QUERY);
@@ -144,6 +121,8 @@ public final class AdDao extends AbstractDao<Ad> {
 
             if (resultSet.next()) {
                 ad = buildAdFromResultSet(resultSet);
+            } else {
+                throw new ObjectNotFoundException("Ad", id);
             }
         } catch (SQLException e) {
             throw new DaoSqlException("SQL failed.", e);
@@ -205,9 +184,9 @@ public final class AdDao extends AbstractDao<Ad> {
         }
     }
 
-    public List<AdShortInformationDto> getAllShortInformationAds(int pageNumber, int limit) {
+    public List<AdShortInformationResponse> getAllShortInformationAds(int pageNumber, int limit) {
         ResultSet resultSet;
-        List<AdShortInformationDto> ads = new ArrayList<>();
+        List<AdShortInformationResponse> ads = new ArrayList<>();
 
         try {
             PreparedStatement preparedStatement = prepareStatement(GET_ALL_SHORT_INFO_QUERY);
@@ -216,7 +195,7 @@ public final class AdDao extends AbstractDao<Ad> {
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                ads.add(AdShortInformationDto.builder()
+                ads.add(AdShortInformationResponse.builder()
                     .adId(resultSet.getLong("ad_id"))
                     .year(resultSet.getInt("year"))
                     .brand(resultSet.getString("brand"))
@@ -237,9 +216,9 @@ public final class AdDao extends AbstractDao<Ad> {
         return ads;
     }
 
-    public AdFullInformationDto getFullInformationAdById(long id) {
+    public AdFullInformationResponse getFullInformationAdById(long id) {
         ResultSet resultSet;
-        AdFullInformationDto adFullInformationDto = null;
+        AdFullInformationResponse adFullInformationResponse;
 
         try {
             PreparedStatement preparedStatement = prepareStatement(GET_BY_ID_FULL_INFO_QUERY);
@@ -249,7 +228,7 @@ public final class AdDao extends AbstractDao<Ad> {
 
             if (resultSet.next()) {
                 phones.add(resultSet.getString("phone_number"));
-                adFullInformationDto = AdFullInformationDto.builder()
+                adFullInformationResponse = AdFullInformationResponse.builder()
                     .adId(resultSet.getLong("ad_id"))
                     .year(resultSet.getInt("year"))
                     .brand(resultSet.getString("brand"))
@@ -262,17 +241,17 @@ public final class AdDao extends AbstractDao<Ad> {
                     .creationTime(resultSet.getTimestamp("creation_time").toLocalDateTime())
                     .editingTime(resultSet.getTimestamp("editing_time").toLocalDateTime())
                     .build();
+            } else {
+                throw new ObjectNotFoundException("Ad", id);
             }
 
             while (resultSet.next()) {
                 phones.add(resultSet.getString("phone_number"));
             }
 
-            if (adFullInformationDto != null) {
-                adFullInformationDto.setOwnerPhoneNumbers(phones);
-                adFullInformationDto.setPictureReferences(getAllPicturesByAdId(adFullInformationDto.getAdId()));
-            } else {
-                throw new NullPointerException("Ad doesn't exist.");
+            if (adFullInformationResponse != null) {
+                adFullInformationResponse.setOwnerPhoneNumbers(phones);
+                adFullInformationResponse.setPictureReferences(getAllPicturesByAdId(adFullInformationResponse.getAdId()));
             }
         } catch (SQLException e) {
             throw new DaoSqlException("Troubles with getting params from ResultSet.", e);
@@ -280,7 +259,7 @@ public final class AdDao extends AbstractDao<Ad> {
 
         close(resultSet);
 
-        return adFullInformationDto;
+        return adFullInformationResponse;
     }
 
     public List<String> getAllPicturesByAdId(Long id) {
@@ -330,6 +309,30 @@ public final class AdDao extends AbstractDao<Ad> {
         } catch (SQLException e) {
             throw new DaoSqlException("SQL failed.", e);
         }
+    }
+
+    private static Ad buildAdFromResultSet(ResultSet resultSet) {
+        Ad ad;
+
+        try {
+            ad = Ad.builder()
+                .adId(resultSet.getLong("ad_id"))
+                .userId(resultSet.getLong("user_id"))
+                .year(resultSet.getInt("year"))
+                .brand(resultSet.getString("brand"))
+                .model(resultSet.getString("model"))
+                .engineVolume(resultSet.getInt("engine_volume"))
+                .condition(Condition.valueOf(resultSet.getString("condition").toUpperCase()))
+                .mileage(resultSet.getLong("mileage"))
+                .enginePower(resultSet.getInt("engine_power"))
+                .creationTime(resultSet.getTimestamp("creation_time").toLocalDateTime())
+                .editingTime(resultSet.getTimestamp("editing_time").toLocalDateTime())
+                .build();
+        } catch (SQLException e) {
+            throw new DaoSqlException("Troubles with getting params from ResultSet.", e);
+        }
+
+        return ad;
     }
 
     public static AdDao getInstance() {

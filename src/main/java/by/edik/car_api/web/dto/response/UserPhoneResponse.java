@@ -1,18 +1,19 @@
-package by.edik.car_api.web.dto;
+package by.edik.car_api.web.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserCreatedDto {
-    private String username;
-    private String password;
-    private String email;
+@ToString
+public class UserPhoneResponse {
+    private Long phoneNumberId;
+    private String phoneNumber;
 }

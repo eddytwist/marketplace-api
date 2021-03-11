@@ -1,17 +1,20 @@
-package by.edik.car_api.web.controller.error;
+package by.edik.car_api.web.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApiErrorResponse {
-    private String errorMessage;
-    private String errorExceptionType;
+@ToString
+public class UserResponse {
+    private Long userId;
+    private String username;
+    private String email;
 }

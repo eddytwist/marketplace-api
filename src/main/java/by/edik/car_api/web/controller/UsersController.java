@@ -1,8 +1,9 @@
 package by.edik.car_api.web.controller;
 
+import by.edik.car_api.service.UserService;
 import by.edik.car_api.service.impl.UserServiceImpl;
-import by.edik.car_api.web.dto.UserCreatedDto;
-import by.edik.car_api.web.dto.UserUpdatedDto;
+import by.edik.car_api.web.dto.request.CreateUserRequest;
+import by.edik.car_api.web.dto.request.UpdateUserRequest;
 import org.apache.log4j.Logger;
 
 import javax.servlet.annotation.WebServlet;
@@ -12,14 +13,14 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/api/v1/users")
 public class UsersController extends BaseController {
 
-    private final UserServiceImpl userService = UserServiceImpl.getInstance();
+    private final UserService userService = UserServiceImpl.getInstance();
     private final Logger log = Logger.getLogger(UsersController.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         log.info("GET method running.");
 
-        executeWithResult(resp, userService::getAll);
+        executeWithStatusOk(resp, userService::getAll);
     }
 
     @Override
@@ -27,15 +28,7 @@ public class UsersController extends BaseController {
         log.info("POST method running.");
         log.info("Transferred params: " + req.getQueryString());
 
-        executeWithResult(resp, () -> {
-            UserCreatedDto userCreatedDto = UserCreatedDto.builder()
-                .username(req.getParameter("username"))
-                .password(req.getParameter("password"))
-                .email(req.getParameter("email"))
-                .build();
-
-            return userService.create(userCreatedDto);
-        });
+        executeWithStatusCreated(resp, () -> userService.create(getRequestObject(req, CreateUserRequest.class)));
     }
 
     @Override
@@ -43,15 +36,6 @@ public class UsersController extends BaseController {
         log.info("PUT method running.");
         log.info("Transferred params: " + req.getQueryString());
 
-        executeWithResult(resp, () -> {
-            UserUpdatedDto userUpdatedDto = UserUpdatedDto.builder()
-                .userId(Long.parseLong(req.getParameter("userId")))
-                .username(req.getParameter("username"))
-                .password(req.getParameter("password"))
-                .email(req.getParameter("email"))
-                .build();
-
-            return userService.update(userUpdatedDto);
-        });
+        executeWithStatusCreated(resp, () -> userService.update(getRequestObject(req, UpdateUserRequest.class)));
     }
 }

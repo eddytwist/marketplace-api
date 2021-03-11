@@ -1,4 +1,4 @@
-package by.edik.car_api.web.dto;
+package by.edik.car_api.web.dto.response;
 
 import by.edik.car_api.dao.model.Condition;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,7 +20,8 @@ import static by.edik.car_api.config.DateConstants.UTC_TIME_ZONE;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdFullInformationDto {
+@ToString
+public class AdFullInformationResponse {
     private Long adId;
     private Integer year;
     private String brand;

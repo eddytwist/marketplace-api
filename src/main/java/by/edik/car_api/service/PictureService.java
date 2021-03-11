@@ -1,20 +1,20 @@
 package by.edik.car_api.service;
 
-import by.edik.car_api.dao.model.Picture;
-import by.edik.car_api.web.dto.PictureCreatedDto;
-import by.edik.car_api.web.dto.PictureDto;
+import by.edik.car_api.web.dto.request.CreatePictureRequest;
+import by.edik.car_api.web.dto.request.UpdatePictureRequest;
+import by.edik.car_api.web.dto.response.PictureResponse;
 
 import java.util.List;
 
 public interface PictureService {
 
-    PictureDto create(PictureCreatedDto pictureCreatedDto);
+    PictureResponse create(CreatePictureRequest createPictureRequest);
 
-    PictureDto getById(Long id);
+    PictureResponse getById(Long id);
 
-    List<PictureDto> getAll();
+    List<PictureResponse> getAll();
 
-    void update(Picture picture);
+    void update(UpdatePictureRequest updatePictureRequest);
 
     void delete(Long id);
 }

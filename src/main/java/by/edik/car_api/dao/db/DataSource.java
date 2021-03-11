@@ -2,10 +2,13 @@ package by.edik.car_api.dao.db;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DataSource {
 
     private static final HikariConfig CONFIG = new HikariConfig("/db/datasource.properties");
@@ -13,9 +16,6 @@ public final class DataSource {
 
     static {
         DATA_SOURCE = new HikariDataSource(CONFIG);
-    }
-
-    private DataSource() {
     }
 
     public static Connection getConnection() throws SQLException {

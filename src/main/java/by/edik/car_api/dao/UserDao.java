@@ -1,6 +1,7 @@
 package by.edik.car_api.dao;
 
 import by.edik.car_api.dao.exception.DaoSqlException;
+import by.edik.car_api.dao.exception.ObjectNotFoundException;
 import by.edik.car_api.dao.model.User;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -22,23 +23,6 @@ public final class UserDao extends AbstractDao<User> {
     private static final String CREATE_QUERY = "INSERT INTO users VALUES (DEFAULT, ?, ?, ?)";
     private static final String UPDATE_QUERY = "UPDATE users SET (username, email, password) = (?, ?, ?) WHERE user_id = ?";
     private static final String DELETE_QUERY = "DELETE FROM users WHERE user_id = ?";
-
-    private static User buildUserFromResultSet(ResultSet resultSet) {
-        User user;
-
-        try {
-            user = User.builder()
-                .userId(resultSet.getLong("user_id"))
-                .username(resultSet.getString("username"))
-                .email(resultSet.getString("email"))
-                .password(resultSet.getString("password"))
-                .build();
-        } catch (SQLException e) {
-            throw new DaoSqlException("Troubles with getting params from ResultSet.", e);
-        }
-
-        return user;
-    }
 
     @Override
     public User create(User user) {
@@ -63,28 +47,6 @@ public final class UserDao extends AbstractDao<User> {
         close(resultSet);
 
         return user.setUserId(key);
-    }
-
-    @Override
-    public User getById(Long id) {
-        ResultSet resultSet;
-        User user = null;
-
-        try {
-            PreparedStatement preparedStatement = prepareStatement(GET_BY_ID_QUERY);
-            preparedStatement.setLong(1, id);
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                user = buildUserFromResultSet(resultSet);
-            }
-        } catch (SQLException e) {
-            throw new DaoSqlException("SQL failed.", e);
-        }
-
-        close(resultSet);
-
-        return user;
     }
 
     @Override
@@ -131,6 +93,47 @@ public final class UserDao extends AbstractDao<User> {
         } catch (SQLException e) {
             throw new DaoSqlException("SQL failed.", e);
         }
+    }
+
+    @Override
+    public User getById(Long id) {
+        ResultSet resultSet;
+        User user;
+
+        try {
+            PreparedStatement preparedStatement = prepareStatement(GET_BY_ID_QUERY);
+            preparedStatement.setLong(1, id);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                user = buildUserFromResultSet(resultSet);
+            } else {
+                throw new ObjectNotFoundException("User", id);
+            }
+        } catch (SQLException e) {
+            throw new DaoSqlException("SQL failed.", e);
+        }
+
+        close(resultSet);
+
+        return user;
+    }
+
+    private static User buildUserFromResultSet(ResultSet resultSet) {
+        User user;
+
+        try {
+            user = User.builder()
+                .userId(resultSet.getLong("user_id"))
+                .username(resultSet.getString("username"))
+                .email(resultSet.getString("email"))
+                .password(resultSet.getString("password"))
+                .build();
+        } catch (SQLException e) {
+            throw new DaoSqlException("Troubles with getting params from ResultSet.", e);
+        }
+
+        return user;
     }
 
     public static UserDao getInstance() {

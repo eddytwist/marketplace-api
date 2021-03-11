@@ -1,5 +1,7 @@
 package by.edik.car_api.web.controller;
 
+import by.edik.car_api.service.AdService;
+import by.edik.car_api.service.PictureService;
 import by.edik.car_api.service.impl.AdServiceImpl;
 import by.edik.car_api.service.impl.PictureServiceImpl;
 import by.edik.car_api.web.utils.UriUtils;
@@ -12,15 +14,15 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/api/v1/ads/picture/*")
 public class AdPicturesController extends BaseController {
 
-    private final PictureServiceImpl pictureService = PictureServiceImpl.getInstance();
-    private final AdServiceImpl adService = AdServiceImpl.getInstance();
+    private final PictureService pictureService = PictureServiceImpl.getInstance();
+    private final AdService adService = AdServiceImpl.getInstance();
     private final Logger log = Logger.getLogger(AdPicturesController.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         log.info("GET method running.");
 
-        executeWithResult(resp, () -> {
+        executeWithStatusOk(resp, () -> {
             Long pictureId = UriUtils.getId(req.getPathInfo());
 
             return pictureService.getById(pictureId);

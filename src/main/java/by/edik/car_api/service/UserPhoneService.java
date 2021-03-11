@@ -1,19 +1,20 @@
 package by.edik.car_api.service;
 
-import by.edik.car_api.dao.model.UserPhone;
-import by.edik.car_api.web.dto.UserPhoneDto;
+import by.edik.car_api.web.dto.request.CreateUserPhoneRequest;
+import by.edik.car_api.web.dto.request.UpdateUserPhoneRequest;
+import by.edik.car_api.web.dto.response.UserPhoneResponse;
 
 import java.util.List;
 
 public interface UserPhoneService {
 
-    UserPhoneDto create(UserPhone userPhone);
+    UserPhoneResponse create(CreateUserPhoneRequest createUserPhoneRequest);
 
-    UserPhoneDto getById(Long id);
+    UserPhoneResponse getById(Long id);
 
-    List<UserPhoneDto> getAll();
+    List<UserPhoneResponse> getAll();
 
-    void update(UserPhone userPhone);
+    void update(UpdateUserPhoneRequest updateUserPhoneRequest);
 
     void delete(Long id);
 }

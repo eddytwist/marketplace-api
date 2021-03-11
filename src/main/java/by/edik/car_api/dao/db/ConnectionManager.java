@@ -1,15 +1,15 @@
 package by.edik.car_api.dao.db;
 
 import by.edik.car_api.dao.db.exception.DbManagerException;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.sql.Connection;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ConnectionManager {
 
     private static final ThreadLocal<Connection> THREAD_LOCAL = new ThreadLocal<>();
-
-    private ConnectionManager() {
-    }
 
     public static Connection getConnection() {
         try {

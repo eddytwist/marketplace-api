@@ -1,6 +1,7 @@
 package by.edik.car_api.dao;
 
 import by.edik.car_api.dao.exception.DaoSqlException;
+import by.edik.car_api.dao.exception.ObjectNotFoundException;
 import by.edik.car_api.dao.model.UserPhone;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -22,22 +23,6 @@ public final class UserPhoneDao extends AbstractDao<UserPhone> {
     private static final String CREATE_QUERY = "INSERT INTO user_phones VALUES (DEFAULT, ?, ?)";
     private static final String UPDATE_QUERY = "UPDATE user_phones SET phone_number = ? WHERE phone_number_id = ?";
     private static final String DELETE_QUERY = "DELETE FROM user_phones WHERE phone_number_id = ?";
-
-    private static UserPhone buildUserPhoneFromResultSet(ResultSet resultSet) {
-        UserPhone userPhone;
-
-        try {
-            userPhone = UserPhone.builder()
-                .phoneNumberId(resultSet.getLong("phone_number_id"))
-                .phoneNumber(resultSet.getString("phone_number"))
-                .userId(resultSet.getLong("user_id"))
-                .build();
-        } catch (SQLException e) {
-            throw new DaoSqlException("Troubles with getting params from ResultSet.", e);
-        }
-
-        return userPhone;
-    }
 
     @Override
     public UserPhone create(UserPhone userPhone) {
@@ -66,7 +51,7 @@ public final class UserPhoneDao extends AbstractDao<UserPhone> {
     @Override
     public UserPhone getById(Long id) {
         ResultSet resultSet;
-        UserPhone userPhone = null;
+        UserPhone userPhone;
 
         try {
             PreparedStatement preparedStatement = prepareStatement(GET_BY_ID_QUERY);
@@ -75,6 +60,8 @@ public final class UserPhoneDao extends AbstractDao<UserPhone> {
 
             if (resultSet.next()) {
                 userPhone = buildUserPhoneFromResultSet(resultSet);
+            } else {
+                throw new ObjectNotFoundException("UserPhone", id);
             }
         } catch (SQLException e) {
             throw new DaoSqlException("SQL failed.", e);
@@ -127,6 +114,22 @@ public final class UserPhoneDao extends AbstractDao<UserPhone> {
         } catch (SQLException e) {
             throw new DaoSqlException("SQL failed.", e);
         }
+    }
+
+    private static UserPhone buildUserPhoneFromResultSet(ResultSet resultSet) {
+        UserPhone userPhone;
+
+        try {
+            userPhone = UserPhone.builder()
+                .phoneNumberId(resultSet.getLong("phone_number_id"))
+                .phoneNumber(resultSet.getString("phone_number"))
+                .userId(resultSet.getLong("user_id"))
+                .build();
+        } catch (SQLException e) {
+            throw new DaoSqlException("Troubles with getting params from ResultSet.", e);
+        }
+
+        return userPhone;
     }
 
     public static UserPhoneDao getInstance() {

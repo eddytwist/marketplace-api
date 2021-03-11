@@ -1,5 +1,6 @@
 package by.edik.car_api.web.controller;
 
+import by.edik.car_api.service.UserService;
 import by.edik.car_api.service.impl.UserServiceImpl;
 import by.edik.car_api.web.utils.UriUtils;
 import org.apache.log4j.Logger;
@@ -11,14 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/api/v1/users/*")
 public class UserByIdController extends BaseController {
 
-    private final UserServiceImpl userService = UserServiceImpl.getInstance();
+    private final UserService userService = UserServiceImpl.getInstance();
     private final Logger log = Logger.getLogger(UserByIdController.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         log.info("GET method running.");
 
-        executeWithResult(resp, () -> {
+        executeWithStatusOk(resp, () -> {
             Long userId = UriUtils.getId(req.getPathInfo());
 
             return userService.getById(userId);
