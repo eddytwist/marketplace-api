@@ -1,6 +1,6 @@
 package by.edik.car_api.web.utils;
 
-import by.edik.car_api.web.exception.BadRequestParamsException;
+import by.edik.car_api.web.exception.NotValidIdException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -17,7 +17,7 @@ public final class UriUtils {
         try {
             return Long.parseLong(sId);
         } catch (NumberFormatException e) {
-            throw new BadRequestParamsException("Id should be number, but got: " + sId, e);
+            throw new NotValidIdException("Id should be number, but got: " + sId, e);
         }
     }
 }
