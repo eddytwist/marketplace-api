@@ -10,7 +10,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class UserMapper {
 
-    public static UserResponse userToUserResponse(User user) {
+    public static UserResponse toUserResponse(User user) {
+        if (user == null) {
+            return null;
+        }
+
         return UserResponse.builder()
             .userId(user.getUserId())
             .username(user.getUsername())
@@ -18,7 +22,11 @@ public final class UserMapper {
             .build();
     }
 
-    public static User createUserRequestToUser(CreateUserRequest createUserRequest) {
+    public static User toUser(CreateUserRequest createUserRequest) {
+        if (createUserRequest == null) {
+            return null;
+        }
+
         return User.builder()
             .username(createUserRequest.getUsername())
             .password(createUserRequest.getPassword())
@@ -26,7 +34,11 @@ public final class UserMapper {
             .build();
     }
 
-    public static User updateUserRequestToUser(UpdateUserRequest updateUserRequest) {
+    public static User toUser(UpdateUserRequest updateUserRequest) {
+        if (updateUserRequest == null) {
+            return null;
+        }
+
         return User.builder()
             .userId(updateUserRequest.getUserId())
             .username(updateUserRequest.getUsername())

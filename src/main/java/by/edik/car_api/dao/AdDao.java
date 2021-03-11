@@ -1,6 +1,7 @@
 package by.edik.car_api.dao;
 
 import by.edik.car_api.dao.exception.DaoSqlException;
+import by.edik.car_api.dao.exception.ObjectNotFoundException;
 import by.edik.car_api.dao.model.Ad;
 import by.edik.car_api.dao.model.Condition;
 import by.edik.car_api.web.dto.response.AdFullInformationResponse;
@@ -111,7 +112,7 @@ public final class AdDao extends AbstractDao<Ad> {
     @Override
     public Ad getById(Long id) {
         ResultSet resultSet;
-        Ad ad = null;
+        Ad ad;
 
         try {
             PreparedStatement preparedStatement = prepareStatement(GET_BY_ID_QUERY);
@@ -120,6 +121,8 @@ public final class AdDao extends AbstractDao<Ad> {
 
             if (resultSet.next()) {
                 ad = buildAdFromResultSet(resultSet);
+            } else {
+                throw new ObjectNotFoundException("Ad", id);
             }
         } catch (SQLException e) {
             throw new DaoSqlException("SQL failed.", e);
@@ -215,7 +218,7 @@ public final class AdDao extends AbstractDao<Ad> {
 
     public AdFullInformationResponse getFullInformationAdById(long id) {
         ResultSet resultSet;
-        AdFullInformationResponse adFullInformationResponse = null;
+        AdFullInformationResponse adFullInformationResponse;
 
         try {
             PreparedStatement preparedStatement = prepareStatement(GET_BY_ID_FULL_INFO_QUERY);
@@ -238,6 +241,8 @@ public final class AdDao extends AbstractDao<Ad> {
                     .creationTime(resultSet.getTimestamp("creation_time").toLocalDateTime())
                     .editingTime(resultSet.getTimestamp("editing_time").toLocalDateTime())
                     .build();
+            } else {
+                throw new ObjectNotFoundException("Ad", id);
             }
 
             while (resultSet.next()) {
@@ -247,8 +252,6 @@ public final class AdDao extends AbstractDao<Ad> {
             if (adFullInformationResponse != null) {
                 adFullInformationResponse.setOwnerPhoneNumbers(phones);
                 adFullInformationResponse.setPictureReferences(getAllPicturesByAdId(adFullInformationResponse.getAdId()));
-            } else {
-                throw new NullPointerException("Ad doesn't exist.");
             }
         } catch (SQLException e) {
             throw new DaoSqlException("Troubles with getting params from ResultSet.", e);

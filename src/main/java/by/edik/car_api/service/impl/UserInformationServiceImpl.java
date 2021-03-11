@@ -24,7 +24,7 @@ public final class UserInformationServiceImpl extends AbstractService implements
 
     @Override
     public UserInformationResponse create(UserInformationRequest userInformationRequest) {
-        UserInformation userInformationToCreate = UserInformationMapper.userInformationRequestToUserInformation(userInformationRequest);
+        UserInformation userInformationToCreate = UserInformationMapper.toUserInformation(userInformationRequest);
         UserInformation createdUserInformation;
 
         try {
@@ -36,7 +36,7 @@ public final class UserInformationServiceImpl extends AbstractService implements
             throw new ServiceFailedException("Creating failed: " + userInformationRequest, e);
         }
 
-        return UserInformationMapper.userInformationToUserInformationResponse(createdUserInformation);
+        return UserInformationMapper.toUserInformationResponse(createdUserInformation);
     }
 
     @Override
@@ -52,7 +52,7 @@ public final class UserInformationServiceImpl extends AbstractService implements
             throw new ServiceFailedException("Can't find Picture with id: " + id, e);
         }
 
-        return UserInformationMapper.userInformationToUserInformationResponse(userInformation);
+        return UserInformationMapper.toUserInformationResponse(userInformation);
     }
 
     @Override
@@ -69,13 +69,13 @@ public final class UserInformationServiceImpl extends AbstractService implements
         }
 
         return usersInformation.stream()
-            .map(UserInformationMapper::userInformationToUserInformationResponse)
+            .map(UserInformationMapper::toUserInformationResponse)
             .collect(Collectors.toList());
     }
 
     @Override
     public void update(UserInformationRequest userInformationRequest) {
-        UserInformation userInformation = UserInformationMapper.userInformationRequestToUserInformation(userInformationRequest);
+        UserInformation userInformation = UserInformationMapper.toUserInformation(userInformationRequest);
 
         try {
             startTransaction();

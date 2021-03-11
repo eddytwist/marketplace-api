@@ -9,17 +9,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 
 import static by.edik.car_api.config.DateConstants.LOCAL_DATE_TIME_PATTERN_Z;
 import static by.edik.car_api.config.DateConstants.UTC_TIME_ZONE;
 
-@Accessors(chain = true)
 @Setter
 @Getter
-@Builder(toBuilder = true)
+@Builder
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor

@@ -30,7 +30,7 @@ public final class AdServiceImpl extends AbstractService implements AdService {
 
     @Override
     public AdResponse create(CreateAdRequest adCreatedDto) {
-        Ad adToCreate = AdMapper.createAdRequestToAd(adCreatedDto);
+        Ad adToCreate = AdMapper.toAd(adCreatedDto);
         Ad createdAd;
 
         try {
@@ -42,7 +42,7 @@ public final class AdServiceImpl extends AbstractService implements AdService {
             throw new ServiceFailedException("Creating failed: " + adCreatedDto, e);
         }
 
-        return AdMapper.adToAdResponse(createdAd);
+        return AdMapper.toAdResponse(createdAd);
     }
 
     @Override
@@ -58,7 +58,7 @@ public final class AdServiceImpl extends AbstractService implements AdService {
             throw new ServiceFailedException("Can't find Ad with id: " + id, e);
         }
 
-        return AdMapper.adToAdResponse(ad);
+        return AdMapper.toAdResponse(ad);
     }
 
     @Override
@@ -91,7 +91,7 @@ public final class AdServiceImpl extends AbstractService implements AdService {
         }
 
         return ads.stream()
-            .map(AdMapper::adToAdResponse)
+            .map(AdMapper::toAdResponse)
             .collect(Collectors.toList());
     }
 
@@ -113,7 +113,7 @@ public final class AdServiceImpl extends AbstractService implements AdService {
 
     @Override
     public AdResponse update(UpdateAdRequest updateAdRequest) {
-        Ad ad = AdMapper.updateAdRequestToAd(updateAdRequest);
+        Ad ad = AdMapper.toAd(updateAdRequest);
 
         try {
             startTransaction();
@@ -156,7 +156,7 @@ public final class AdServiceImpl extends AbstractService implements AdService {
 
     @Override
     public AdResponse updateAllowedFields(PatchAdRequest patchAdRequest) {
-        Ad ad = AdMapper.patchAdRequestToAd(patchAdRequest);
+        Ad ad = AdMapper.toAd(patchAdRequest);
 
         try {
             startTransaction();

@@ -9,13 +9,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class UserInformationMapper {
 
-    public static UserInformationResponse userInformationToUserInformationResponse(UserInformation userInformation) {
+    public static UserInformationResponse toUserInformationResponse(UserInformation userInformation) {
+        if (userInformation == null) {
+            return null;
+        }
+
         return UserInformationResponse.builder()
             .name(userInformation.getName())
             .build();
     }
 
-    public static UserInformation userInformationRequestToUserInformation(UserInformationRequest userInformationRequest) {
+    public static UserInformation toUserInformation(UserInformationRequest userInformationRequest) {
+        if (userInformationRequest == null) {
+            return null;
+        }
+
         return UserInformation.builder()
             .userId(userInformationRequest.getUserId())
             .name(userInformationRequest.getName())

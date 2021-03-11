@@ -25,7 +25,7 @@ public final class UserPhoneServiceImpl extends AbstractService implements UserP
 
     @Override
     public UserPhoneResponse create(CreateUserPhoneRequest createUserPhoneRequest) {
-        UserPhone userPhoneToCreate = UserPhoneMapper.createUserPhoneRequestToUserPhone(createUserPhoneRequest);
+        UserPhone userPhoneToCreate = UserPhoneMapper.toUserPhone(createUserPhoneRequest);
         UserPhone createdUserPhone;
 
         try {
@@ -37,7 +37,7 @@ public final class UserPhoneServiceImpl extends AbstractService implements UserP
             throw new ServiceFailedException("Creating failed: " + createUserPhoneRequest, e);
         }
 
-        return UserPhoneMapper.userPhoneToUserPhoneResponse(createdUserPhone);
+        return UserPhoneMapper.toUserPhoneResponse(createdUserPhone);
     }
 
     @Override
@@ -53,7 +53,7 @@ public final class UserPhoneServiceImpl extends AbstractService implements UserP
             throw new ServiceFailedException("Can't find UserPhone with id: " + id, e);
         }
 
-        return UserPhoneMapper.userPhoneToUserPhoneResponse(userPhone);
+        return UserPhoneMapper.toUserPhoneResponse(userPhone);
     }
 
     @Override
@@ -70,13 +70,13 @@ public final class UserPhoneServiceImpl extends AbstractService implements UserP
         }
 
         return userPhones.stream()
-            .map(UserPhoneMapper::userPhoneToUserPhoneResponse)
+            .map(UserPhoneMapper::toUserPhoneResponse)
             .collect(Collectors.toList());
     }
 
     @Override
     public void update(UpdateUserPhoneRequest updateUserPhoneRequest) {
-        UserPhone userPhone = UserPhoneMapper.updateUserPhoneRequestToUserPhone(updateUserPhoneRequest);
+        UserPhone userPhone = UserPhoneMapper.toUserPhone(updateUserPhoneRequest);
 
         try {
             startTransaction();

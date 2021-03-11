@@ -10,21 +10,33 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class UserPhoneMapper {
 
-    public static UserPhoneResponse userPhoneToUserPhoneResponse(UserPhone userPhone) {
+    public static UserPhoneResponse toUserPhoneResponse(UserPhone userPhone) {
+        if (userPhone == null) {
+            return null;
+        }
+
         return UserPhoneResponse.builder()
             .phoneNumberId(userPhone.getPhoneNumberId())
             .phoneNumber(userPhone.getPhoneNumber())
             .build();
     }
 
-    public static UserPhone createUserPhoneRequestToUserPhone(CreateUserPhoneRequest createUserPhoneRequest) {
+    public static UserPhone toUserPhone(CreateUserPhoneRequest createUserPhoneRequest) {
+        if (createUserPhoneRequest == null) {
+            return null;
+        }
+
         return UserPhone.builder()
             .userId(createUserPhoneRequest.getUserId())
             .phoneNumber(createUserPhoneRequest.getPhoneNumber())
             .build();
     }
 
-    public static UserPhone updateUserPhoneRequestToUserPhone(UpdateUserPhoneRequest updateUserPhoneRequest) {
+    public static UserPhone toUserPhone(UpdateUserPhoneRequest updateUserPhoneRequest) {
+        if (updateUserPhoneRequest == null) {
+            return null;
+        }
+
         return UserPhone.builder()
             .userId(updateUserPhoneRequest.getUserId())
             .phoneNumberId(updateUserPhoneRequest.getPhoneNumberId())

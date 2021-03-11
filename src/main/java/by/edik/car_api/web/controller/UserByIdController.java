@@ -19,7 +19,7 @@ public class UserByIdController extends BaseController {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         log.info("GET method running.");
 
-        executeWithResult(resp, () -> {
+        executeWithStatusOk(resp, () -> {
             Long userId = UriUtils.getId(req.getPathInfo());
 
             return userService.getById(userId);

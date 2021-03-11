@@ -25,7 +25,7 @@ public final class UserServiceImpl extends AbstractService implements UserServic
 
     @Override
     public UserResponse create(CreateUserRequest createUserRequest) {
-        User userToCreate = UserMapper.createUserRequestToUser(createUserRequest);
+        User userToCreate = UserMapper.toUser(createUserRequest);
         User createdUser;
 
         try {
@@ -37,7 +37,7 @@ public final class UserServiceImpl extends AbstractService implements UserServic
             throw new ServiceFailedException("Creating failed: " + createUserRequest, e);
         }
 
-        return UserMapper.userToUserResponse(createdUser);
+        return UserMapper.toUserResponse(createdUser);
     }
 
     @Override
@@ -53,7 +53,7 @@ public final class UserServiceImpl extends AbstractService implements UserServic
             throw new ServiceFailedException("Can't find User with id: " + id, e);
         }
 
-        return UserMapper.userToUserResponse(user);
+        return UserMapper.toUserResponse(user);
     }
 
     @Override
@@ -70,13 +70,13 @@ public final class UserServiceImpl extends AbstractService implements UserServic
         }
 
         return users.stream()
-            .map(UserMapper::userToUserResponse)
+            .map(UserMapper::toUserResponse)
             .collect(Collectors.toList());
     }
 
     @Override
     public UserResponse update(UpdateUserRequest updateUserRequest) {
-        User user = UserMapper.updateUserRequestToUser(updateUserRequest);
+        User user = UserMapper.toUser(updateUserRequest);
 
         try {
             startTransaction();

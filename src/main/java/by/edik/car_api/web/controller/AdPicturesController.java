@@ -22,7 +22,7 @@ public class AdPicturesController extends BaseController {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         log.info("GET method running.");
 
-        executeWithResult(resp, () -> {
+        executeWithStatusOk(resp, () -> {
             Long pictureId = UriUtils.getId(req.getPathInfo());
 
             return pictureService.getById(pictureId);

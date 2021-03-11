@@ -10,21 +10,33 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PictureMapper {
 
-    public static PictureResponse pictureToPictureResponse(Picture picture) {
+    public static PictureResponse toPictureResponse(Picture picture) {
+        if (picture == null) {
+            return null;
+        }
+
         return PictureResponse.builder()
             .pictureId(picture.getPictureId())
             .reference(picture.getReference())
             .build();
     }
 
-    public static Picture createPictureRequestToPicture(CreatePictureRequest createPictureRequest) {
+    public static Picture toPicture(CreatePictureRequest createPictureRequest) {
+        if (createPictureRequest == null) {
+            return null;
+        }
+
         return Picture.builder()
             .adId(createPictureRequest.getAdId())
             .reference(createPictureRequest.getReference())
             .build();
     }
 
-    public static Picture updatePictureRequestToPicture(UpdatePictureRequest updatePictureRequest) {
+    public static Picture toPicture(UpdatePictureRequest updatePictureRequest) {
+        if (updatePictureRequest == null) {
+            return null;
+        }
+
         return Picture.builder()
             .adId(updatePictureRequest.getAdId())
             .pictureId(updatePictureRequest.getPictureId())

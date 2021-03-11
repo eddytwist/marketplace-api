@@ -25,7 +25,7 @@ public final class PictureServiceImpl extends AbstractService implements Picture
 
     @Override
     public PictureResponse create(CreatePictureRequest createPictureRequest) {
-        Picture pictureToCreate = PictureMapper.createPictureRequestToPicture(createPictureRequest);
+        Picture pictureToCreate = PictureMapper.toPicture(createPictureRequest);
         Picture createdPicture;
 
         try {
@@ -37,7 +37,7 @@ public final class PictureServiceImpl extends AbstractService implements Picture
             throw new ServiceFailedException("Creating failed: " + createPictureRequest, e);
         }
 
-        return PictureMapper.pictureToPictureResponse(createdPicture);
+        return PictureMapper.toPictureResponse(createdPicture);
     }
 
     @Override
@@ -53,7 +53,7 @@ public final class PictureServiceImpl extends AbstractService implements Picture
             throw new ServiceFailedException("Can't find Picture with id: " + id, e);
         }
 
-        return PictureMapper.pictureToPictureResponse(picture);
+        return PictureMapper.toPictureResponse(picture);
     }
 
     @Override
@@ -70,13 +70,13 @@ public final class PictureServiceImpl extends AbstractService implements Picture
         }
 
         return pictures.stream()
-            .map(PictureMapper::pictureToPictureResponse)
+            .map(PictureMapper::toPictureResponse)
             .collect(Collectors.toList());
     }
 
     @Override
     public void update(UpdatePictureRequest updatePictureRequest) {
-        Picture picture = PictureMapper.updatePictureRequestToPicture(updatePictureRequest);
+        Picture picture = PictureMapper.toPicture(updatePictureRequest);
 
         try {
             startTransaction();

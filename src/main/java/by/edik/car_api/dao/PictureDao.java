@@ -1,6 +1,7 @@
 package by.edik.car_api.dao;
 
 import by.edik.car_api.dao.exception.DaoSqlException;
+import by.edik.car_api.dao.exception.ObjectNotFoundException;
 import by.edik.car_api.dao.model.Picture;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -22,22 +23,6 @@ public final class PictureDao extends AbstractDao<Picture> {
     private static final String CREATE_QUERY = "INSERT INTO pictures VALUES (DEFAULT, ?, ?)";
     private static final String UPDATE_QUERY = "UPDATE pictures SET reference = ? WHERE picture_id = ?";
     private static final String DELETE_QUERY = "DELETE FROM pictures WHERE picture_id = ?";
-
-    private static Picture buildPictureFromResultSet(ResultSet resultSet) {
-        Picture picture;
-
-        try {
-            picture = Picture.builder()
-                .pictureId(resultSet.getLong("picture_id"))
-                .reference(resultSet.getString("reference"))
-                .adId(resultSet.getLong("ad_id"))
-                .build();
-        } catch (SQLException e) {
-            throw new DaoSqlException("Troubles with getting params from ResultSet.", e);
-        }
-
-        return picture;
-    }
 
     @Override
     public Picture create(Picture picture) {
@@ -66,7 +51,7 @@ public final class PictureDao extends AbstractDao<Picture> {
     @Override
     public Picture getById(Long id) {
         ResultSet resultSet;
-        Picture picture = null;
+        Picture picture;
 
         try {
             PreparedStatement preparedStatement = prepareStatement(GET_BY_ID_QUERY);
@@ -75,6 +60,8 @@ public final class PictureDao extends AbstractDao<Picture> {
 
             if (resultSet.next()) {
                 picture = buildPictureFromResultSet(resultSet);
+            } else {
+                throw new ObjectNotFoundException("Picture", id);
             }
         } catch (SQLException e) {
             throw new DaoSqlException("SQL failed.", e);
@@ -127,6 +114,22 @@ public final class PictureDao extends AbstractDao<Picture> {
         } catch (SQLException e) {
             throw new DaoSqlException("SQL failed.", e);
         }
+    }
+
+    private static Picture buildPictureFromResultSet(ResultSet resultSet) {
+        Picture picture;
+
+        try {
+            picture = Picture.builder()
+                .pictureId(resultSet.getLong("picture_id"))
+                .reference(resultSet.getString("reference"))
+                .adId(resultSet.getLong("ad_id"))
+                .build();
+        } catch (SQLException e) {
+            throw new DaoSqlException("Troubles with getting params from ResultSet.", e);
+        }
+
+        return picture;
     }
 
     public static PictureDao getInstance() {

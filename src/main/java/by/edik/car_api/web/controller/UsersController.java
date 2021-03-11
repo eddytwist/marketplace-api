@@ -20,7 +20,7 @@ public class UsersController extends BaseController {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         log.info("GET method running.");
 
-        executeWithResult(resp, userService::getAll);
+        executeWithStatusOk(resp, userService::getAll);
     }
 
     @Override
@@ -28,15 +28,7 @@ public class UsersController extends BaseController {
         log.info("POST method running.");
         log.info("Transferred params: " + req.getQueryString());
 
-        executeWithResult(resp, () -> {
-            CreateUserRequest createUserRequest = CreateUserRequest.builder()
-                .username(req.getParameter("username"))
-                .password(req.getParameter("password"))
-                .email(req.getParameter("email"))
-                .build();
-
-            return userService.create(createUserRequest);
-        });
+        executeWithStatusCreated(resp, () -> userService.create(getRequestObject(req, CreateUserRequest.class)));
     }
 
     @Override
@@ -44,15 +36,6 @@ public class UsersController extends BaseController {
         log.info("PUT method running.");
         log.info("Transferred params: " + req.getQueryString());
 
-        executeWithResult(resp, () -> {
-            UpdateUserRequest updateUserRequest = UpdateUserRequest.builder()
-                .userId(Long.parseLong(req.getParameter("userId")))
-                .username(req.getParameter("username"))
-                .password(req.getParameter("password"))
-                .email(req.getParameter("email"))
-                .build();
-
-            return userService.update(updateUserRequest);
-        });
+        executeWithStatusCreated(resp, () -> userService.update(getRequestObject(req, UpdateUserRequest.class)));
     }
 }

@@ -1,6 +1,7 @@
 package by.edik.car_api.dao;
 
 import by.edik.car_api.dao.exception.DaoSqlException;
+import by.edik.car_api.dao.exception.ObjectNotFoundException;
 import by.edik.car_api.dao.model.UserInformation;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -22,21 +23,6 @@ public final class UserInformationDao extends AbstractDao<UserInformation> {
     private static final String UPDATE_QUERY = "UPDATE user_information SET name = ? WHERE user_id = ?";
     private static final String DELETE_QUERY = "DELETE FROM user_information WHERE user_id = ?";
 
-    private static UserInformation buildUserInformationFromResultSet(ResultSet resultSet) {
-        UserInformation userInformation;
-
-        try {
-            userInformation = UserInformation.builder()
-                .userId(resultSet.getLong("user_id"))
-                .name(resultSet.getString("name"))
-                .build();
-        } catch (SQLException e) {
-            throw new DaoSqlException("Troubles with getting params from ResultSet.", e);
-        }
-
-        return userInformation;
-    }
-
     @Override
     public UserInformation create(UserInformation userInformation) {
 
@@ -55,7 +41,7 @@ public final class UserInformationDao extends AbstractDao<UserInformation> {
     @Override
     public UserInformation getById(Long id) {
         ResultSet resultSet;
-        UserInformation userInformation = null;
+        UserInformation userInformation;
 
         try {
             PreparedStatement preparedStatement = prepareStatement(GET_BY_ID_QUERY);
@@ -64,6 +50,8 @@ public final class UserInformationDao extends AbstractDao<UserInformation> {
 
             if (resultSet.next()) {
                 userInformation = buildUserInformationFromResultSet(resultSet);
+            } else {
+                throw new ObjectNotFoundException("UserInformation", id);
             }
         } catch (SQLException e) {
             throw new DaoSqlException("SQL failed.", e);
@@ -116,6 +104,21 @@ public final class UserInformationDao extends AbstractDao<UserInformation> {
         } catch (SQLException e) {
             throw new DaoSqlException("SQL failed.", e);
         }
+    }
+
+    private static UserInformation buildUserInformationFromResultSet(ResultSet resultSet) {
+        UserInformation userInformation;
+
+        try {
+            userInformation = UserInformation.builder()
+                .userId(resultSet.getLong("user_id"))
+                .name(resultSet.getString("name"))
+                .build();
+        } catch (SQLException e) {
+            throw new DaoSqlException("Troubles with getting params from ResultSet.", e);
+        }
+
+        return userInformation;
     }
 
     public static UserInformationDao getInstance() {

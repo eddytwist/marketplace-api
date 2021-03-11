@@ -11,7 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class AdMapper {
 
-    public static AdResponse adToAdResponse(Ad ad) {
+    public static AdResponse toAdResponse(Ad ad) {
+        if (ad == null) {
+            return null;
+        }
+
         return AdResponse.builder()
             .adId(ad.getUserId())
             .year(ad.getYear())
@@ -26,7 +30,11 @@ public final class AdMapper {
             .build();
     }
 
-    public static Ad createAdRequestToAd(CreateAdRequest adCreatedDto) {
+    public static Ad toAd(CreateAdRequest adCreatedDto) {
+        if (adCreatedDto == null) {
+            return null;
+        }
+
         return Ad.builder()
             .userId(adCreatedDto.getUserId())
             .year(adCreatedDto.getYear())
@@ -39,7 +47,11 @@ public final class AdMapper {
             .build();
     }
 
-    public static Ad updateAdRequestToAd(UpdateAdRequest updateAdRequest) {
+    public static Ad toAd(UpdateAdRequest updateAdRequest) {
+        if (updateAdRequest == null) {
+            return null;
+        }
+
         return Ad.builder()
             .adId(updateAdRequest.getAdId())
             .userId(updateAdRequest.getUserId())
@@ -53,7 +65,11 @@ public final class AdMapper {
             .build();
     }
 
-    public static Ad patchAdRequestToAd(PatchAdRequest patchAdRequest) {
+    public static Ad toAd(PatchAdRequest patchAdRequest) {
+        if (patchAdRequest == null) {
+            return null;
+        }
+
         return Ad.builder()
             .adId(patchAdRequest.getAdId())
             .year(patchAdRequest.getYear())

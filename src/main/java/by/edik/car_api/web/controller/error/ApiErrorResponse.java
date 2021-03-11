@@ -13,6 +13,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ApiErrorResponse {
     private String errorMessage;
-    private Integer errorStatusCode;
     private String errorExceptionType;
 }

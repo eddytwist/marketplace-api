@@ -1,6 +1,5 @@
 package by.edik.car_api.web.controller;
 
-import by.edik.car_api.dao.model.Condition;
 import by.edik.car_api.service.AdService;
 import by.edik.car_api.service.impl.AdServiceImpl;
 import by.edik.car_api.web.dto.request.CreateAdRequest;
@@ -11,7 +10,6 @@ import org.apache.log4j.Logger;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
 
 @WebServlet("/api/v1/ads")
 public class AdsController extends BaseController {
@@ -25,7 +23,7 @@ public class AdsController extends BaseController {
         log.info("GET method running.");
         log.info("Transferred params: " + req.getQueryString());
 
-        executeWithResult(resp, () -> {
+        executeWithStatusOk(resp, () -> {
             int page = Integer.parseInt(req.getParameter("page"));
             int size = (req.getParameter("size") == null) ? DEFAULT_ADS_PER_PAGE : Integer.parseInt(req.getParameter("size"));
 
@@ -38,22 +36,7 @@ public class AdsController extends BaseController {
         log.info("POST method running.");
         log.info("Transferred params: " + req.getQueryString());
 
-        executeWithResult(resp, () -> {
-            CreateAdRequest createAdRequest = CreateAdRequest.builder()
-                .userId(Long.parseLong(req.getParameter("userId")))
-                .year(Integer.parseInt(req.getParameter("year")))
-                .brand(req.getParameter("brand"))
-                .model(req.getParameter("model"))
-                .engineVolume(Integer.parseInt(req.getParameter("engineVolume")))
-                .condition(Condition.valueOf(req.getParameter("condition")))
-                .mileage(Long.parseLong(req.getParameter("mileage")))
-                .enginePower(Integer.parseInt(req.getParameter("enginePower")))
-                .ownerPhoneNumbers(Arrays.asList(req.getParameterValues("ownerPhoneNumbers")))
-                .pictureReferences(Arrays.asList(req.getParameterValues("pictureReferences")))
-                .build();
-
-            return adService.create(createAdRequest);
-        });
+        executeWithStatusCreated(resp, () -> adService.create(getRequestObject(req, CreateAdRequest.class)));
     }
 
     @Override
@@ -61,24 +44,7 @@ public class AdsController extends BaseController {
         log.info("PUT method running.");
         log.info("Transferred params: " + req.getQueryString());
 
-        executeWithResult(resp, () -> {
-            UpdateAdRequest updateAdRequest = UpdateAdRequest.builder()
-                .adId(Long.parseLong(req.getParameter("adId")))
-                .userId(Long.parseLong(req.getParameter("userId")))
-                .year(Integer.parseInt(req.getParameter("year")))
-                .brand(req.getParameter("brand"))
-                .model(req.getParameter("model"))
-                .engineVolume(Integer.parseInt(req.getParameter("engineVolume")))
-                .condition(Condition.valueOf(req.getParameter("condition")))
-                .mileage(Long.parseLong(req.getParameter("mileage")))
-                .enginePower(Integer.parseInt(req.getParameter("enginePower")))
-                .ownerName(req.getParameter("ownerName"))
-                .ownerPhoneNumbers(Arrays.asList(req.getParameterValues("ownerPhoneNumbers")))
-                .pictureReferences(Arrays.asList(req.getParameterValues("pictureReferences")))
-                .build();
-
-            return adService.update(updateAdRequest);
-        });
+        executeWithStatusCreated(resp, () -> adService.update(getRequestObject(req, UpdateAdRequest.class)));
     }
 
     @Override
@@ -86,18 +52,6 @@ public class AdsController extends BaseController {
         log.info("PATCH method running.");
         log.info("Transferred params: " + req.getQueryString());
 
-        executeWithResult(resp, () -> {
-            PatchAdRequest patchAdRequest = PatchAdRequest.builder()
-                .adId(Long.parseLong(req.getParameter("adId")))
-                .year(Integer.parseInt(req.getParameter("year")))
-                .brand(req.getParameter("brand"))
-                .model(req.getParameter("model"))
-                .engineVolume(Integer.parseInt(req.getParameter("engineVolume")))
-                .mileage(Long.parseLong(req.getParameter("mileage")))
-                .enginePower(Integer.parseInt(req.getParameter("enginePower")))
-                .build();
-
-            return adService.updateAllowedFields(patchAdRequest);
-        });
+        executeWithStatusCreated(resp, () -> adService.updateAllowedFields(getRequestObject(req, PatchAdRequest.class)));
     }
 }
