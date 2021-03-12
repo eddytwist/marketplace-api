@@ -7,15 +7,46 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import java.util.List;
+
 @Accessors(chain = true)
 @Setter
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "users")
 public class User {
+    @Id
+    @GeneratedValue
+    @Column(name = "user_id", nullable = false)
     private Long userId;
+
+    @Column(unique = true, nullable = false)
     private String username;
+
+    @Column(unique = true, nullable = false)
     private String email;
+
+    @Column(nullable = false)
     private String password;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private UserInformation userInformation;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Ad> ads;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserPhone> userPhones;
 }

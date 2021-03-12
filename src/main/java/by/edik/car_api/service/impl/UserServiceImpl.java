@@ -1,5 +1,6 @@
 package by.edik.car_api.service.impl;
 
+import by.edik.car_api.dao.AdDaoHiba;
 import by.edik.car_api.dao.UserDao;
 import by.edik.car_api.dao.model.User;
 import by.edik.car_api.service.AbstractService;
@@ -27,18 +28,29 @@ public final class UserServiceImpl extends AbstractService implements UserServic
     public UserResponse create(CreateUserRequest createUserRequest) {
         User userToCreate = UserMapper.toUser(createUserRequest);
         User createdUser;
+        AdDaoHiba adDaoHiba = new AdDaoHiba();
 
-        try {
-            startTransaction();
-            createdUser = userDao.create(userToCreate);
-            commit();
-        } catch (SQLException e) {
-            rollback();
-            throw new ServiceFailedException("Creating failed: " + createUserRequest, e);
-        }
+        createdUser = adDaoHiba.create(userToCreate);
 
         return UserMapper.toUserResponse(createdUser);
     }
+
+//    @Override
+//    public UserResponse create(CreateUserRequest createUserRequest) {
+//        User userToCreate = UserMapper.toUser(createUserRequest);
+//        User createdUser;
+//
+//        try {
+//            startTransaction();
+//            createdUser = userDao.create(userToCreate);
+//            commit();
+//        } catch (SQLException e) {
+//            rollback();
+//            throw new ServiceFailedException("Creating failed: " + createUserRequest, e);
+//        }
+//
+//        return UserMapper.toUserResponse(createdUser);
+//    }
 
     @Override
     public UserResponse getById(Long id) {
