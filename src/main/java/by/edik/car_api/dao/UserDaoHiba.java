@@ -5,7 +5,7 @@ import by.edik.car_api.dao.model.User;
 
 import javax.persistence.EntityManager;
 
-public class AdDaoHiba {
+public class UserDaoHiba {
 
     public User create(User user) {
         EntityManager em = ConnectionManagerHiba.getEntityManager();

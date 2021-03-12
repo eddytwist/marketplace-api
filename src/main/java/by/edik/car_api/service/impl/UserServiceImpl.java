@@ -1,7 +1,7 @@
 package by.edik.car_api.service.impl;
 
-import by.edik.car_api.dao.AdDaoHiba;
 import by.edik.car_api.dao.UserDao;
+import by.edik.car_api.dao.UserDaoHiba;
 import by.edik.car_api.dao.model.User;
 import by.edik.car_api.service.AbstractService;
 import by.edik.car_api.service.UserService;
@@ -28,9 +28,9 @@ public final class UserServiceImpl extends AbstractService implements UserServic
     public UserResponse create(CreateUserRequest createUserRequest) {
         User userToCreate = UserMapper.toUser(createUserRequest);
         User createdUser;
-        AdDaoHiba adDaoHiba = new AdDaoHiba();
+        UserDaoHiba userDaoHiba = new UserDaoHiba();
 
-        createdUser = adDaoHiba.create(userToCreate);
+        createdUser = userDaoHiba.create(userToCreate);
 
         return UserMapper.toUserResponse(createdUser);
     }
