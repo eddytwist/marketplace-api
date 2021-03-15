@@ -27,7 +27,7 @@ public final class UserPhoneMapper {
         }
 
         return UserPhone.builder()
-            .userId(createUserPhoneRequest.getUserId())
+//            .userId(createUserPhoneRequest.getUserId())
             .phoneNumber(createUserPhoneRequest.getPhoneNumber())
             .build();
     }
@@ -38,7 +38,7 @@ public final class UserPhoneMapper {
         }
 
         return UserPhone.builder()
-            .userId(updateUserPhoneRequest.getUserId())
+//            .userId(updateUserPhoneRequest.getUserId())
             .phoneNumberId(updateUserPhoneRequest.getPhoneNumberId())
             .phoneNumber(updateUserPhoneRequest.getPhoneNumber())
             .build();

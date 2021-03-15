@@ -28,7 +28,7 @@ public final class UserInformationDao extends AbstractDao<UserInformation> {
 
         try {
             PreparedStatement preparedStatement = prepareStatement(CREATE_QUERY);
-            preparedStatement.setLong(1, userInformation.getUserId());
+//            preparedStatement.setLong(1, userInformation.getUserId());
             preparedStatement.setString(2, userInformation.getName());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -88,7 +88,7 @@ public final class UserInformationDao extends AbstractDao<UserInformation> {
         try {
             PreparedStatement preparedStatement = prepareStatement(UPDATE_QUERY);
             preparedStatement.setString(1, userInformation.getName());
-            preparedStatement.setLong(2, userInformation.getUserId());
+//            preparedStatement.setLong(2, userInformation.getUserId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DaoSqlException("SQL failed.", e);
@@ -111,7 +111,7 @@ public final class UserInformationDao extends AbstractDao<UserInformation> {
 
         try {
             userInformation = UserInformation.builder()
-                .userId(resultSet.getLong("user_id"))
+//                .userId(resultSet.getLong("user_id"))
                 .name(resultSet.getString("name"))
                 .build();
         } catch (SQLException e) {

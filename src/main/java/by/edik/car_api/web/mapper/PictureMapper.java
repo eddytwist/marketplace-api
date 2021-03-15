@@ -27,7 +27,7 @@ public final class PictureMapper {
         }
 
         return Picture.builder()
-            .adId(createPictureRequest.getAdId())
+//            .adId(createPictureRequest.getAdId())
             .reference(createPictureRequest.getReference())
             .build();
     }
@@ -38,7 +38,7 @@ public final class PictureMapper {
         }
 
         return Picture.builder()
-            .adId(updatePictureRequest.getAdId())
+//            .adId(updatePictureRequest.getAdId())
             .pictureId(updatePictureRequest.getPictureId())
             .reference(updatePictureRequest.getReference())
             .build();

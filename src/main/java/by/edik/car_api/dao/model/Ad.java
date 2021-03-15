@@ -16,7 +16,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
@@ -35,9 +34,6 @@ public class Ad {
     @GeneratedValue
     @Column(name = "ad_id", nullable = false)
     private Long adId;
-
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
 
     @Column(nullable = false)
     private Integer year;
@@ -67,10 +63,13 @@ public class Ad {
     private LocalDateTime editingTime;
 
     @ManyToOne
-    @MapsId
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(
+        mappedBy = "ad",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
     private List<Picture> pictures;
 }

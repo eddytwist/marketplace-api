@@ -32,7 +32,7 @@ public final class PictureDao extends AbstractDao<Picture> {
         try {
             PreparedStatement preparedStatement = prepareStatement(CREATE_QUERY, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, picture.getReference());
-            preparedStatement.setLong(2, picture.getAdId());
+//            preparedStatement.setLong(2, picture.getAdId());
             preparedStatement.executeUpdate();
             resultSet = preparedStatement.getGeneratedKeys();
 
@@ -123,7 +123,7 @@ public final class PictureDao extends AbstractDao<Picture> {
             picture = Picture.builder()
                 .pictureId(resultSet.getLong("picture_id"))
                 .reference(resultSet.getString("reference"))
-                .adId(resultSet.getLong("ad_id"))
+//                .adId(resultSet.getLong("ad_id"))
                 .build();
         } catch (SQLException e) {
             throw new DaoSqlException("Troubles with getting params from ResultSet.", e);

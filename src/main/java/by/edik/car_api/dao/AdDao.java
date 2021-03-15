@@ -84,7 +84,7 @@ public final class AdDao extends AbstractDao<Ad> {
 
         try {
             PreparedStatement preparedStatement = prepareStatement(CREATE_QUERY, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setLong(1, ad.getUserId());
+//            preparedStatement.setLong(1, ad.getUserId());
             preparedStatement.setInt(2, ad.getYear());
             preparedStatement.setString(3, ad.getBrand());
             preparedStatement.setString(4, ad.getModel());
@@ -317,7 +317,7 @@ public final class AdDao extends AbstractDao<Ad> {
         try {
             ad = Ad.builder()
                 .adId(resultSet.getLong("ad_id"))
-                .userId(resultSet.getLong("user_id"))
+//                .userId(resultSet.getLong("user_id"))
                 .year(resultSet.getInt("year"))
                 .brand(resultSet.getString("brand"))
                 .model(resultSet.getString("model"))

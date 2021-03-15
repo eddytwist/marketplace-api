@@ -13,7 +13,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
 import javax.persistence.Table;
 
 @Accessors(chain = true)
@@ -33,11 +32,7 @@ public class UserPhone {
     @Column(name = "phone_number", unique = true, nullable = false)
     private String phoneNumber;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
-
     @ManyToOne
-    @MapsId
     @JoinColumn(name = "user_id")
     private User user;
 }

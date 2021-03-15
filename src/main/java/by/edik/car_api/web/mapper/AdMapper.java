@@ -17,7 +17,7 @@ public final class AdMapper {
         }
 
         return AdResponse.builder()
-            .adId(ad.getUserId())
+//            .adId(ad.getUserId())
             .year(ad.getYear())
             .brand(ad.getBrand())
             .model(ad.getModel())
@@ -36,7 +36,7 @@ public final class AdMapper {
         }
 
         return Ad.builder()
-            .userId(adCreatedDto.getUserId())
+//            .userId(adCreatedDto.getUserId())
             .year(adCreatedDto.getYear())
             .brand(adCreatedDto.getBrand())
             .model(adCreatedDto.getModel())
@@ -54,7 +54,7 @@ public final class AdMapper {
 
         return Ad.builder()
             .adId(updateAdRequest.getAdId())
-            .userId(updateAdRequest.getUserId())
+//            .userId(updateAdRequest.getUserId())
             .year(updateAdRequest.getYear())
             .brand(updateAdRequest.getBrand())
             .model(updateAdRequest.getModel())

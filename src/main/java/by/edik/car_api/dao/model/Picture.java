@@ -13,7 +13,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
 import javax.persistence.Table;
 
 @Accessors(chain = true)
@@ -33,11 +32,7 @@ public class Picture {
     @Column(nullable = false)
     private String reference;
 
-    @Column(name = "ad_id", nullable = false)
-    private Long adId;
-
     @ManyToOne
-    @MapsId
-    @JoinColumn(name = "ad_id", updatable = false, insertable = false)
+    @JoinColumn(name = "ad_id")
     private Ad ad;
 }

@@ -32,7 +32,7 @@ public final class UserPhoneDao extends AbstractDao<UserPhone> {
         try {
             PreparedStatement preparedStatement = prepareStatement(CREATE_QUERY, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, userPhone.getPhoneNumber());
-            preparedStatement.setLong(2, userPhone.getUserId());
+//            preparedStatement.setLong(2, userPhone.getUserId());
             preparedStatement.executeUpdate();
             resultSet = preparedStatement.getGeneratedKeys();
 
@@ -123,7 +123,7 @@ public final class UserPhoneDao extends AbstractDao<UserPhone> {
             userPhone = UserPhone.builder()
                 .phoneNumberId(resultSet.getLong("phone_number_id"))
                 .phoneNumber(resultSet.getString("phone_number"))
-                .userId(resultSet.getLong("user_id"))
+//                .userId(resultSet.getLong("user_id"))
                 .build();
         } catch (SQLException e) {
             throw new DaoSqlException("Troubles with getting params from ResultSet.", e);
