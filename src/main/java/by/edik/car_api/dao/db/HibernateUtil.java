@@ -6,6 +6,8 @@ import by.edik.car_api.dao.model.Picture;
 import by.edik.car_api.dao.model.User;
 import by.edik.car_api.dao.model.UserInformation;
 import by.edik.car_api.dao.model.UserPhone;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
@@ -20,7 +22,8 @@ import java.net.URL;
 import java.util.Properties;
 
 @Slf4j
-public class HibernateUtil {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class HibernateUtil {
 
     private static final String PROPERTY_FILE_NAME = "hibernate.properties";
 
@@ -29,17 +32,8 @@ public class HibernateUtil {
         return makeSessionFactory(serviceRegistry);
     }
 
-    public static SessionFactory getSessionFactoryByProperties(Properties properties) {
-        ServiceRegistry serviceRegistry = configureServiceRegistry(properties);
-        return makeSessionFactory(serviceRegistry);
-    }
-
     public static EntityManager getEntityManager() {
         return getSessionFactory().createEntityManager();
-    }
-
-    public static EntityManager getEntityManagerByProperties() {
-        return getSessionFactoryByProperties(getProperties()).createEntityManager();
     }
 
     private static SessionFactory makeSessionFactory(ServiceRegistry serviceRegistry) {
@@ -71,10 +65,10 @@ public class HibernateUtil {
     public static Properties getProperties() {
         try {
             Properties properties = new Properties();
-            URL propertiesURL = Thread.currentThread()
+            URL propertiesUrl = Thread.currentThread()
                 .getContextClassLoader()
                 .getResource(PROPERTY_FILE_NAME);
-            try (FileInputStream inputStream = new FileInputStream(propertiesURL.getFile())) {
+            try (FileInputStream inputStream = new FileInputStream(propertiesUrl.getFile())) {
                 properties.load(inputStream);
             }
             return properties;

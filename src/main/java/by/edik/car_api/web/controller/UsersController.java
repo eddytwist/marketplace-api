@@ -2,6 +2,7 @@ package by.edik.car_api.web.controller;
 
 import by.edik.car_api.service.UserService;
 import by.edik.car_api.service.impl.UserServiceImpl;
+import by.edik.car_api.service.impl.UserServiceImplHiba;
 import by.edik.car_api.web.dto.request.CreateUserRequest;
 import by.edik.car_api.web.dto.request.UpdateUserRequest;
 import org.apache.log4j.Logger;
@@ -14,13 +15,14 @@ import javax.servlet.http.HttpServletResponse;
 public class UsersController extends BaseController {
 
     private final UserService userService = UserServiceImpl.getInstance();
+    private final UserServiceImplHiba userServiceImplHiba = UserServiceImplHiba.getInstance();
     private final Logger log = Logger.getLogger(UsersController.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         log.info("GET method running.");
 
-        executeWithStatusOk(resp, userService::getAll);
+        executeWithStatusOk(resp, userServiceImplHiba::getAll);
     }
 
     @Override
@@ -28,7 +30,7 @@ public class UsersController extends BaseController {
         log.info("POST method running.");
         log.info("Transferred params: " + req.getQueryString());
 
-        executeWithStatusCreated(resp, () -> userService.create(getRequestObject(req, CreateUserRequest.class)));
+        executeWithStatusCreated(resp, () -> userServiceImplHiba.create(getRequestObject(req, CreateUserRequest.class)));
     }
 
     @Override
@@ -36,6 +38,6 @@ public class UsersController extends BaseController {
         log.info("PUT method running.");
         log.info("Transferred params: " + req.getQueryString());
 
-        executeWithStatusCreated(resp, () -> userService.update(getRequestObject(req, UpdateUserRequest.class)));
+        executeWithStatusCreated(resp, () -> userServiceImplHiba.update(getRequestObject(req, UpdateUserRequest.class)));
     }
 }
