@@ -25,7 +25,7 @@ public final class PictureDao extends AbstractDao<Picture> {
     private static final String DELETE_QUERY = "DELETE FROM pictures WHERE picture_id = ?";
 
     @Override
-    public Picture create(Picture picture) {
+    public Picture save(Picture picture) {
         ResultSet resultSet;
         long key = -1L;
 
@@ -49,7 +49,7 @@ public final class PictureDao extends AbstractDao<Picture> {
     }
 
     @Override
-    public Picture getById(Long id) {
+    public Picture findById(Long id) {
         ResultSet resultSet;
         Picture picture;
 
@@ -73,7 +73,7 @@ public final class PictureDao extends AbstractDao<Picture> {
     }
 
     @Override
-    public List<Picture> getAll() {
+    public List<Picture> findAll() {
         ResultSet resultSet;
         List<Picture> pictures = new ArrayList<>();
 

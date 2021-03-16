@@ -26,10 +26,10 @@ class UserDaoTest {
 
     @BeforeEach
     void setUp() {
-        user = userDao.create(new User()
-                .setUsername(USERNAME)
-                .setEmail(EMAIL)
-                .setPassword(PASSWORD)
+        user = userDao.save(new User()
+            .setUsername(USERNAME)
+            .setEmail(EMAIL)
+            .setPassword(PASSWORD)
         );
     }
 
@@ -40,7 +40,7 @@ class UserDaoTest {
 
     @Test
     void create() {
-        User createdUser = userDao.getById(user.getUserId());
+        User createdUser = userDao.findById(user.getUserId());
         assertTrue(createdUser.getUserId() > 0);
         assertEquals(USERNAME, createdUser.getUsername());
         assertEquals(EMAIL, createdUser.getEmail());
@@ -49,7 +49,7 @@ class UserDaoTest {
 
     @Test
     void getById() {
-        User foundedUser = userDao.getById(user.getUserId());
+        User foundedUser = userDao.findById(user.getUserId());
         assertTrue(foundedUser.getUserId() > 0);
         assertEquals(USERNAME, foundedUser.getUsername());
         assertEquals(EMAIL, foundedUser.getEmail());
@@ -58,12 +58,12 @@ class UserDaoTest {
 
     @Test
     void getAll() {
-        userDao.create(user
-                .setUsername("Fedor")
-                .setEmail("fedor@mail.com")
-                .setPassword("pass")
+        userDao.save(user
+            .setUsername("Fedor")
+            .setEmail("fedor@mail.com")
+            .setPassword("pass")
         );
-        List<User> foundedUsers = userDao.getAll();
+        List<User> foundedUsers = userDao.findAll();
         assertEquals(foundedUsers.size(), 2);
 
         User firstUser = foundedUsers.get(0);
@@ -81,12 +81,12 @@ class UserDaoTest {
 
     @Test
     void update() {
-        User foundedUser = userDao.getById(user.getUserId())
-                .setUsername("newUser")
-                .setEmail("newuser@user.com")
-                .setPassword("new_password");
+        User foundedUser = userDao.findById(user.getUserId())
+            .setUsername("newUser")
+            .setEmail("newuser@user.com")
+            .setPassword("new_password");
         userDao.update(foundedUser);
-        User updatedUser = userDao.getById(foundedUser.getUserId());
+        User updatedUser = userDao.findById(foundedUser.getUserId());
         assertTrue(updatedUser.getUserId() > 0);
         assertEquals("newUser", updatedUser.getUsername());
         assertEquals("newuser@user.com", updatedUser.getEmail());
@@ -96,7 +96,7 @@ class UserDaoTest {
     @Test
     void delete() {
         userDao.delete(user.getUserId());
-        assertNull(userDao.getById(user.getUserId()));
+        assertNull(userDao.findById(user.getUserId()));
     }
 
     @SneakyThrows

@@ -1,40 +1,37 @@
 package by.edik.car_api.dao;
 
-import javax.persistence.Query;
+import java.util.List;
 
 import static by.edik.car_api.dao.db.EntityManagerProvider.getEntityManager;
 
 public abstract class AbstractDaoHiba<T> implements GenericDao<T> {
 
-    protected void persist(T t) {
-        getEntityManager().persist(t);
+    @Override
+    public T save(T entity) {
+        getEntityManager().persist(entity);
+        return entity;
     }
 
-    protected T find(Class<T> entityClass, Long pkey) {
-        return getEntityManager().find(entityClass, pkey);
+    @Override
+    public T findById(Long id) {
+        return getEntityManager().find(getEntityType(), id);
     }
 
-    protected void remove(T t) {
-        getEntityManager().remove(t);
+    @Override
+    public List<T> findAll() {
+        return getEntityManager()
+            .createQuery("from " + getEntityType().getSimpleName(), getEntityType())
+            .getResultList();
     }
 
-    protected void merge(T t) {
-        getEntityManager().merge(t);
+    @Override
+    public T update(T entity) {
+        return getEntityManager().merge(entity);
     }
 
-    protected T getReference(Class<T> entityClass, Long pkey) {
-        return getEntityManager().getReference(entityClass, pkey);
-    }
-
-    protected void flush() {
-        getEntityManager().flush();
-    }
-
-    protected void detach(T t) {
-        getEntityManager().detach(t);
-    }
-
-    protected Query createQuery(String jpql) {
-        return getEntityManager().createQuery(jpql);
+    @Override
+    public void delete(Long id) {
+        T entity = getEntityManager().find(getEntityType(), id);
+        getEntityManager().remove(entity);
     }
 }

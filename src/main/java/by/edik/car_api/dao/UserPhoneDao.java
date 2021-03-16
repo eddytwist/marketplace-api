@@ -25,7 +25,7 @@ public final class UserPhoneDao extends AbstractDao<UserPhone> {
     private static final String DELETE_QUERY = "DELETE FROM user_phones WHERE phone_number_id = ?";
 
     @Override
-    public UserPhone create(UserPhone userPhone) {
+    public UserPhone save(UserPhone userPhone) {
         ResultSet resultSet;
         long key = -1L;
 
@@ -49,7 +49,7 @@ public final class UserPhoneDao extends AbstractDao<UserPhone> {
     }
 
     @Override
-    public UserPhone getById(Long id) {
+    public UserPhone findById(Long id) {
         ResultSet resultSet;
         UserPhone userPhone;
 
@@ -73,7 +73,7 @@ public final class UserPhoneDao extends AbstractDao<UserPhone> {
     }
 
     @Override
-    public List<UserPhone> getAll() {
+    public List<UserPhone> findAll() {
         ResultSet resultSet;
         List<UserPhone> usersPhones = new ArrayList<>();
 

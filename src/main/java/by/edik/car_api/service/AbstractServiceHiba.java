@@ -5,16 +5,16 @@ import static by.edik.car_api.dao.db.EntityManagerProvider.getEntityManager;
 
 public abstract class AbstractServiceHiba {
 
-    protected void begin() {
+    protected static void begin() {
         getEntityManager().getTransaction().begin();
     }
 
-    protected void commit() {
+    protected static void commit() {
         getEntityManager().getTransaction().commit();
         clear();
     }
 
-    protected void rollback() {
+    protected static void rollback() {
         getEntityManager().getTransaction().rollback();
         clear();
     }

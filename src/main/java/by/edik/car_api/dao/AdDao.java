@@ -78,7 +78,7 @@ public final class AdDao extends AbstractDao<Ad> {
         "WHERE ad_id = ?";
 
     @Override
-    public Ad create(Ad ad) {
+    public Ad save(Ad ad) {
         long key = -1L;
         ResultSet resultSet;
 
@@ -110,7 +110,7 @@ public final class AdDao extends AbstractDao<Ad> {
     }
 
     @Override
-    public Ad getById(Long id) {
+    public Ad findById(Long id) {
         ResultSet resultSet;
         Ad ad;
 
@@ -134,7 +134,7 @@ public final class AdDao extends AbstractDao<Ad> {
     }
 
     @Override
-    public List<Ad> getAll() {
+    public List<Ad> findAll() {
         ResultSet resultSet;
         List<Ad> ads = new ArrayList<>();
 

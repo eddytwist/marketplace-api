@@ -27,14 +27,14 @@ class UserInformationDaoTest {
 
     @BeforeEach
     void setUp() {
-        user = userDao.create(new User()
-                .setUsername("test")
-                .setEmail("test@tut.by")
-                .setPassword("pass")
+        user = userDao.save(new User()
+            .setUsername("test")
+            .setEmail("test@tut.by")
+            .setPassword("pass")
         );
-        userInformation = userInformationDao.create(new UserInformation()
-                .setUserId(user.getUserId())
-                .setName(NAME)
+        userInformation = userInformationDao.save(new UserInformation()
+            .setUserId(user.getUserId())
+            .setName(NAME)
         );
     }
 
@@ -45,7 +45,7 @@ class UserInformationDaoTest {
 
     @Test
     void create() {
-        UserInformation createdUserInformation = userInformationDao.getById(userInformation.getUserId());
+        UserInformation createdUserInformation = userInformationDao.findById(userInformation.getUserId());
         assertTrue(createdUserInformation.getUserId() > 0);
         assertEquals(NAME, createdUserInformation.getName());
         assertEquals(user.getUserId(), createdUserInformation.getUserId());
@@ -53,22 +53,22 @@ class UserInformationDaoTest {
 
     @Test
     void getById() {
-        UserInformation foundedUserInformation = userInformationDao.getById(userInformation.getUserId());
+        UserInformation foundedUserInformation = userInformationDao.findById(userInformation.getUserId());
         assertTrue(foundedUserInformation.getUserId() > 0);
         assertEquals(NAME, foundedUserInformation.getName());
     }
 
     @Test
     void getAll() {
-        User secondUser = userDao.create(user
-                .setUsername("testPetr")
-                .setEmail("testptr@mail.com")
+        User secondUser = userDao.save(user
+            .setUsername("testPetr")
+            .setEmail("testptr@mail.com")
         );
-        userInformationDao.create(userInformation
-                .setUserId(secondUser.getUserId())
-                .setName("Petr")
+        userInformationDao.save(userInformation
+            .setUserId(secondUser.getUserId())
+            .setName("Petr")
         );
-        List<UserInformation> foundedUsersInformation = userInformationDao.getAll();
+        List<UserInformation> foundedUsersInformation = userInformationDao.findAll();
         assertEquals(foundedUsersInformation.size(), 2);
 
         UserInformation firstUserInformation = foundedUsersInformation.get(0);
@@ -83,10 +83,10 @@ class UserInformationDaoTest {
 
     @Test
     void update() {
-        UserInformation foundedUserInformation = userInformationDao.getById(userInformation.getUserId())
-                .setName("Petr");
+        UserInformation foundedUserInformation = userInformationDao.findById(userInformation.getUserId())
+            .setName("Petr");
         userInformationDao.update(foundedUserInformation);
-        UserInformation updatedUserInformation = userInformationDao.getById(foundedUserInformation.getUserId());
+        UserInformation updatedUserInformation = userInformationDao.findById(foundedUserInformation.getUserId());
         assertTrue(updatedUserInformation.getUserId() > 0);
         assertEquals(foundedUserInformation.getName(), updatedUserInformation.getName());
         assertEquals(foundedUserInformation.getUserId(), updatedUserInformation.getUserId());
@@ -96,7 +96,7 @@ class UserInformationDaoTest {
     @Test
     void delete() {
         userInformationDao.delete(userInformation.getUserId());
-        assertNull(userInformationDao.getById(userInformation.getUserId()));
+        assertNull(userInformationDao.findById(userInformation.getUserId()));
     }
 
     @SneakyThrows

@@ -36,22 +36,22 @@ class AdDaoTest {
 
     @BeforeEach
     void setUp() {
-        user = userDao.create(new User()
-                .setUsername("test")
-                .setEmail("test@tut.by")
-                .setPassword("pass")
+        user = userDao.save(new User()
+            .setUsername("test")
+            .setEmail("test@tut.by")
+            .setPassword("pass")
         );
-        ad = adDao.create(new Ad()
-                .setUserId(user.getUserId())
-                .setYear(YEAR)
-                .setBrand(BRAND)
-                .setModel(MODEL)
-                .setEngineVolume(ENGINE_VOLUME)
-                .setCondition(Condition.USED)
-                .setMileage(MILEAGE)
-                .setEnginePower(ENGINE_POWER)
-                .setCreationTime(CREATION_TIME)
-                .setEditingTime(EDITING_TIME)
+        ad = adDao.save(new Ad()
+            .setUserId(user.getUserId())
+            .setYear(YEAR)
+            .setBrand(BRAND)
+            .setModel(MODEL)
+            .setEngineVolume(ENGINE_VOLUME)
+            .setCondition(Condition.USED)
+            .setMileage(MILEAGE)
+            .setEnginePower(ENGINE_POWER)
+            .setCreationTime(CREATION_TIME)
+            .setEditingTime(EDITING_TIME)
         );
     }
 
@@ -63,7 +63,7 @@ class AdDaoTest {
 
     @Test
     void create() {
-        Ad createdAd = adDao.create(ad);
+        Ad createdAd = adDao.save(ad);
         assertTrue(createdAd.getAdId() > 0);
         assertTrue(createdAd.getUserId() > 0);
         assertEquals(YEAR, createdAd.getYear());
@@ -79,7 +79,7 @@ class AdDaoTest {
 
     @Test
     void getById() {
-        Ad foundedAd = adDao.getById(ad.getAdId());
+        Ad foundedAd = adDao.findById(ad.getAdId());
         assertTrue(foundedAd.getAdId() > 0);
         assertTrue(foundedAd.getUserId() > 0);
         assertEquals(YEAR, foundedAd.getYear());
@@ -95,16 +95,16 @@ class AdDaoTest {
 
     @Test
     void getAll() {
-        adDao.create(ad
-                .setBrand("JIGULI")
-                .setModel("2107")
-                .setCondition(Condition.NEW)
-                .setYear(2020)
-                .setEnginePower(0)
-                .setEngineVolume(0)
-                .setMileage(0L)
+        adDao.save(ad
+            .setBrand("JIGULI")
+            .setModel("2107")
+            .setCondition(Condition.NEW)
+            .setYear(2020)
+            .setEnginePower(0)
+            .setEngineVolume(0)
+            .setMileage(0L)
         );
-        List<Ad> foundedAds = adDao.getAll();
+        List<Ad> foundedAds = adDao.findAll();
         assertEquals(foundedAds.size(), 2);
 
         Ad firstAd = foundedAds.get(0);
@@ -136,18 +136,18 @@ class AdDaoTest {
 
     @Test
     void update() {
-        Ad foundedAd = adDao.getById(ad.getAdId())
-                .setYear(2010)
-                .setBrand("Ford")
-                .setModel("Focus")
-                .setEngineVolume(2000)
-                .setCondition(Condition.DAMAGED)
-                .setMileage(10999L)
-                .setEnginePower(150)
-                .setCreationTime(CREATION_TIME)
-                .setEditingTime(EDITING_TIME);
+        Ad foundedAd = adDao.findById(ad.getAdId())
+            .setYear(2010)
+            .setBrand("Ford")
+            .setModel("Focus")
+            .setEngineVolume(2000)
+            .setCondition(Condition.DAMAGED)
+            .setMileage(10999L)
+            .setEnginePower(150)
+            .setCreationTime(CREATION_TIME)
+            .setEditingTime(EDITING_TIME);
         adDao.update(foundedAd);
-        Ad updatedAd = adDao.getById(foundedAd.getAdId());
+        Ad updatedAd = adDao.findById(foundedAd.getAdId());
         assertTrue(updatedAd.getAdId() > 0);
         assertTrue(updatedAd.getUserId() > 0);
         assertEquals(2010, updatedAd.getYear());
@@ -164,20 +164,20 @@ class AdDaoTest {
     @Test
     void delete() {
         adDao.delete(ad.getAdId());
-        assertNull(adDao.getById(ad.getAdId()));
+        assertNull(adDao.findById(ad.getAdId()));
     }
 
     @Test
     void updateAllowedFields() {
-        Ad foundedAd = adDao.getById(ad.getAdId())
-                .setYear(2010)
-                .setBrand("Ford")
-                .setModel("Focus")
-                .setEngineVolume(2000)
-                .setMileage(10999L)
-                .setEnginePower(150);
+        Ad foundedAd = adDao.findById(ad.getAdId())
+            .setYear(2010)
+            .setBrand("Ford")
+            .setModel("Focus")
+            .setEngineVolume(2000)
+            .setMileage(10999L)
+            .setEnginePower(150);
         adDao.updateAllowedFields(foundedAd);
-        Ad updatedAd = adDao.getById(foundedAd.getAdId());
+        Ad updatedAd = adDao.findById(foundedAd.getAdId());
         assertTrue(updatedAd.getAdId() > 0);
         assertTrue(updatedAd.getUserId() > 0);
         assertEquals(2010, updatedAd.getYear());

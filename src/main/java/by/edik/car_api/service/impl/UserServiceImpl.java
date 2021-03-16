@@ -30,7 +30,7 @@ public final class UserServiceImpl extends AbstractService implements UserServic
         User createdUser;
         UserDaoHiba userDaoHiba = new UserDaoHiba();
 
-        createdUser = userDaoHiba.create(userToCreate);
+        createdUser = userDaoHiba.save(userToCreate);
 
         return UserMapper.toUserResponse(createdUser);
     }
@@ -58,7 +58,7 @@ public final class UserServiceImpl extends AbstractService implements UserServic
 
         try {
             startTransaction();
-            user = userDao.getById(id);
+            user = userDao.findById(id);
             commit();
         } catch (SQLException e) {
             rollback();
@@ -74,7 +74,7 @@ public final class UserServiceImpl extends AbstractService implements UserServic
 
         try {
             startTransaction();
-            users = userDao.getAll();
+            users = userDao.findAll();
             commit();
         } catch (SQLException e) {
             rollback();

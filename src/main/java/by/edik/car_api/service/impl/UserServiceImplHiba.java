@@ -1,6 +1,5 @@
 package by.edik.car_api.service.impl;
 
-import by.edik.car_api.dao.UserDao;
 import by.edik.car_api.dao.UserDaoHiba;
 import by.edik.car_api.dao.model.User;
 import by.edik.car_api.service.AbstractServiceHiba;
@@ -21,7 +20,6 @@ public final class UserServiceImplHiba extends AbstractServiceHiba implements Us
 
     private static volatile UserServiceImplHiba userServiceInstance;
 
-    private final UserDao userDao = UserDao.getInstance();
     private final UserDaoHiba userDaoHiba = UserDaoHiba.getInstance();
 
     @Override
@@ -31,7 +29,7 @@ public final class UserServiceImplHiba extends AbstractServiceHiba implements Us
 
         try {
             begin();
-            createdUser = userDaoHiba.create(userToCreate);
+            createdUser = userDaoHiba.save(userToCreate);
             commit();
         } catch (Exception e) {
             rollback();
@@ -47,7 +45,7 @@ public final class UserServiceImplHiba extends AbstractServiceHiba implements Us
 
         try {
             begin();
-            user = userDaoHiba.getById(id);
+            user = userDaoHiba.findById(id);
             commit();
         } catch (Exception e) {
             rollback();
@@ -63,7 +61,7 @@ public final class UserServiceImplHiba extends AbstractServiceHiba implements Us
 
         try {
             begin();
-            users = userDaoHiba.getAll();
+            users = userDaoHiba.findAll();
             commit();
         } catch (Exception e) {
             rollback();

@@ -32,26 +32,26 @@ class PictureDaoTest {
 
     @BeforeEach
     void setUp() {
-        user = userDao.create(new User()
-                .setUsername("test")
-                .setEmail("test@tut.by")
-                .setPassword("pass")
+        user = userDao.save(new User()
+            .setUsername("test")
+            .setEmail("test@tut.by")
+            .setPassword("pass")
         );
-        ad = adDao.create(new Ad()
-                .setUserId(user.getUserId())
-                .setYear(2020)
-                .setBrand("JIGULI")
-                .setModel("2107")
-                .setEngineVolume(0)
-                .setCondition(Condition.NEW)
-                .setMileage(0L)
-                .setEnginePower(0)
-                .setCreationTime(LocalDateTime.of(2021, 2, 8, 12, 20))
-                .setEditingTime(LocalDateTime.of(2021, 2, 16, 12, 20))
+        ad = adDao.save(new Ad()
+            .setUserId(user.getUserId())
+            .setYear(2020)
+            .setBrand("JIGULI")
+            .setModel("2107")
+            .setEngineVolume(0)
+            .setCondition(Condition.NEW)
+            .setMileage(0L)
+            .setEnginePower(0)
+            .setCreationTime(LocalDateTime.of(2021, 2, 8, 12, 20))
+            .setEditingTime(LocalDateTime.of(2021, 2, 16, 12, 20))
         );
-        picture = pictureDao.create(new Picture()
-                .setAdId(ad.getAdId())
-                .setReference(REFERENCE));
+        picture = pictureDao.save(new Picture()
+            .setAdId(ad.getAdId())
+            .setReference(REFERENCE));
     }
 
     @AfterEach
@@ -62,7 +62,7 @@ class PictureDaoTest {
 
     @Test
     void create() {
-        Picture createdPicture = pictureDao.create(picture);
+        Picture createdPicture = pictureDao.save(picture);
         assertTrue(createdPicture.getPictureId() > 0);
         assertTrue(createdPicture.getAdId() > 0);
         assertEquals(REFERENCE, createdPicture.getReference());
@@ -70,7 +70,7 @@ class PictureDaoTest {
 
     @Test
     void getById() {
-        Picture foundedPicture = pictureDao.getById(picture.getPictureId());
+        Picture foundedPicture = pictureDao.findById(picture.getPictureId());
         assertTrue(foundedPicture.getPictureId() > 0);
         assertTrue(foundedPicture.getAdId() > 0);
         assertEquals(REFERENCE, foundedPicture.getReference());
@@ -78,10 +78,10 @@ class PictureDaoTest {
 
     @Test
     void getAll() {
-        pictureDao.create(picture
-                .setReference("new_reference")
+        pictureDao.save(picture
+            .setReference("new_reference")
         );
-        List<Picture> foundedPictures = pictureDao.getAll();
+        List<Picture> foundedPictures = pictureDao.findAll();
         assertEquals(foundedPictures.size(), 2);
 
         Picture firstPicture = foundedPictures.get(0);
@@ -97,10 +97,10 @@ class PictureDaoTest {
 
     @Test
     void update() {
-        Picture foundedPicture = pictureDao.getById(picture.getPictureId())
-                .setReference("NEW_REFERENCE");
+        Picture foundedPicture = pictureDao.findById(picture.getPictureId())
+            .setReference("NEW_REFERENCE");
         pictureDao.update(foundedPicture);
-        Picture updatedPicture = pictureDao.getById(foundedPicture.getPictureId());
+        Picture updatedPicture = pictureDao.findById(foundedPicture.getPictureId());
         assertTrue(updatedPicture.getPictureId() > 0);
         assertTrue(updatedPicture.getAdId() > 0);
         assertEquals(foundedPicture.getPictureId(), updatedPicture.getPictureId());
@@ -111,7 +111,7 @@ class PictureDaoTest {
     @Test
     void delete() {
         pictureDao.delete(picture.getPictureId());
-        assertNull(pictureDao.getById(picture.getPictureId()));
+        assertNull(pictureDao.findById(picture.getPictureId()));
     }
 
     @SneakyThrows

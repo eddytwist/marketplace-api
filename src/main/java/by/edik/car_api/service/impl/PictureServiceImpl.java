@@ -30,7 +30,7 @@ public final class PictureServiceImpl extends AbstractService implements Picture
 
         try {
             startTransaction();
-            createdPicture = pictureDao.create(pictureToCreate);
+            createdPicture = pictureDao.save(pictureToCreate);
             commit();
         } catch (SQLException e) {
             rollback();
@@ -46,7 +46,7 @@ public final class PictureServiceImpl extends AbstractService implements Picture
 
         try {
             startTransaction();
-            picture = pictureDao.getById(id);
+            picture = pictureDao.findById(id);
             commit();
         } catch (SQLException e) {
             rollback();
@@ -62,7 +62,7 @@ public final class PictureServiceImpl extends AbstractService implements Picture
 
         try {
             startTransaction();
-            pictures = pictureDao.getAll();
+            pictures = pictureDao.findAll();
             commit();
         } catch (SQLException e) {
             rollback();

@@ -35,7 +35,7 @@ public final class AdServiceImpl extends AbstractService implements AdService {
 
         try {
             startTransaction();
-            createdAd = adDao.create(adToCreate);
+            createdAd = adDao.save(adToCreate);
             commit();
         } catch (SQLException e) {
             rollback();
@@ -51,7 +51,7 @@ public final class AdServiceImpl extends AbstractService implements AdService {
 
         try {
             startTransaction();
-            ad = adDao.getById(id);
+            ad = adDao.findById(id);
             commit();
         } catch (SQLException e) {
             rollback();
@@ -83,7 +83,7 @@ public final class AdServiceImpl extends AbstractService implements AdService {
 
         try {
             startTransaction();
-            ads = adDao.getAll();
+            ads = adDao.findAll();
             commit();
         } catch (SQLException e) {
             rollback();

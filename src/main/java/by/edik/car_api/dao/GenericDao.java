@@ -4,13 +4,15 @@ import java.util.List;
 
 public interface GenericDao<T> {
 
-    T create(T t);
+    Class<T> getEntityType();
 
-    T getById(Long id);
+    T save(T t);
 
-    List<T> getAll();
+    T findById(Long id);
 
-    void update(T t);
+    List<T> findAll();
+
+    T update(T t);
 
     void delete(Long id);
 }

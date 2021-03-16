@@ -29,7 +29,7 @@ public final class UserInformationServiceImpl extends AbstractService implements
 
         try {
             startTransaction();
-            createdUserInformation = userInformationDao.create(userInformationToCreate);
+            createdUserInformation = userInformationDao.save(userInformationToCreate);
             commit();
         } catch (SQLException e) {
             rollback();
@@ -45,7 +45,7 @@ public final class UserInformationServiceImpl extends AbstractService implements
 
         try {
             startTransaction();
-            userInformation = userInformationDao.getById(id);
+            userInformation = userInformationDao.findById(id);
             commit();
         } catch (SQLException e) {
             rollback();
@@ -61,7 +61,7 @@ public final class UserInformationServiceImpl extends AbstractService implements
 
         try {
             startTransaction();
-            usersInformation = userInformationDao.getAll();
+            usersInformation = userInformationDao.findAll();
             commit();
         } catch (SQLException e) {
             rollback();

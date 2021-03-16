@@ -30,7 +30,7 @@ public final class UserPhoneServiceImpl extends AbstractService implements UserP
 
         try {
             startTransaction();
-            createdUserPhone = userPhoneDao.create(userPhoneToCreate);
+            createdUserPhone = userPhoneDao.save(userPhoneToCreate);
             commit();
         } catch (SQLException e) {
             rollback();
@@ -46,7 +46,7 @@ public final class UserPhoneServiceImpl extends AbstractService implements UserP
 
         try {
             startTransaction();
-            userPhone = userPhoneDao.getById(id);
+            userPhone = userPhoneDao.findById(id);
             commit();
         } catch (SQLException e) {
             rollback();
@@ -62,7 +62,7 @@ public final class UserPhoneServiceImpl extends AbstractService implements UserP
 
         try {
             startTransaction();
-            userPhones = userPhoneDao.getAll();
+            userPhones = userPhoneDao.findAll();
             commit();
         } catch (SQLException e) {
             rollback();

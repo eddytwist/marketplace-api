@@ -24,7 +24,7 @@ public final class UserInformationDao extends AbstractDao<UserInformation> {
     private static final String DELETE_QUERY = "DELETE FROM user_information WHERE user_id = ?";
 
     @Override
-    public UserInformation create(UserInformation userInformation) {
+    public UserInformation save(UserInformation userInformation) {
 
         try {
             PreparedStatement preparedStatement = prepareStatement(CREATE_QUERY);
@@ -39,7 +39,7 @@ public final class UserInformationDao extends AbstractDao<UserInformation> {
     }
 
     @Override
-    public UserInformation getById(Long id) {
+    public UserInformation findById(Long id) {
         ResultSet resultSet;
         UserInformation userInformation;
 
@@ -63,7 +63,7 @@ public final class UserInformationDao extends AbstractDao<UserInformation> {
     }
 
     @Override
-    public List<UserInformation> getAll() {
+    public List<UserInformation> findAll() {
         ResultSet resultSet;
         List<UserInformation> usersInformation = new ArrayList<>();
 

@@ -27,14 +27,14 @@ class UserPhoneDaoTest {
 
     @BeforeEach
     void setUp() {
-        user = userDao.create(new User()
-                .setUsername("test")
-                .setEmail("test@tut.by")
-                .setPassword("pass")
+        user = userDao.save(new User()
+            .setUsername("test")
+            .setEmail("test@tut.by")
+            .setPassword("pass")
         );
-        userPhone = userPhoneDao.create(new UserPhone()
-                .setUserId(user.getUserId())
-                .setPhoneNumber(PHONE_NUMBER)
+        userPhone = userPhoneDao.save(new UserPhone()
+            .setUserId(user.getUserId())
+            .setPhoneNumber(PHONE_NUMBER)
         );
     }
 
@@ -45,7 +45,7 @@ class UserPhoneDaoTest {
 
     @Test
     void create() {
-        UserPhone createdUserPhone = userPhoneDao.getById(userPhone.getPhoneNumberId());
+        UserPhone createdUserPhone = userPhoneDao.findById(userPhone.getPhoneNumberId());
         assertTrue(createdUserPhone.getUserId() > 0);
         assertEquals(PHONE_NUMBER, createdUserPhone.getPhoneNumber());
         assertEquals(user.getUserId(), createdUserPhone.getUserId());
@@ -53,18 +53,18 @@ class UserPhoneDaoTest {
 
     @Test
     void getById() {
-        UserPhone foundedUserPhone = userPhoneDao.getById(userPhone.getPhoneNumberId());
+        UserPhone foundedUserPhone = userPhoneDao.findById(userPhone.getPhoneNumberId());
         assertTrue(foundedUserPhone.getUserId() > 0);
         assertEquals(PHONE_NUMBER, foundedUserPhone.getPhoneNumber());
     }
 
     @Test
     void getAll() {
-        userPhoneDao.create(userPhone
-                .setUserId(user.getUserId())
-                .setPhoneNumber("+375297777777")
+        userPhoneDao.save(userPhone
+            .setUserId(user.getUserId())
+            .setPhoneNumber("+375297777777")
         );
-        List<UserPhone> foundedUserPhones = userPhoneDao.getAll();
+        List<UserPhone> foundedUserPhones = userPhoneDao.findAll();
         assertEquals(foundedUserPhones.size(), 2);
 
         UserPhone firstUserPhone = foundedUserPhones.get(0);
@@ -80,10 +80,10 @@ class UserPhoneDaoTest {
 
     @Test
     void update() {
-        UserPhone foundedUserPhone = userPhoneDao.getById(userPhone.getPhoneNumberId())
-                .setPhoneNumber("+375297777777");
+        UserPhone foundedUserPhone = userPhoneDao.findById(userPhone.getPhoneNumberId())
+            .setPhoneNumber("+375297777777");
         userPhoneDao.update(foundedUserPhone);
-        UserPhone updatedUserPhone = userPhoneDao.getById(foundedUserPhone.getPhoneNumberId());
+        UserPhone updatedUserPhone = userPhoneDao.findById(foundedUserPhone.getPhoneNumberId());
         assertTrue(updatedUserPhone.getUserId() > 0);
         assertEquals(foundedUserPhone.getUserId(), updatedUserPhone.getUserId());
         assertEquals("+375297777777", updatedUserPhone.getPhoneNumber());
@@ -92,7 +92,7 @@ class UserPhoneDaoTest {
     @Test
     void delete() {
         userPhoneDao.delete(userPhone.getUserId());
-        assertNull(userPhoneDao.getById(userPhone.getUserId()));
+        assertNull(userPhoneDao.findById(userPhone.getUserId()));
     }
 
     @SneakyThrows

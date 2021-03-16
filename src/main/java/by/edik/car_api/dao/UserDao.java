@@ -25,7 +25,7 @@ public final class UserDao extends AbstractDao<User> {
     private static final String DELETE_QUERY = "DELETE FROM users WHERE user_id = ?";
 
     @Override
-    public User create(User user) {
+    public User save(User user) {
         ResultSet resultSet;
         long key = -1L;
 
@@ -50,7 +50,7 @@ public final class UserDao extends AbstractDao<User> {
     }
 
     @Override
-    public List<User> getAll() {
+    public List<User> findAll() {
         ResultSet resultSet;
         List<User> users = new ArrayList<>();
 
@@ -96,7 +96,7 @@ public final class UserDao extends AbstractDao<User> {
     }
 
     @Override
-    public User getById(Long id) {
+    public User findById(Long id) {
         ResultSet resultSet;
         User user;
 
