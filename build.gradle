@@ -3,7 +3,7 @@ plugins {
     id 'war'
 }
 
-group 'by.edik'
+group 'com.edik'
 version '1.0-SNAPSHOT'
 
 repositories {
