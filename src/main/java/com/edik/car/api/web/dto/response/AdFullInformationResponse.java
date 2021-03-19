@@ -12,6 +12,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Setter
 @Getter
@@ -31,6 +32,7 @@ public class AdFullInformationResponse {
     private Long mileage;
     private String ownerName;
 
+    private List<String> pictures;
     @JsonFormat(pattern = DateConstants.LOCAL_DATE_TIME_PATTERN_Z, timezone = DateConstants.UTC_TIME_ZONE)
     private LocalDateTime creationTime;
     @JsonFormat(pattern = DateConstants.LOCAL_DATE_TIME_PATTERN_Z, timezone = DateConstants.UTC_TIME_ZONE)

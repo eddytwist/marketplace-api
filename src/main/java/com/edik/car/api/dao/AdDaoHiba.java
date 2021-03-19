@@ -22,7 +22,7 @@ public final class AdDaoHiba extends AbstractDaoHiba<Ad> {
 
     public List<AdShortInformationResponse> getAllShortInformationAds(int pageNumber, int limit) {
         return EntityManagerProvider.getEntityManager()
-            .createQuery("select new com.edik.car_api.web.dto.response.AdShortInformationResponse(" +
+            .createQuery("select new com.edik.car.api.web.dto.response.AdShortInformationResponse(" +
                 " ad.adId," +
                 " ad.year," +
                 " ad.brand," +
@@ -33,7 +33,7 @@ public final class AdDaoHiba extends AbstractDaoHiba<Ad> {
                 " ui.name," +
                 " ad.pictures.size)" +
                 " from Ad ad" +
-                " left join UserInformation ui on ad.user.userId = ui.userId " +
+                " left join UserInformation ui on ad.user.userId = ui.userId" +
                 " order by ad.creationTime desc", AdShortInformationResponse.class)
             .setFirstResult((pageNumber - 1) * limit)
             .setMaxResults(limit)
@@ -42,7 +42,7 @@ public final class AdDaoHiba extends AbstractDaoHiba<Ad> {
 
     public AdFullInformationResponse getFullInformationAdById(long id) {
         return EntityManagerProvider.getEntityManager()
-            .createQuery("select new com.edik.car_api.web.dto.response.AdFullInformationResponse(" +
+            .createQuery("select new com.edik.car.api.web.dto.response.AdFullInformationResponse(" +
                 " ad.adId," +
                 " ad.year," +
                 " ad.brand," +
@@ -52,10 +52,13 @@ public final class AdDaoHiba extends AbstractDaoHiba<Ad> {
                 " ad.condition," +
                 " ad.mileage," +
                 " ui.name," +
+                " pics" +
                 " ad.creationTime," +
-                " ad.editingTime)" +
+                " ad.editingTime" +
+                ")" +
                 " from Ad ad" +
                 " left join UserInformation ui on ad.user.userId = ui.userId" +
+                " join fetch ad.pictures pics" +
                 " where ad.adId = :id", AdFullInformationResponse.class)
             .setParameter("id", id)
             .getSingleResult();
