@@ -7,6 +7,7 @@ RESTful Web Service developed using Java EE technologies,Layered Architecture an
 - PostgreSQL
 - Docker
 - Servlets
+- JPA
 - Hibernate
 - Slf4j
 - SQL
