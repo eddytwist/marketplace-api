@@ -1,5 +1,5 @@
 # Vehicle Marketplace
-RESTful Web Service developed using Java EE technologies,Layered Architecture and Docker for PostgreSQL deployment.
+RESTful Web Service developed using Java EE technologies, Layered Architecture and Docker for PostgreSQL deployment.
 
 ## Technology stack:
 - Gradle
