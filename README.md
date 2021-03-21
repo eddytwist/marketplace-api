@@ -1,5 +1,5 @@
 # Car Marketplace
-RESTful Web Service developed using Java EE technologies and layered architecture.
+RESTful Web Service developed using Java EE technologies and Layered Architecture.
 
 ## Technology stack:
 - Gradle
@@ -16,4 +16,4 @@ RESTful Web Service developed using Java EE technologies and layered architectur
 - HikariCP
 
 The project hasn't finished yet.
-It is in stage of refactoring Java EE stack to Hibernate and Spring Framework than.
+It is in stage of refactoring the Java EE stack to Hibernate and Spring Framework.
