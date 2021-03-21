@@ -17,5 +17,4 @@ RESTful Web Service developed using Java EE technologies, Layered Architecture a
 - Jackson
 - HikariCP
 
-The project hasn't finished yet.
-It is in stage of refactoring the Java EE stack to Hibernate and Spring Framework.
+The project is in the stage of refactoring the Java EE stack to Hibernate and Spring Framework.
