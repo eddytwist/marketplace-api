@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Setter
 @Getter
 @Builder
@@ -17,4 +19,6 @@ public class CreateUserRequest {
     private String username;
     private String password;
     private String email;
+    private String name;
+    private List<String> userPhones;
 }

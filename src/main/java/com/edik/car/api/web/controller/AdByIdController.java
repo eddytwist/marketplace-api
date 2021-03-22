@@ -1,6 +1,6 @@
 package com.edik.car.api.web.controller;
 
-import com.edik.car.api.service.impl.AdServiceImplHiba;
+import com.edik.car.api.service.impl.AdServiceImpl;
 import com.edik.car.api.web.utils.UriUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/api/v1/ads/*")
 public class AdByIdController extends BaseController {
 
-    private final AdServiceImplHiba adService = AdServiceImplHiba.getInstance();
+    private final AdServiceImpl adService = AdServiceImpl.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
@@ -32,6 +32,6 @@ public class AdByIdController extends BaseController {
         Long adId = UriUtils.getId(req.getPathInfo());
 
         adService.delete(adId);
-        log.info("Ad id = " + adId + " successfully deleted.");
+        log.info("Ad id = {} successfully deleted.", adId);
     }
 }

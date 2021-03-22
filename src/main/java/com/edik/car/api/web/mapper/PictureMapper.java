@@ -32,6 +32,16 @@ public final class PictureMapper {
             .build();
     }
 
+    public static Picture toPicture(String pictureReference) {
+        if (pictureReference == null) {
+            return null;
+        }
+
+        return Picture.builder()
+            .reference(pictureReference)
+            .build();
+    }
+
     public static Picture toPicture(UpdatePictureRequest updatePictureRequest) {
         if (updatePictureRequest == null) {
             return null;

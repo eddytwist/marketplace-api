@@ -51,14 +51,14 @@ public abstract class BaseController extends HttpServlet {
         }
     }
 
-    private void throwIfNotJsonForSpecificMethod(HttpServletRequest request) {
+    private static void throwIfNotJsonForSpecificMethod(HttpServletRequest request) {
         boolean applicationJson = ServletConstants.APPLICATION_JSON.equals(request.getHeader("Content-Type"));
-        boolean methodThatShouldBeApplicationJson = "POST" .equalsIgnoreCase(request.getMethod())
-            || "PATCH" .equalsIgnoreCase(request.getMethod())
-            || "PUT" .equalsIgnoreCase(request.getMethod());
+        boolean methodThatShouldBeApplicationJson = "POST".equalsIgnoreCase(request.getMethod())
+            || "PATCH".equalsIgnoreCase(request.getMethod())
+            || "PUT".equalsIgnoreCase(request.getMethod());
 
         if (!applicationJson && methodThatShouldBeApplicationJson) {
-            log.warn("Unsupported content type: " + request.getHeader("Content-Type"));
+            log.warn("Unsupported content type: {}", request.getHeader("Content-Type"));
             throw new UnsupportedMediaTypeException("Unsupported content type.");
         }
     }
@@ -80,7 +80,7 @@ public abstract class BaseController extends HttpServlet {
 
         try {
             Object o = getResult.get();
-            log.info("Object for mapping: " + o);
+            log.info("Object for mapping: {}", o);
 
             String json = writeAsString(o);
 
@@ -88,7 +88,7 @@ public abstract class BaseController extends HttpServlet {
             writer.write(json);
             writer.flush();
             writer.close();
-            log.info("Data returned to the client: " + json);
+            log.info("Data returned to the client: {}", json);
         } catch (IOException e) {
             log.warn("Server failed.", e);
             throw new ServerFailedException("Server failed.", e);
@@ -98,7 +98,7 @@ public abstract class BaseController extends HttpServlet {
     protected <T> T getRequestObject(HttpServletRequest req, Class<T> clazz) {
         String json = getJson(req);
         try {
-            log.info("JSON for mapping: " + json);
+            log.info("JSON for mapping: {}", json);
             return mapper.readValue(json, clazz);
         } catch (JsonProcessingException e) {
             log.warn("Wrong input parameters.", e);
@@ -109,7 +109,7 @@ public abstract class BaseController extends HttpServlet {
     protected String getJson(HttpServletRequest request) {
         try {
             String json = request.getReader().lines().collect(Collectors.joining());
-            log.debug("Body parsed from request: " + json);
+            log.debug("Body parsed from request: {}", json);
             return json;
         } catch (IOException e) {
             log.warn("Impossible to read.", e);

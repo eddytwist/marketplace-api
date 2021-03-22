@@ -14,6 +14,5 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class UserInformationRequest {
-    private Long userId;
     private String name;
 }

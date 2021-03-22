@@ -2,6 +2,7 @@ package com.edik.car.api.dao.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Accessors(chain = true)
@@ -69,12 +71,13 @@ public class Ad {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Default
     @OneToMany(
         mappedBy = "ad",
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
-    private List<Picture> pictures;
+    private List<Picture> pictures = new ArrayList<>();
 
     public void addPicture(Picture picture) {
         pictures.add(picture);

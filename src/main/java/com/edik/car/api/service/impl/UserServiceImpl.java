@@ -1,7 +1,6 @@
 package com.edik.car.api.service.impl;
 
 import com.edik.car.api.dao.UserDao;
-import com.edik.car.api.dao.UserDaoHiba;
 import com.edik.car.api.dao.model.User;
 import com.edik.car.api.service.AbstractService;
 import com.edik.car.api.service.UserService;
@@ -13,7 +12,6 @@ import com.edik.car.api.web.mapper.UserMapper;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,39 +26,28 @@ public final class UserServiceImpl extends AbstractService implements UserServic
     public UserResponse create(CreateUserRequest createUserRequest) {
         User userToCreate = UserMapper.toUser(createUserRequest);
         User createdUser;
-        UserDaoHiba userDaoHiba = new UserDaoHiba();
 
-        createdUser = userDaoHiba.save(userToCreate);
+        try {
+            begin();
+            createdUser = userDao.save(userToCreate);
+            commit();
+        } catch (Exception e) {
+            rollback();
+            throw new ServiceFailedException("Creating failed: " + createUserRequest, e);
+        }
 
         return UserMapper.toUserResponse(createdUser);
     }
-
-//    @Override
-//    public UserResponse create(CreateUserRequest createUserRequest) {
-//        User userToCreate = UserMapper.toUser(createUserRequest);
-//        User createdUser;
-//
-//        try {
-//            startTransaction();
-//            createdUser = userDao.create(userToCreate);
-//            commit();
-//        } catch (SQLException e) {
-//            rollback();
-//            throw new ServiceFailedException("Creating failed: " + createUserRequest, e);
-//        }
-//
-//        return UserMapper.toUserResponse(createdUser);
-//    }
 
     @Override
     public UserResponse getById(Long id) {
         User user;
 
         try {
-            startTransaction();
+            begin();
             user = userDao.findById(id);
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Can't find User with id: " + id, e);
         }
@@ -68,15 +55,30 @@ public final class UserServiceImpl extends AbstractService implements UserServic
         return UserMapper.toUserResponse(user);
     }
 
+    public User getByIdForAd(Long id) {
+        User user;
+
+        try {
+            begin();
+            user = userDao.getUserToResponse(id);
+            commit();
+        } catch (Exception e) {
+            rollback();
+            throw new ServiceFailedException("Can't find User with id: " + id, e);
+        }
+
+        return user;
+    }
+
     @Override
     public List<UserResponse> getAll() {
         List<User> users;
 
         try {
-            startTransaction();
+            begin();
             users = userDao.findAll();
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Can't find Users.", e);
         }
@@ -91,10 +93,10 @@ public final class UserServiceImpl extends AbstractService implements UserServic
         User user = UserMapper.toUser(updateUserRequest);
 
         try {
-            startTransaction();
+            begin();
             userDao.update(user);
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Can't update User: " + updateUserRequest, e);
         }
@@ -105,10 +107,10 @@ public final class UserServiceImpl extends AbstractService implements UserServic
     @Override
     public void delete(Long id) {
         try {
-            startTransaction();
+            begin();
             userDao.delete(id);
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Can't delete User id: " + id, e);
         }

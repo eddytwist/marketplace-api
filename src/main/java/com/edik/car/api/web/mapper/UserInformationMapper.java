@@ -25,8 +25,17 @@ public final class UserInformationMapper {
         }
 
         return UserInformation.builder()
-//            .userId(userInformationRequest.getUserId())
             .name(userInformationRequest.getName())
+            .build();
+    }
+
+    public static UserInformation toUserInformation(String userInformationRequest) {
+        if (userInformationRequest == null) {
+            return null;
+        }
+
+        return UserInformation.builder()
+            .name(userInformationRequest)
             .build();
     }
 }

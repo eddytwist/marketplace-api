@@ -2,6 +2,7 @@ package com.edik.car.api.dao.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 
 @Accessors(chain = true)
@@ -51,19 +53,21 @@ public class User {
     @PrimaryKeyJoinColumn
     private UserInformation userInformation;
 
+    @Default
     @OneToMany(
         mappedBy = "user",
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
-    private List<Ad> ads;
+    private List<Ad> ads = new ArrayList<>();
 
+    @Default
     @OneToMany(
         mappedBy = "user",
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
-    private List<UserPhone> userPhones;
+    private List<UserPhone> userPhones = new ArrayList<>();
 
     public void addUserPhone(UserPhone userPhone) {
         userPhones.add(userPhone);
@@ -83,5 +87,10 @@ public class User {
     public void removeAd(Ad ad) {
         ads.remove(ad);
         ad.setUser(null);
+    }
+
+    public void addUserInformation(UserInformation userInformation) {
+        this.userInformation = userInformation;
+        userInformation.setUser(this);
     }
 }

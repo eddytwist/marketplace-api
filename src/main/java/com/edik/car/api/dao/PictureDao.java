@@ -1,17 +1,8 @@
 package com.edik.car.api.dao;
 
-import com.edik.car.api.dao.exception.DaoSqlException;
-import com.edik.car.api.dao.exception.ObjectNotFoundException;
 import com.edik.car.api.dao.model.Picture;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PictureDao extends AbstractDao<Picture> {
@@ -26,118 +17,9 @@ public final class PictureDao extends AbstractDao<Picture> {
 
     @Override
     public Class<Picture> getEntityType() {
-        return null;
+        return Picture.class;
     }
 
-    @Override
-    public Picture save(Picture picture) {
-        ResultSet resultSet;
-        long key = -1L;
-
-        try {
-            PreparedStatement preparedStatement = prepareStatement(CREATE_QUERY, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, picture.getReference());
-//            preparedStatement.setLong(2, picture.getAdId());
-            preparedStatement.executeUpdate();
-            resultSet = preparedStatement.getGeneratedKeys();
-
-            if (resultSet != null && resultSet.next()) {
-                key = resultSet.getLong("picture_id");
-            }
-        } catch (SQLException e) {
-            throw new DaoSqlException("SQL failed.", e);
-        }
-
-        close(resultSet);
-
-        return picture.setPictureId(key);
-    }
-
-    @Override
-    public Picture findById(Long id) {
-        ResultSet resultSet;
-        Picture picture;
-
-        try {
-            PreparedStatement preparedStatement = prepareStatement(GET_BY_ID_QUERY);
-            preparedStatement.setLong(1, id);
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                picture = buildPictureFromResultSet(resultSet);
-            } else {
-                throw new ObjectNotFoundException("Picture", id);
-            }
-        } catch (SQLException e) {
-            throw new DaoSqlException("SQL failed.", e);
-        }
-
-        close(resultSet);
-
-        return picture;
-    }
-
-    @Override
-    public List<Picture> findAll() {
-        ResultSet resultSet;
-        List<Picture> pictures = new ArrayList<>();
-
-        try {
-            PreparedStatement preparedStatement = prepareStatement(GET_ALL_QUERY);
-            resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                pictures.add(buildPictureFromResultSet(resultSet));
-            }
-        } catch (SQLException e) {
-            throw new DaoSqlException("SQL failed.", e);
-        }
-
-        close(resultSet);
-
-        return pictures;
-    }
-
-    @Override
-    public Picture update(Picture picture) {
-        try {
-            PreparedStatement preparedStatement = prepareStatement(UPDATE_QUERY);
-            preparedStatement.setString(1, picture.getReference());
-            preparedStatement.setLong(2, picture.getPictureId());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DaoSqlException("SQL failed.", e);
-        }
-
-        return picture;
-    }
-
-    @Override
-    public void delete(Long id) {
-        try {
-            PreparedStatement preparedStatement = prepareStatement(DELETE_QUERY);
-            preparedStatement.setLong(1, id);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DaoSqlException("SQL failed.", e);
-        }
-    }
-
-    private static Picture buildPictureFromResultSet(ResultSet resultSet) {
-        Picture picture;
-
-        try {
-            picture = Picture.builder()
-                .pictureId(resultSet.getLong("picture_id"))
-                .reference(resultSet.getString("reference"))
-//                .adId(resultSet.getLong("ad_id"))
-                .build();
-        } catch (SQLException e) {
-            throw new DaoSqlException("Troubles with getting params from ResultSet.", e);
-        }
-
-        return picture;
-    }
 
     public static PictureDao getInstance() {
         PictureDao localInstance = pictureDaoInstance;

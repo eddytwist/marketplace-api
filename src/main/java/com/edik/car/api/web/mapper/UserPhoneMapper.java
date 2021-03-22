@@ -32,6 +32,16 @@ public final class UserPhoneMapper {
             .build();
     }
 
+    public static UserPhone toUserPhone(String userPhoneRequest) {
+        if (userPhoneRequest == null) {
+            return null;
+        }
+
+        return UserPhone.builder()
+            .phoneNumber(userPhoneRequest)
+            .build();
+    }
+
     public static UserPhone toUserPhone(UpdateUserPhoneRequest updateUserPhoneRequest) {
         if (updateUserPhoneRequest == null) {
             return null;

@@ -25,6 +25,5 @@ public class CreateAdRequest {
     private Condition condition;
     private Long mileage;
     private Integer enginePower;
-    private List<String> ownerPhoneNumbers;
     private List<String> pictureReferences;
 }

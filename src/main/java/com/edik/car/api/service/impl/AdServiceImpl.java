@@ -1,7 +1,10 @@
 package com.edik.car.api.service.impl;
 
 import com.edik.car.api.dao.AdDao;
+import com.edik.car.api.dao.UserDao;
+import com.edik.car.api.dao.dto.AdShortInformationService;
 import com.edik.car.api.dao.model.Ad;
+import com.edik.car.api.dao.model.User;
 import com.edik.car.api.service.AbstractService;
 import com.edik.car.api.service.AdService;
 import com.edik.car.api.service.exception.ServiceFailedException;
@@ -15,7 +18,7 @@ import com.edik.car.api.web.mapper.AdMapper;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,21 +28,26 @@ public final class AdServiceImpl extends AbstractService implements AdService {
     private static volatile AdServiceImpl adServiceImplInstance;
 
     private final PictureServiceImpl pictureService = PictureServiceImpl.getInstance();
+    private final UserServiceImpl userServiceImplHiba = UserServiceImpl.getInstance();
 
-    private final AdDao adDao = AdDao.getInstance();
+    private final AdDao adDaoHiba = AdDao.getInstance();
+    private final UserDao userDaoHiba = UserDao.getInstance();
 
     @Override
-    public AdResponse create(CreateAdRequest adCreatedDto) {
-        Ad adToCreate = AdMapper.toAd(adCreatedDto);
+    public AdResponse create(CreateAdRequest createAdRequest) {
+        Ad adToCreate = AdMapper.toAd(createAdRequest);
+        adToCreate.setCreationTime(LocalDateTime.now());
+        adToCreate.setEditingTime(LocalDateTime.now());
+        adToCreate.setUser(userDaoHiba.findById(createAdRequest.getUserId()));
         Ad createdAd;
 
         try {
-            startTransaction();
-            createdAd = adDao.save(adToCreate);
+            begin();
+            createdAd = adDaoHiba.save(adToCreate);
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
-            throw new ServiceFailedException("Creating failed: " + adCreatedDto, e);
+            throw new ServiceFailedException("Creating failed: " + createAdRequest, e);
         }
 
         return AdMapper.toAdResponse(createdAd);
@@ -50,10 +58,10 @@ public final class AdServiceImpl extends AbstractService implements AdService {
         Ad ad;
 
         try {
-            startTransaction();
-            ad = adDao.findById(id);
+            begin();
+            ad = adDaoHiba.findById(id);
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Can't find Ad with id: " + id, e);
         }
@@ -63,18 +71,20 @@ public final class AdServiceImpl extends AbstractService implements AdService {
 
     @Override
     public AdFullInformationResponse getFullInformationAdById(Long id) {
-        AdFullInformationResponse adFullInformationResponse;
+        Ad adToResponse;
+        User userToResponse;
 
         try {
-            startTransaction();
-            adFullInformationResponse = adDao.getFullInformationAdById(id);
+            begin();
+            adToResponse = adDaoHiba.getAdToResponse(id);
+            userToResponse = userDaoHiba.getUserToResponse(adToResponse.getUser().getUserId());
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Can't find Ad with id: " + id, e);
         }
 
-        return adFullInformationResponse;
+        return AdMapper.toAdFullInformationResponse(adToResponse, userToResponse);
     }
 
     @Override
@@ -82,10 +92,10 @@ public final class AdServiceImpl extends AbstractService implements AdService {
         List<Ad> ads;
 
         try {
-            startTransaction();
-            ads = adDao.findAll();
+            begin();
+            ads = adDaoHiba.findAll();
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Can't find Ads.", e);
         }
@@ -97,43 +107,46 @@ public final class AdServiceImpl extends AbstractService implements AdService {
 
     @Override
     public List<AdShortInformationResponse> getAllShortInformationAds(int pageNumber, int adsPerPage) {
-        List<AdShortInformationResponse> paginatedAds;
+        List<AdShortInformationService> paginatedAds;
 
         try {
-            startTransaction();
-            paginatedAds = adDao.getAllShortInformationAds(pageNumber, adsPerPage);
+            begin();
+            paginatedAds = adDaoHiba.getAllShortInformationAds(pageNumber, adsPerPage);
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Can't find Ads.", e);
         }
 
-        return paginatedAds;
+        return paginatedAds.stream()
+            .map(AdMapper::toAdShortInformationResponse)
+            .collect(Collectors.toList());
     }
 
     @Override
     public AdResponse update(UpdateAdRequest updateAdRequest) {
-        Ad ad = AdMapper.toAd(updateAdRequest);
+        Ad adToUpdate = AdMapper.toAd(updateAdRequest);
+        Ad updatedAd;
 
         try {
-            startTransaction();
-            adDao.update(ad);
+            begin();
+            updatedAd = adDaoHiba.update(adToUpdate);
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Can't update Ad: " + updateAdRequest, e);
         }
 
-        return getById(ad.getAdId());
+        return AdMapper.toAdResponse(updatedAd);
     }
 
     @Override
     public void delete(Long id) {
         try {
-            startTransaction();
-            adDao.delete(id);
+            begin();
+            adDaoHiba.delete(id);
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Can't delete Ad id: " + id, e);
         }
@@ -142,13 +155,13 @@ public final class AdServiceImpl extends AbstractService implements AdService {
     @Override
     public void deletePictureFromAdById(Long id) {
         try {
-            startTransaction();
+            begin();
 
-            adDao.updateAdEditingTimeByPictureId(id);
+            adDaoHiba.updateAdEditingTimeByPictureId(id);
             pictureService.delete(id);
 
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Can't delete Picture from Ad by Picture id: " + id, e);
         }
@@ -159,10 +172,10 @@ public final class AdServiceImpl extends AbstractService implements AdService {
         Ad ad = AdMapper.toAd(patchAdRequest);
 
         try {
-            startTransaction();
-            adDao.updateAllowedFields(ad);
+            begin();
+            adDaoHiba.updateAllowedFields(ad);
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Can't update Ad: " + patchAdRequest, e);
         }

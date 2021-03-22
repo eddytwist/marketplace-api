@@ -12,7 +12,6 @@ import com.edik.car.api.web.mapper.PictureMapper;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,10 +28,10 @@ public final class PictureServiceImpl extends AbstractService implements Picture
         Picture createdPicture;
 
         try {
-            startTransaction();
+            begin();
             createdPicture = pictureDao.save(pictureToCreate);
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Creating failed: " + createPictureRequest, e);
         }
@@ -45,10 +44,10 @@ public final class PictureServiceImpl extends AbstractService implements Picture
         Picture picture;
 
         try {
-            startTransaction();
+            begin();
             picture = pictureDao.findById(id);
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Can't find Picture with id: " + id, e);
         }
@@ -61,10 +60,10 @@ public final class PictureServiceImpl extends AbstractService implements Picture
         List<Picture> pictures;
 
         try {
-            startTransaction();
+            begin();
             pictures = pictureDao.findAll();
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Can't find Pictures.", e);
         }
@@ -79,10 +78,10 @@ public final class PictureServiceImpl extends AbstractService implements Picture
         Picture picture = PictureMapper.toPicture(updatePictureRequest);
 
         try {
-            startTransaction();
+            begin();
             pictureDao.update(picture);
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Can't update Picture: " + updatePictureRequest, e);
         }
@@ -91,10 +90,10 @@ public final class PictureServiceImpl extends AbstractService implements Picture
     @Override
     public void delete(Long id) {
         try {
-            startTransaction();
+            begin();
             pictureDao.delete(id);
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Can't delete Picture id: " + id, e);
         }

@@ -1,6 +1,6 @@
 package com.edik.car.api.web.controller;
 
-import com.edik.car.api.service.impl.AdServiceImplHiba;
+import com.edik.car.api.service.impl.AdServiceImpl;
 import com.edik.car.api.web.dto.request.CreateAdRequest;
 import com.edik.car.api.web.dto.request.PatchAdRequest;
 import com.edik.car.api.web.dto.request.UpdateAdRequest;
@@ -16,12 +16,12 @@ public class AdsController extends BaseController {
 
     public static final int DEFAULT_ADS_PER_PAGE = 10;
     public static final int DEFAULT_PAGE_NUMBER = 1;
-    private final AdServiceImplHiba adService = AdServiceImplHiba.getInstance();
+    private final AdServiceImpl adService = AdServiceImpl.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         log.info("GET method running.");
-        log.info("Transferred params: " + req.getQueryString());
+        log.info("Transferred params: {}", req.getQueryString());
 
         executeWithStatusOk(resp, () -> {
             int page = (req.getParameter("page") == null) ? DEFAULT_PAGE_NUMBER : Integer.parseInt(req.getParameter("page"));
@@ -34,7 +34,7 @@ public class AdsController extends BaseController {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         log.info("POST method running.");
-        log.info("Transferred params: " + req.getQueryString());
+        log.info("Transferred params: {}", req.getQueryString());
 
         executeWithStatusCreated(resp, () -> adService.create(getRequestObject(req, CreateAdRequest.class)));
     }
@@ -42,7 +42,7 @@ public class AdsController extends BaseController {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
         log.info("PUT method running.");
-        log.info("Transferred params: " + req.getQueryString());
+        log.info("Transferred params: {}", req.getQueryString());
 
         executeWithStatusCreated(resp, () -> adService.update(getRequestObject(req, UpdateAdRequest.class)));
     }
@@ -50,7 +50,7 @@ public class AdsController extends BaseController {
     @Override
     protected void doPatch(HttpServletRequest req, HttpServletResponse resp) {
         log.info("PATCH method running.");
-        log.info("Transferred params: " + req.getQueryString());
+        log.info("Transferred params: {}", req.getQueryString());
 
         executeWithStatusCreated(resp, () -> adService.updateAllowedFields(getRequestObject(req, PatchAdRequest.class)));
     }

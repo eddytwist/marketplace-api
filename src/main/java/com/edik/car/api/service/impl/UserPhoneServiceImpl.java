@@ -12,7 +12,6 @@ import com.edik.car.api.web.mapper.UserPhoneMapper;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,10 +28,10 @@ public final class UserPhoneServiceImpl extends AbstractService implements UserP
         UserPhone createdUserPhone;
 
         try {
-            startTransaction();
+            begin();
             createdUserPhone = userPhoneDao.save(userPhoneToCreate);
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Creating failed: " + createUserPhoneRequest, e);
         }
@@ -45,10 +44,10 @@ public final class UserPhoneServiceImpl extends AbstractService implements UserP
         UserPhone userPhone;
 
         try {
-            startTransaction();
+            begin();
             userPhone = userPhoneDao.findById(id);
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Can't find UserPhone with id: " + id, e);
         }
@@ -61,10 +60,10 @@ public final class UserPhoneServiceImpl extends AbstractService implements UserP
         List<UserPhone> userPhones;
 
         try {
-            startTransaction();
+            begin();
             userPhones = userPhoneDao.findAll();
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Can't find UserPhones.", e);
         }
@@ -79,10 +78,10 @@ public final class UserPhoneServiceImpl extends AbstractService implements UserP
         UserPhone userPhone = UserPhoneMapper.toUserPhone(updateUserPhoneRequest);
 
         try {
-            startTransaction();
+            begin();
             userPhoneDao.update(userPhone);
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Can't update UserPhone: " + updateUserPhoneRequest, e);
         }
@@ -91,10 +90,10 @@ public final class UserPhoneServiceImpl extends AbstractService implements UserP
     @Override
     public void delete(Long id) {
         try {
-            startTransaction();
+            begin();
             userPhoneDao.delete(id);
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Can't delete UserPhone id: " + id, e);
         }

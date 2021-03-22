@@ -36,6 +36,6 @@ public class AdPicturesController extends BaseController {
         Long pictureId = UriUtils.getId(req.getPathInfo());
 
         adService.deletePictureFromAdById(pictureId);
-        log.info("Picture id = " + pictureId + " successfully deleted.");
+        log.info("Picture id = {} successfully deleted.", pictureId);
     }
 }

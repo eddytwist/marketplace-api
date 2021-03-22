@@ -28,10 +28,10 @@ public final class UserInformationServiceImpl extends AbstractService implements
         UserInformation createdUserInformation;
 
         try {
-            startTransaction();
+            begin();
             createdUserInformation = userInformationDao.save(userInformationToCreate);
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Creating failed: " + userInformationRequest, e);
         }
@@ -44,10 +44,10 @@ public final class UserInformationServiceImpl extends AbstractService implements
         UserInformation userInformation;
 
         try {
-            startTransaction();
+            begin();
             userInformation = userInformationDao.findById(id);
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Can't find Picture with id: " + id, e);
         }
@@ -60,10 +60,10 @@ public final class UserInformationServiceImpl extends AbstractService implements
         List<UserInformation> usersInformation;
 
         try {
-            startTransaction();
+            begin();
             usersInformation = userInformationDao.findAll();
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Can't find UsersInformation.", e);
         }
@@ -78,10 +78,10 @@ public final class UserInformationServiceImpl extends AbstractService implements
         UserInformation userInformation = UserInformationMapper.toUserInformation(userInformationRequest);
 
         try {
-            startTransaction();
+            begin();
             userInformationDao.update(userInformation);
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Can't update UserInformation: " + userInformationRequest, e);
         }
@@ -90,10 +90,10 @@ public final class UserInformationServiceImpl extends AbstractService implements
     @Override
     public void delete(Long id) {
         try {
-            startTransaction();
+            begin();
             userInformationDao.delete(id);
             commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Can't delete UserInformation id: " + id, e);
         }

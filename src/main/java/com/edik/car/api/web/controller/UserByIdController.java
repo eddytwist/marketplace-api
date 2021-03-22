@@ -2,7 +2,6 @@ package com.edik.car.api.web.controller;
 
 import com.edik.car.api.service.UserService;
 import com.edik.car.api.service.impl.UserServiceImpl;
-import com.edik.car.api.service.impl.UserServiceImplHiba;
 import com.edik.car.api.web.utils.UriUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 public class UserByIdController extends BaseController {
 
     private final UserService userService = UserServiceImpl.getInstance();
-    private final UserServiceImplHiba userServiceHiba = UserServiceImplHiba.getInstance();
+    private final UserServiceImpl userServiceHiba = UserServiceImpl.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {

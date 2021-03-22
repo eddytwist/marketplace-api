@@ -2,7 +2,6 @@ package com.edik.car.api.web.controller;
 
 import com.edik.car.api.service.UserService;
 import com.edik.car.api.service.impl.UserServiceImpl;
-import com.edik.car.api.service.impl.UserServiceImplHiba;
 import com.edik.car.api.web.dto.request.CreateUserRequest;
 import com.edik.car.api.web.dto.request.UpdateUserRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 public class UsersController extends BaseController {
 
     private final UserService userService = UserServiceImpl.getInstance();
-    private final UserServiceImplHiba userServiceImplHiba = UserServiceImplHiba.getInstance();
+    private final UserServiceImpl userServiceImplHiba = UserServiceImpl.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
@@ -28,15 +27,16 @@ public class UsersController extends BaseController {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         log.info("POST method running.");
-        log.info("Transferred params: " + req.getQueryString());
+        log.info("Transferred params: {}", req.getQueryString());
 
-        executeWithStatusCreated(resp, () -> userServiceImplHiba.create(getRequestObject(req, CreateUserRequest.class)));
+        executeWithStatusCreated(resp, () ->
+            userServiceImplHiba.create(getRequestObject(req, CreateUserRequest.class)));
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
         log.info("PUT method running.");
-        log.info("Transferred params: " + req.getQueryString());
+        log.info("Transferred params: {}", req.getQueryString());
 
         executeWithStatusCreated(resp, () -> userServiceImplHiba.update(getRequestObject(req, UpdateUserRequest.class)));
     }
