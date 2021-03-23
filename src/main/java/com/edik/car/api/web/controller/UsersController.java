@@ -15,13 +15,12 @@ import javax.servlet.http.HttpServletResponse;
 public class UsersController extends BaseController {
 
     private final UserService userService = UserServiceImpl.getInstance();
-    private final UserServiceImpl userServiceImplHiba = UserServiceImpl.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         log.info("GET method running.");
 
-        executeWithStatusOk(resp, userServiceImplHiba::getAll);
+        executeWithStatusOk(resp, userService::getAll);
     }
 
     @Override
@@ -30,7 +29,7 @@ public class UsersController extends BaseController {
         log.info("Transferred params: {}", req.getQueryString());
 
         executeWithStatusCreated(resp, () ->
-            userServiceImplHiba.create(getRequestObject(req, CreateUserRequest.class)));
+            userService.create(getRequestObject(req, CreateUserRequest.class)));
     }
 
     @Override
@@ -38,6 +37,7 @@ public class UsersController extends BaseController {
         log.info("PUT method running.");
         log.info("Transferred params: {}", req.getQueryString());
 
-        executeWithStatusCreated(resp, () -> userServiceImplHiba.update(getRequestObject(req, UpdateUserRequest.class)));
+        executeWithStatusCreated(resp, () ->
+            userService.update(getRequestObject(req, UpdateUserRequest.class)));
     }
 }

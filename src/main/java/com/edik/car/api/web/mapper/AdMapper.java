@@ -100,15 +100,6 @@ public final class AdMapper {
         return ad;
     }
 
-    private static void setPictures(Ad ad, CreateAdRequest request) {
-        if (request.getPictureReferences() == null) {
-            return;
-        }
-
-        request.getPictureReferences().stream()
-            .map(PictureMapper::toPicture)
-            .forEach(ad::addPicture);
-    }
 
     public static Ad toAd(UpdateAdRequest updateAdRequest) {
         if (updateAdRequest == null) {
@@ -162,5 +153,47 @@ public final class AdMapper {
         return user.getUserPhones().stream()
             .map(UserPhone::getPhoneNumber)
             .collect(Collectors.toList());
+    }
+
+    private static void setPictures(Ad ad, CreateAdRequest request) {
+        if (request.getPictureReferences() == null) {
+            return;
+        }
+
+        request.getPictureReferences().stream()
+            .map(PictureMapper::toPicture)
+            .forEach(ad::addPicture);
+    }
+
+    private static void setPictures(Ad ad, UpdateAdRequest request) {
+        if (request.getPictureReferences() == null) {
+            return;
+        }
+
+        ad.getPictures().clear();
+
+        request.getPictureReferences().stream()
+            .map(PictureMapper::toPicture)
+            .forEach(ad::addPicture);
+    }
+
+    public static void updateAdFields(Ad foundedAd, UpdateAdRequest updateAdRequest) {
+        foundedAd.setBrand(updateAdRequest.getBrand());
+        foundedAd.setModel(updateAdRequest.getModel());
+        foundedAd.setYear(updateAdRequest.getYear());
+        foundedAd.setCondition(updateAdRequest.getCondition());
+        foundedAd.setEnginePower(updateAdRequest.getEnginePower());
+        foundedAd.setEngineVolume(updateAdRequest.getEngineVolume());
+        foundedAd.setMileage(updateAdRequest.getMileage());
+        setPictures(foundedAd, updateAdRequest);
+    }
+
+    public static void updateAllowedAdFields(Ad foundedAd, PatchAdRequest patchAdRequest) {
+        foundedAd.setBrand(patchAdRequest.getBrand());
+        foundedAd.setModel(patchAdRequest.getModel());
+        foundedAd.setYear(patchAdRequest.getYear());
+        foundedAd.setEnginePower(patchAdRequest.getEnginePower());
+        foundedAd.setEngineVolume(patchAdRequest.getEngineVolume());
+        foundedAd.setMileage(patchAdRequest.getMileage());
     }
 }

@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,6 +18,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -36,24 +39,24 @@ import java.util.List;
 @Table(name = "ads")
 public class Ad {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ad_id")
     private Long adId;
 
-    @Column()
+    @Column
     private Integer year;
 
-    @Column()
+    @Column
     private String brand;
 
-    @Column()
+    @Column
     private String model;
 
     @Column(name = "engine_volume")
     private Integer engineVolume;
 
     @Enumerated(EnumType.STRING)
-    @Column()
+    @Column
     private Condition condition;
 
     private Long mileage;
@@ -61,9 +64,11 @@ public class Ad {
     @Column(name = "engine_power")
     private Integer enginePower;
 
+    @CreationTimestamp
     @Column(name = "creation_time")
     private LocalDateTime creationTime;
 
+    @UpdateTimestamp
     @Column(name = "editing_time")
     private LocalDateTime editingTime;
 

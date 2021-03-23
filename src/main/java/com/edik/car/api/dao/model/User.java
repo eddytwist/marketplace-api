@@ -13,6 +13,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -31,17 +32,17 @@ import java.util.List;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue
-    @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String username;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
-    @Column()
+    @Column(nullable = false)
     private String password;
 
     @OneToOne(
@@ -91,6 +92,13 @@ public class User {
 
     public void addUserInformation(UserInformation userInformation) {
         this.userInformation = userInformation;
+        userInformation.setUserId(userId);
         userInformation.setUser(this);
+    }
+
+    public void removeUserInformation(UserInformation userInformation) {
+        this.userInformation = null;
+        userInformation.setUserId(null);
+        userInformation.setUser(null);
     }
 }

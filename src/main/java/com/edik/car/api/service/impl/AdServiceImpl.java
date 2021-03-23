@@ -1,12 +1,15 @@
 package com.edik.car.api.service.impl;
 
 import com.edik.car.api.dao.AdDao;
+import com.edik.car.api.dao.PictureDao;
 import com.edik.car.api.dao.UserDao;
 import com.edik.car.api.dao.dto.AdShortInformationService;
 import com.edik.car.api.dao.model.Ad;
+import com.edik.car.api.dao.model.Picture;
 import com.edik.car.api.dao.model.User;
 import com.edik.car.api.service.AbstractService;
 import com.edik.car.api.service.AdService;
+import com.edik.car.api.service.exception.ServiceEntityNotFoundException;
 import com.edik.car.api.service.exception.ServiceFailedException;
 import com.edik.car.api.web.dto.request.CreateAdRequest;
 import com.edik.car.api.web.dto.request.PatchAdRequest;
@@ -18,7 +21,6 @@ import com.edik.car.api.web.mapper.AdMapper;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,22 +30,22 @@ public final class AdServiceImpl extends AbstractService implements AdService {
     private static volatile AdServiceImpl adServiceImplInstance;
 
     private final PictureServiceImpl pictureService = PictureServiceImpl.getInstance();
-    private final UserServiceImpl userServiceImplHiba = UserServiceImpl.getInstance();
 
-    private final AdDao adDaoHiba = AdDao.getInstance();
-    private final UserDao userDaoHiba = UserDao.getInstance();
+    private final AdDao adDao = AdDao.getInstance();
+    private final UserDao userDao = UserDao.getInstance();
+    private final PictureDao pictureDao = PictureDao.getInstance();
 
     @Override
     public AdResponse create(CreateAdRequest createAdRequest) {
         Ad adToCreate = AdMapper.toAd(createAdRequest);
-        adToCreate.setCreationTime(LocalDateTime.now());
-        adToCreate.setEditingTime(LocalDateTime.now());
-        adToCreate.setUser(userDaoHiba.findById(createAdRequest.getUserId()));
         Ad createdAd;
 
         try {
             begin();
-            createdAd = adDaoHiba.save(adToCreate);
+
+            adToCreate.setUser(userDao.findById(createAdRequest.getUserId()));
+            createdAd = adDao.save(adToCreate);
+
             commit();
         } catch (Exception e) {
             rollback();
@@ -59,7 +61,9 @@ public final class AdServiceImpl extends AbstractService implements AdService {
 
         try {
             begin();
-            ad = adDaoHiba.findById(id);
+
+            ad = adDao.findById(id);
+
             commit();
         } catch (Exception e) {
             rollback();
@@ -76,8 +80,10 @@ public final class AdServiceImpl extends AbstractService implements AdService {
 
         try {
             begin();
-            adToResponse = adDaoHiba.getAdToResponse(id);
-            userToResponse = userDaoHiba.getUserToResponse(adToResponse.getUser().getUserId());
+
+            adToResponse = adDao.getAdToResponse(id);
+            userToResponse = userDao.getUserToResponse(adToResponse.getUser().getUserId());
+
             commit();
         } catch (Exception e) {
             rollback();
@@ -93,7 +99,9 @@ public final class AdServiceImpl extends AbstractService implements AdService {
 
         try {
             begin();
-            ads = adDaoHiba.findAll();
+
+            ads = adDao.findAll();
+
             commit();
         } catch (Exception e) {
             rollback();
@@ -111,7 +119,9 @@ public final class AdServiceImpl extends AbstractService implements AdService {
 
         try {
             begin();
-            paginatedAds = adDaoHiba.getAllShortInformationAds(pageNumber, adsPerPage);
+
+            paginatedAds = adDao.getAllShortInformationAds(pageNumber, adsPerPage);
+
             commit();
         } catch (Exception e) {
             rollback();
@@ -125,12 +135,20 @@ public final class AdServiceImpl extends AbstractService implements AdService {
 
     @Override
     public AdResponse update(UpdateAdRequest updateAdRequest) {
-        Ad adToUpdate = AdMapper.toAd(updateAdRequest);
         Ad updatedAd;
 
         try {
             begin();
-            updatedAd = adDaoHiba.update(adToUpdate);
+
+            Ad foundedAd = adDao.findById(updateAdRequest.getAdId());
+
+            if (foundedAd != null) {
+                AdMapper.updateAdFields(foundedAd, updateAdRequest);
+                updatedAd = adDao.update(foundedAd);
+            } else {
+                throw new ServiceEntityNotFoundException("Ad", updateAdRequest.getAdId());
+            }
+
             commit();
         } catch (Exception e) {
             rollback();
@@ -144,7 +162,9 @@ public final class AdServiceImpl extends AbstractService implements AdService {
     public void delete(Long id) {
         try {
             begin();
-            adDaoHiba.delete(id);
+
+            adDao.delete(id);
+
             commit();
         } catch (Exception e) {
             rollback();
@@ -157,8 +177,11 @@ public final class AdServiceImpl extends AbstractService implements AdService {
         try {
             begin();
 
-            adDaoHiba.updateAdEditingTimeByPictureId(id);
-            pictureService.delete(id);
+            Picture pictureToDelete = pictureDao.findById(id);
+            Ad foundedAd = adDao.findById(pictureToDelete.getAd().getAdId());
+            pictureDao.delete(id);
+            foundedAd.removePicture(pictureToDelete);
+            adDao.update(foundedAd);
 
             commit();
         } catch (Exception e) {
@@ -169,18 +192,27 @@ public final class AdServiceImpl extends AbstractService implements AdService {
 
     @Override
     public AdResponse updateAllowedFields(PatchAdRequest patchAdRequest) {
-        Ad ad = AdMapper.toAd(patchAdRequest);
+        Ad patchedAd;
 
         try {
             begin();
-            adDaoHiba.updateAllowedFields(ad);
+
+            Ad foundedAd = adDao.findById(patchAdRequest.getAdId());
+
+            if (foundedAd != null) {
+                AdMapper.updateAllowedAdFields(foundedAd, patchAdRequest);
+                patchedAd = adDao.update(foundedAd);
+            } else {
+                throw new ServiceEntityNotFoundException("Ad", patchAdRequest.getAdId());
+            }
+
             commit();
         } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Can't update Ad: " + patchAdRequest, e);
         }
 
-        return getById(patchAdRequest.getAdId());
+        return AdMapper.toAdResponse(patchedAd);
     }
 
     public static AdServiceImpl getInstance() {

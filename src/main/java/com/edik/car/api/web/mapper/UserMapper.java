@@ -1,16 +1,11 @@
 package com.edik.car.api.web.mapper;
 
 import com.edik.car.api.dao.model.User;
-import com.edik.car.api.dao.model.UserPhone;
 import com.edik.car.api.web.dto.request.CreateUserRequest;
 import com.edik.car.api.web.dto.request.UpdateUserRequest;
 import com.edik.car.api.web.dto.response.UserResponse;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class UserMapper {
@@ -44,7 +39,7 @@ public final class UserMapper {
         return user;
     }
 
-    private static void setUserInformation(User user, CreateUserRequest request) {
+    public static void setUserInformation(User user, CreateUserRequest request) {
         if (request.getName() == null) {
             return;
         }
@@ -62,28 +57,31 @@ public final class UserMapper {
             .forEach(user::addUserPhone);
     }
 
-
-    public static User toUser(UpdateUserRequest updateUserRequest) {
-        if (updateUserRequest == null) {
-            return null;
+    private static void setUserInformation(User user, UpdateUserRequest request) {
+        if (request.getName() == null) {
+            return;
         }
 
-        return User.builder()
-            .userId(updateUserRequest.getUserId())
-            .username(updateUserRequest.getUsername())
-            .password(updateUserRequest.getPassword())
-            .email(updateUserRequest.getEmail())
-            .build();
+        user.addUserInformation(UserInformationMapper.toUserInformation(request.getName()));
     }
 
-    private static List<UserPhone> getUserPhones(CreateUserRequest request) {
+    private static void setUserPhones(User user, UpdateUserRequest request) {
         if (request.getUserPhones() == null) {
-            return Collections.emptyList();
+            return;
         }
 
-        return request.getUserPhones()
-            .stream()
+        user.getUserPhones().clear();
+
+        request.getUserPhones().stream()
             .map(UserPhoneMapper::toUserPhone)
-            .collect(Collectors.toList());
+            .forEach(user::addUserPhone);
+    }
+
+    public static void updateUserFields(User userToUpdate, UpdateUserRequest userFromRequest) {
+        userToUpdate.setUsername(userFromRequest.getUsername());
+        userToUpdate.setEmail(userFromRequest.getEmail());
+        userToUpdate.setPassword(userFromRequest.getPassword());
+        setUserPhones(userToUpdate, userFromRequest);
+        setUserInformation(userToUpdate, userFromRequest);
     }
 }

@@ -4,6 +4,7 @@ import com.edik.car.api.dao.UserDao;
 import com.edik.car.api.dao.model.User;
 import com.edik.car.api.service.AbstractService;
 import com.edik.car.api.service.UserService;
+import com.edik.car.api.service.exception.ServiceEntityNotFoundException;
 import com.edik.car.api.service.exception.ServiceFailedException;
 import com.edik.car.api.web.dto.request.CreateUserRequest;
 import com.edik.car.api.web.dto.request.UpdateUserRequest;
@@ -90,18 +91,26 @@ public final class UserServiceImpl extends AbstractService implements UserServic
 
     @Override
     public UserResponse update(UpdateUserRequest updateUserRequest) {
-        User user = UserMapper.toUser(updateUserRequest);
+        User updatedUser;
 
         try {
             begin();
-            userDao.update(user);
+
+            User foundedUser = userDao.findById(updateUserRequest.getUserId());
+
+            if (foundedUser != null) {
+                UserMapper.updateUserFields(foundedUser, updateUserRequest);
+                updatedUser = userDao.update(foundedUser);
+            } else {
+                throw new ServiceEntityNotFoundException("User", updateUserRequest.getUserId());
+            }
             commit();
         } catch (Exception e) {
             rollback();
             throw new ServiceFailedException("Can't update User: " + updateUserRequest, e);
         }
 
-        return getById(user.getUserId());
+        return UserMapper.toUserResponse(updatedUser);
     }
 
     @Override

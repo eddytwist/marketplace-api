@@ -49,39 +49,6 @@ public final class AdDao extends AbstractDao<Ad> {
             .getSingleResult();
     }
 
-//    public AdFullInformationResponse getFullInformationAdById(long id) {
-//        return EntityManagerProvider.getEntityManager()
-//            .createQuery("select new com.edik.car.api.web.dto.response.AdFullInformationResponse(" +
-//                " ad.adId," +
-//                " ad.year," +
-//                " ad.brand," +
-//                " ad.model," +
-//                " ad.engineVolume," +
-//                " ad.engineVolume," +
-//                " ad.condition," +
-//                " ad.mileage," +
-//                " ui.name," +
-//                " pics" +
-//                " ad.creationTime," +
-//                " ad.editingTime" +
-//                ")" +
-//                " from Ad ad" +
-//                " left join UserInformation ui on ad.user.userId = ui.userId" +
-//                " join fetch ad.pictures pics" +
-//                " where ad.adId = :id", AdFullInformationResponse.class)
-//            .setParameter("id", id)
-//            .getSingleResult();
-//    }
-
-
-    public List<String> getAllPicturesByAdId(Long id) {
-        return EntityManagerProvider.getEntityManager()
-            .createQuery("select p.reference from Picture p" +
-                " where p.ad.adId = :id", String.class)
-            .setParameter("id", id)
-            .getResultList();
-    }
-
     public void updateAdEditingTimeByPictureId(Long id) {
         EntityManagerProvider.getEntityManager()
             .createQuery("update Ad ad set ad.editingTime = :editingTime" +
@@ -90,22 +57,6 @@ public final class AdDao extends AbstractDao<Ad> {
                 " where p.pictureId = :id)")
             .setParameter("editingTime", LocalDateTime.now())
             .setParameter("id", id);
-    }
-
-    public Ad updateAllowedFields(Ad ad) {
-        return EntityManagerProvider.getEntityManager()
-            .createQuery("update Ad ad set" +
-                " ad.year = :year, ad.brand = :brand, ad.model = :model, ad.engineVolume = :engineVolume, ad.mileage = :mileage, ad.enginePower = :enginePower, ad.editingTime = :editingTime" +
-                " where ad.adId = :id", Ad.class)
-            .setParameter("year", ad.getYear())
-            .setParameter("brand", ad.getBrand())
-            .setParameter("model", ad.getModel())
-            .setParameter("engineVolume", ad.getEngineVolume())
-            .setParameter("mileage", ad.getMileage())
-            .setParameter("enginePower", ad.getEnginePower())
-            .setParameter("editingTime", LocalDateTime.now())
-            .setParameter("id", ad.getAdId())
-            .getSingleResult();
     }
 
 

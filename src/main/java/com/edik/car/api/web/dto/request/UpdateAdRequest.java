@@ -18,7 +18,6 @@ import java.util.List;
 @ToString
 public class UpdateAdRequest {
     private Long adId;
-    private Long userId;
     private Integer year;
     private String brand;
     private String model;
@@ -26,7 +25,5 @@ public class UpdateAdRequest {
     private Condition condition;
     private Long mileage;
     private Integer enginePower;
-    private String ownerName;
-    private List<String> ownerPhoneNumbers;
     private List<String> pictureReferences;
 }
