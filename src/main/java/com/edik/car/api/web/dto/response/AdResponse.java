@@ -12,9 +12,9 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 
-@Setter
-@Getter
 @Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString

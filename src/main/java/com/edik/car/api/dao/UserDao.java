@@ -12,13 +12,13 @@ public class UserDao extends AbstractDao<User> {
         return User.class;
     }
 
-    public User getUserToResponse(Long id) {
-        return (User) EntityManagerProvider.getEntityManager()
+    public User findByIdWithUserInfoAndPhones(Long id) {
+        return EntityManagerProvider.getEntityManager()
             .createQuery("select user" +
                 " from User user" +
                 " left join  user.userInformation" +
                 " left join fetch user.userPhones" +
-                " where user.userId = :id")
+                " where user.userId = :id", User.class)
             .setParameter("id", id)
             .getSingleResult();
     }

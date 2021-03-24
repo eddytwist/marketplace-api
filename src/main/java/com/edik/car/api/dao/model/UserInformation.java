@@ -16,14 +16,14 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-@Accessors(chain = true)
-@Setter
-@Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "user_information")
+@Accessors(chain = true)
+@Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserInformation {
     @Id
     @Column(name = "user_id", nullable = false)

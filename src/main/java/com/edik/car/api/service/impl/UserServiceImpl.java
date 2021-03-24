@@ -75,7 +75,8 @@ public final class UserServiceImpl extends AbstractService implements UserServic
             throw new ServiceFailedException("Can't find Users.", e);
         }
 
-        return users.stream()
+        return users
+            .stream()
             .map(UserMapper::toUserResponse)
             .collect(Collectors.toList());
     }

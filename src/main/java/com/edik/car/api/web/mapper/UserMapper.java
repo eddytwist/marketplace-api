@@ -60,7 +60,8 @@ public final class UserMapper {
             return;
         }
 
-        request.getUserPhones().stream()
+        request.getUserPhones()
+            .stream()
             .map(UserPhoneMapper::toUserPhone)
             .forEach(user::addUserPhone);
     }
@@ -72,7 +73,8 @@ public final class UserMapper {
 
         user.getUserPhones().clear();
 
-        request.getUserPhones().stream()
+        request.getUserPhones()
+            .stream()
             .map(UserPhoneMapper::toUserPhone)
             .forEach(user::addUserPhone);
     }
@@ -81,6 +83,7 @@ public final class UserMapper {
         userToUpdate.setUsername(userFromRequest.getUsername());
         userToUpdate.setEmail(userFromRequest.getEmail());
         userToUpdate.setPassword(userFromRequest.getPassword());
+
         setUserPhones(userToUpdate, userFromRequest);
         setUserInformation(userToUpdate, userFromRequest);
     }

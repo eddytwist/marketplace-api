@@ -54,13 +54,27 @@ public final class AdMapper {
             .engineVolume(ad.getEngineVolume())
             .enginePower(ad.getEnginePower())
             .condition(ad.getCondition())
-            .ownerName(user.getUserInformation().getName())
+            .ownerName(
+                getOwnerName(user)
+            )
             .mileage(ad.getMileage())
-            .userPhones(getPhones(user))
-            .pictures(getPictures(ad))
+            .userPhones(
+                getPhones(user)
+            )
+            .pictures(
+                getPictures(ad)
+            )
             .creationTime(ad.getCreationTime())
             .editingTime(ad.getEditingTime())
             .build();
+    }
+
+    private static String getOwnerName(User user) {
+        if (user.getUserInformation() == null) {
+            return null;
+        }
+
+        return user.getUserInformation().getName();
     }
 
     public static AdShortInformationResponse toAdShortInformationResponse(AdShortInformationService ad) {
@@ -106,7 +120,8 @@ public final class AdMapper {
             return Collections.emptyList();
         }
 
-        return ad.getPictures().stream()
+        return ad.getPictures()
+            .stream()
             .map(Picture::getReference)
             .collect(Collectors.toList());
     }
@@ -116,7 +131,8 @@ public final class AdMapper {
             return Collections.emptyList();
         }
 
-        return user.getUserPhones().stream()
+        return user.getUserPhones()
+            .stream()
             .map(UserPhone::getPhoneNumber)
             .collect(Collectors.toList());
     }
@@ -126,7 +142,8 @@ public final class AdMapper {
             return;
         }
 
-        request.getPictureReferences().stream()
+        request.getPictureReferences()
+            .stream()
             .map(PictureMapper::toPicture)
             .forEach(ad::addPicture);
     }
@@ -138,7 +155,8 @@ public final class AdMapper {
 
         ad.getPictures().clear();
 
-        request.getPictureReferences().stream()
+        request.getPictureReferences()
+            .stream()
             .map(PictureMapper::toPicture)
             .forEach(ad::addPicture);
     }
@@ -152,6 +170,7 @@ public final class AdMapper {
         foundedAd.setEngineVolume(updateAdRequest.getEngineVolume());
         foundedAd.setMileage(updateAdRequest.getMileage());
         foundedAd.setEditingTime(LocalDateTime.now());
+
         setPictures(foundedAd, updateAdRequest);
     }
 

@@ -73,7 +73,8 @@ public final class UserInformationServiceImpl extends AbstractService implements
             throw new ServiceFailedException("Can't find UsersInformation.", e);
         }
 
-        return usersInformation.stream()
+        return usersInformation
+            .stream()
             .map(UserInformationMapper::toUserInformationResponse)
             .collect(Collectors.toList());
     }

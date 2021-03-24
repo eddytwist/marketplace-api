@@ -2,7 +2,6 @@ package com.edik.car.api.web.dto.request;
 
 import com.edik.car.api.dao.model.Condition;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,9 +9,8 @@ import lombok.ToString;
 
 import java.util.List;
 
-@Setter
 @Getter
-@Builder
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString

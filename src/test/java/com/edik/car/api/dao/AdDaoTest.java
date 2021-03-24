@@ -176,7 +176,7 @@ class AdDaoTest {
             .setEngineVolume(2000)
             .setMileage(10999L)
             .setEnginePower(150);
-        adDao.updateAllowedFields(foundedAd);
+//        adDao.updateAllowedFields(foundedAd);
         Ad updatedAd = adDao.findById(foundedAd.getAdId());
         assertTrue(updatedAd.getAdId() > 0);
 //        assertTrue(updatedAd.getUserId() > 0);

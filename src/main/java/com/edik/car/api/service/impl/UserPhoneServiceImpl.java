@@ -74,7 +74,8 @@ public final class UserPhoneServiceImpl extends AbstractService implements UserP
             throw new ServiceFailedException("Can't find UserPhones.", e);
         }
 
-        return userPhones.stream()
+        return userPhones
+            .stream()
             .map(UserPhoneMapper::toUserPhoneResponse)
             .collect(Collectors.toList());
     }

@@ -22,14 +22,14 @@ import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
-@Accessors(chain = true)
-@Setter
-@Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "users")
+@Accessors(chain = true)
+@Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

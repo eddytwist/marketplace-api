@@ -74,7 +74,8 @@ public final class PictureServiceImpl extends AbstractService implements Picture
             throw new ServiceFailedException("Can't find Pictures.", e);
         }
 
-        return pictures.stream()
+        return pictures
+            .stream()
             .map(PictureMapper::toPictureResponse)
             .collect(Collectors.toList());
     }

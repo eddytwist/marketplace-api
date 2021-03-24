@@ -39,12 +39,12 @@ public final class AdDao extends AbstractDao<Ad> {
             .getResultList();
     }
 
-    public Ad getAdToResponse(Long id) {
-        return (Ad) EntityManagerProvider.getEntityManager()
+    public Ad findAdByIdWithPics(Long id) {
+        return EntityManagerProvider.getEntityManager()
             .createQuery("select ad" +
                 " from Ad ad" +
                 " left join fetch ad.pictures" +
-                " where ad.adId = :id")
+                " where ad.adId = :id", Ad.class)
             .setParameter("id", id)
             .getSingleResult();
     }

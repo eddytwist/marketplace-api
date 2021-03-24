@@ -16,11 +16,11 @@ public final class PictureDao extends AbstractDao<Picture> {
     }
 
     public Picture findByIdWithAd(Long id) {
-        return (Picture) EntityManagerProvider.getEntityManager()
+        return EntityManagerProvider.getEntityManager()
             .createQuery("select pic" +
                 " from Picture pic" +
                 " left join fetch pic.ad" +
-                " where pic.pictureId = :id")
+                " where pic.pictureId = :id", Picture.class)
             .setParameter("id", id)
             .getSingleResult();
     }

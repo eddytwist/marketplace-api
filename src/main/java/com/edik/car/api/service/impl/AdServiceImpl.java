@@ -80,8 +80,8 @@ public final class AdServiceImpl extends AbstractService implements AdService {
         try {
             begin();
 
-            adToResponse = adDao.getAdToResponse(id);
-            userToResponse = userDao.getUserToResponse(adToResponse.getUser().getUserId());
+            adToResponse = adDao.findAdByIdWithPics(id);
+            userToResponse = userDao.findByIdWithUserInfoAndPhones(adToResponse.getUser().getUserId());
 
             commit();
         } catch (Exception e) {
@@ -107,7 +107,8 @@ public final class AdServiceImpl extends AbstractService implements AdService {
             throw new ServiceFailedException("Can't find Ads.", e);
         }
 
-        return ads.stream()
+        return ads
+            .stream()
             .map(AdMapper::toAdResponse)
             .collect(Collectors.toList());
     }
@@ -127,7 +128,8 @@ public final class AdServiceImpl extends AbstractService implements AdService {
             throw new ServiceFailedException("Can't find Ads.", e);
         }
 
-        return paginatedAds.stream()
+        return paginatedAds
+            .stream()
             .map(AdMapper::toAdShortInformationResponse)
             .collect(Collectors.toList());
     }
