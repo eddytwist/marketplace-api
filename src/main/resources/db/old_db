@@ -1,0 +1,80 @@
+create table if not exists users
+(
+	user_id bigserial not null
+		constraint users_pkey
+			primary key,
+	username varchar(20) not null
+		constraint users_username_key
+			unique,
+	email varchar(30) not null
+		constraint users_email_key
+			unique,
+	password varchar(20) not null
+);
+
+alter table users owner to postgres;
+
+create table if not exists user_information
+(
+	user_id bigint not null
+		constraint user_information_pkey
+			primary key
+		constraint user_information_user_id_fkey
+			references users
+				on delete cascade,
+	name varchar(30) not null
+);
+
+alter table user_information owner to postgres;
+
+create table if not exists user_phones
+(
+	phone_number_id bigserial not null
+		constraint user_phones_pkey
+			primary key,
+	phone_number varchar(13) not null
+		constraint user_phones_phone_number_key
+			unique,
+	user_id bigint not null
+		constraint user_phones_user_id_fkey
+			references users
+				on delete cascade
+);
+
+alter table user_phones owner to postgres;
+
+create table if not exists ads
+(
+	ad_id bigserial not null
+		constraint ads_pkey
+			primary key,
+	user_id bigint not null
+		constraint ads_user_id_fkey
+			references users
+				on delete cascade,
+	year smallint not null,
+	brand varchar(30) not null,
+	model varchar(30) not null,
+	engine_volume smallint,
+	condition conditions not null,
+	mileage bigint,
+	engine_power integer,
+	creation_time timestamp not null,
+	editing_time timestamp not null
+);
+
+alter table ads owner to postgres;
+
+create table if not exists pictures
+(
+	picture_id bigserial not null
+		constraint pictures_pkey
+			primary key,
+	reference varchar(100) not null,
+	ad_id bigint not null
+		constraint pictures_ad_id_fkey
+			references ads
+				on delete cascade
+);
+
+alter table pictures owner to postgres;
