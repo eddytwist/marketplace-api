@@ -29,7 +29,9 @@ public final class UserPhoneServiceImpl extends AbstractService implements UserP
 
         try {
             begin();
+
             createdUserPhone = userPhoneDao.save(userPhoneToCreate);
+
             commit();
         } catch (Exception e) {
             rollback();
@@ -45,7 +47,9 @@ public final class UserPhoneServiceImpl extends AbstractService implements UserP
 
         try {
             begin();
+
             userPhone = userPhoneDao.findById(id);
+
             commit();
         } catch (Exception e) {
             rollback();
@@ -61,7 +65,9 @@ public final class UserPhoneServiceImpl extends AbstractService implements UserP
 
         try {
             begin();
+
             userPhones = userPhoneDao.findAll();
+
             commit();
         } catch (Exception e) {
             rollback();
@@ -79,7 +85,9 @@ public final class UserPhoneServiceImpl extends AbstractService implements UserP
 
         try {
             begin();
+
             userPhoneDao.update(userPhone);
+
             commit();
         } catch (Exception e) {
             rollback();
@@ -91,7 +99,9 @@ public final class UserPhoneServiceImpl extends AbstractService implements UserP
     public void delete(Long id) {
         try {
             begin();
+
             userPhoneDao.delete(id);
+
             commit();
         } catch (Exception e) {
             rollback();

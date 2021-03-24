@@ -30,7 +30,9 @@ public final class UserServiceImpl extends AbstractService implements UserServic
 
         try {
             begin();
+
             createdUser = userDao.save(userToCreate);
+
             commit();
         } catch (Exception e) {
             rollback();
@@ -46,7 +48,9 @@ public final class UserServiceImpl extends AbstractService implements UserServic
 
         try {
             begin();
+
             user = userDao.findById(id);
+
             commit();
         } catch (Exception e) {
             rollback();
@@ -56,28 +60,15 @@ public final class UserServiceImpl extends AbstractService implements UserServic
         return UserMapper.toUserResponse(user);
     }
 
-    public User getByIdForAd(Long id) {
-        User user;
-
-        try {
-            begin();
-            user = userDao.getUserToResponse(id);
-            commit();
-        } catch (Exception e) {
-            rollback();
-            throw new ServiceFailedException("Can't find User with id: " + id, e);
-        }
-
-        return user;
-    }
-
     @Override
     public List<UserResponse> getAll() {
         List<User> users;
 
         try {
             begin();
+
             users = userDao.findAll();
+
             commit();
         } catch (Exception e) {
             rollback();
@@ -117,7 +108,9 @@ public final class UserServiceImpl extends AbstractService implements UserServic
     public void delete(Long id) {
         try {
             begin();
+
             userDao.delete(id);
+
             commit();
         } catch (Exception e) {
             rollback();

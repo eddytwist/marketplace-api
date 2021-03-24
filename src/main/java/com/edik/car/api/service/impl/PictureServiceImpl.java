@@ -29,7 +29,9 @@ public final class PictureServiceImpl extends AbstractService implements Picture
 
         try {
             begin();
+
             createdPicture = pictureDao.save(pictureToCreate);
+
             commit();
         } catch (Exception e) {
             rollback();
@@ -45,7 +47,9 @@ public final class PictureServiceImpl extends AbstractService implements Picture
 
         try {
             begin();
+
             picture = pictureDao.findById(id);
+
             commit();
         } catch (Exception e) {
             rollback();
@@ -61,7 +65,9 @@ public final class PictureServiceImpl extends AbstractService implements Picture
 
         try {
             begin();
+
             pictures = pictureDao.findAll();
+
             commit();
         } catch (Exception e) {
             rollback();
@@ -79,7 +85,9 @@ public final class PictureServiceImpl extends AbstractService implements Picture
 
         try {
             begin();
+
             pictureDao.update(picture);
+
             commit();
         } catch (Exception e) {
             rollback();
@@ -91,7 +99,9 @@ public final class PictureServiceImpl extends AbstractService implements Picture
     public void delete(Long id) {
         try {
             begin();
+
             pictureDao.delete(id);
+
             commit();
         } catch (Exception e) {
             rollback();

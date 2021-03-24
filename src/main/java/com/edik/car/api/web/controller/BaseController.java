@@ -106,7 +106,7 @@ public abstract class BaseController extends HttpServlet {
         }
     }
 
-    protected String getJson(HttpServletRequest request) {
+    protected static String getJson(HttpServletRequest request) {
         try {
             String json = request.getReader().lines().collect(Collectors.joining());
             log.debug("Body parsed from request: {}", json);

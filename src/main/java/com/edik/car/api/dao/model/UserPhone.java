@@ -30,13 +30,17 @@ import javax.persistence.Table;
 public class UserPhone {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "phone_number_id")
+    @Column(name = "phone_number_id", nullable = false)
     private Long phoneNumberId;
 
-    @Column(name = "phone_number", unique = true)
+    @Column(
+        name = "phone_number",
+        unique = true,
+        nullable = false
+    )
     private String phoneNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }

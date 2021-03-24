@@ -21,6 +21,7 @@ import com.edik.car.api.web.mapper.AdMapper;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,8 +29,6 @@ import java.util.stream.Collectors;
 public final class AdServiceImpl extends AbstractService implements AdService {
 
     private static volatile AdServiceImpl adServiceImplInstance;
-
-    private final PictureServiceImpl pictureService = PictureServiceImpl.getInstance();
 
     private final AdDao adDao = AdDao.getInstance();
     private final UserDao userDao = UserDao.getInstance();
@@ -177,10 +176,12 @@ public final class AdServiceImpl extends AbstractService implements AdService {
         try {
             begin();
 
-            Picture pictureToDelete = pictureDao.findById(id);
+            Picture pictureToDelete = pictureDao.findByIdWithAd(id);
             Ad foundedAd = adDao.findById(pictureToDelete.getAd().getAdId());
-            pictureDao.delete(id);
+
             foundedAd.removePicture(pictureToDelete);
+            foundedAd.setEditingTime(LocalDateTime.now());
+
             adDao.update(foundedAd);
 
             commit();

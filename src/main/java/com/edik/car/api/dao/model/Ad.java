@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -40,23 +39,23 @@ import java.util.List;
 public class Ad {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ad_id")
+    @Column(name = "ad_id", nullable = false)
     private Long adId;
 
-    @Column
+    @Column(nullable = false)
     private Integer year;
 
-    @Column
+    @Column(nullable = false)
     private String brand;
 
-    @Column
+    @Column(nullable = false)
     private String model;
 
     @Column(name = "engine_volume")
     private Integer engineVolume;
 
     @Enumerated(EnumType.STRING)
-    @Column
+    @Column(nullable = false)
     private Condition condition;
 
     private Long mileage;
@@ -65,15 +64,22 @@ public class Ad {
     private Integer enginePower;
 
     @CreationTimestamp
-    @Column(name = "creation_time")
+    @Column(
+        name = "creation_time",
+        updatable = false,
+        nullable = false
+    )
     private LocalDateTime creationTime;
 
-    @UpdateTimestamp
-    @Column(name = "editing_time")
+    @Column(
+        name = "editing_time",
+        insertable = false,
+        nullable = false
+    )
     private LocalDateTime editingTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Default

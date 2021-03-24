@@ -1,5 +1,6 @@
 package com.edik.car.api.web.controller;
 
+import com.edik.car.api.service.AdService;
 import com.edik.car.api.service.impl.AdServiceImpl;
 import com.edik.car.api.web.dto.request.CreateAdRequest;
 import com.edik.car.api.web.dto.request.PatchAdRequest;
@@ -16,7 +17,8 @@ public class AdsController extends BaseController {
 
     public static final int DEFAULT_ADS_PER_PAGE = 10;
     public static final int DEFAULT_PAGE_NUMBER = 1;
-    private final AdServiceImpl adService = AdServiceImpl.getInstance();
+
+    private final AdService adService = AdServiceImpl.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {

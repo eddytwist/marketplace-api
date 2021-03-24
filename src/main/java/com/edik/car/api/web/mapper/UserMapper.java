@@ -47,6 +47,14 @@ public final class UserMapper {
         user.addUserInformation(UserInformationMapper.toUserInformation(request.getName()));
     }
 
+    private static void setUserInformation(User user, UpdateUserRequest request) {
+        if (request.getName() == null) {
+            return;
+        }
+
+        user.addUserInformation(UserInformationMapper.toUserInformation(request.getName()));
+    }
+
     private static void setUserPhones(User user, CreateUserRequest request) {
         if (request.getUserPhones() == null) {
             return;
@@ -55,14 +63,6 @@ public final class UserMapper {
         request.getUserPhones().stream()
             .map(UserPhoneMapper::toUserPhone)
             .forEach(user::addUserPhone);
-    }
-
-    private static void setUserInformation(User user, UpdateUserRequest request) {
-        if (request.getName() == null) {
-            return;
-        }
-
-        user.addUserInformation(UserInformationMapper.toUserInformation(request.getName()));
     }
 
     private static void setUserPhones(User user, UpdateUserRequest request) {

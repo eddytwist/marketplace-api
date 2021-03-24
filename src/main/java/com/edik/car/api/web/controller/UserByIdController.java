@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 public class UserByIdController extends BaseController {
 
     private final UserService userService = UserServiceImpl.getInstance();
-    private final UserServiceImpl userServiceHiba = UserServiceImpl.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
@@ -23,7 +22,7 @@ public class UserByIdController extends BaseController {
         executeWithStatusOk(resp, () -> {
             Long userId = UriUtils.getId(req.getPathInfo());
 
-            return userServiceHiba.getById(userId);
+            return userService.getById(userId);
         });
     }
 
@@ -33,7 +32,7 @@ public class UserByIdController extends BaseController {
 
         Long userId = UriUtils.getId(req.getPathInfo());
 
-        userServiceHiba.delete(userId);
-        log.info("User id = " + userId + " successfully deleted.");
+        userService.delete(userId);
+        log.info("User id = {} successfully deleted.", userId);
     }
 }

@@ -14,6 +14,7 @@ import com.edik.car.api.web.dto.response.AdShortInformationResponse;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -100,41 +101,6 @@ public final class AdMapper {
         return ad;
     }
 
-
-    public static Ad toAd(UpdateAdRequest updateAdRequest) {
-        if (updateAdRequest == null) {
-            return null;
-        }
-
-        return Ad.builder()
-            .adId(updateAdRequest.getAdId())
-//            .userId(updateAdRequest.getUserId())
-            .year(updateAdRequest.getYear())
-            .brand(updateAdRequest.getBrand())
-            .model(updateAdRequest.getModel())
-            .engineVolume(updateAdRequest.getEngineVolume())
-            .condition(updateAdRequest.getCondition())
-            .mileage(updateAdRequest.getMileage())
-            .enginePower(updateAdRequest.getEnginePower())
-            .build();
-    }
-
-    public static Ad toAd(PatchAdRequest patchAdRequest) {
-        if (patchAdRequest == null) {
-            return null;
-        }
-
-        return Ad.builder()
-            .adId(patchAdRequest.getAdId())
-            .year(patchAdRequest.getYear())
-            .brand(patchAdRequest.getBrand())
-            .model(patchAdRequest.getModel())
-            .engineVolume(patchAdRequest.getEngineVolume())
-            .mileage(patchAdRequest.getMileage())
-            .enginePower(patchAdRequest.getEnginePower())
-            .build();
-    }
-
     private static List<String> getPictures(Ad ad) {
         if (ad.getPictures() == null) {
             return Collections.emptyList();
@@ -185,6 +151,7 @@ public final class AdMapper {
         foundedAd.setEnginePower(updateAdRequest.getEnginePower());
         foundedAd.setEngineVolume(updateAdRequest.getEngineVolume());
         foundedAd.setMileage(updateAdRequest.getMileage());
+        foundedAd.setEditingTime(LocalDateTime.now());
         setPictures(foundedAd, updateAdRequest);
     }
 
@@ -195,5 +162,6 @@ public final class AdMapper {
         foundedAd.setEnginePower(patchAdRequest.getEnginePower());
         foundedAd.setEngineVolume(patchAdRequest.getEngineVolume());
         foundedAd.setMileage(patchAdRequest.getMileage());
+        foundedAd.setEditingTime(LocalDateTime.now());
     }
 }

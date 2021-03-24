@@ -11,7 +11,6 @@ import com.edik.car.api.web.mapper.UserInformationMapper;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +28,9 @@ public final class UserInformationServiceImpl extends AbstractService implements
 
         try {
             begin();
+
             createdUserInformation = userInformationDao.save(userInformationToCreate);
+
             commit();
         } catch (Exception e) {
             rollback();
@@ -45,7 +46,9 @@ public final class UserInformationServiceImpl extends AbstractService implements
 
         try {
             begin();
+
             userInformation = userInformationDao.findById(id);
+
             commit();
         } catch (Exception e) {
             rollback();
@@ -61,7 +64,9 @@ public final class UserInformationServiceImpl extends AbstractService implements
 
         try {
             begin();
+
             usersInformation = userInformationDao.findAll();
+
             commit();
         } catch (Exception e) {
             rollback();
@@ -79,7 +84,9 @@ public final class UserInformationServiceImpl extends AbstractService implements
 
         try {
             begin();
+
             userInformationDao.update(userInformation);
+
             commit();
         } catch (Exception e) {
             rollback();
@@ -91,7 +98,9 @@ public final class UserInformationServiceImpl extends AbstractService implements
     public void delete(Long id) {
         try {
             begin();
+
             userInformationDao.delete(id);
+
             commit();
         } catch (Exception e) {
             rollback();

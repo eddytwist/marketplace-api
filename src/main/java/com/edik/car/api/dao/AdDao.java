@@ -6,7 +6,6 @@ import com.edik.car.api.dao.model.Ad;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -30,7 +29,8 @@ public final class AdDao extends AbstractDao<Ad> {
                 " ad.mileage," +
                 " ad.creationTime," +
                 " ui.name," +
-                " ad.pictures.size)" +
+                " ad.pictures.size" +
+                ")" +
                 " from Ad ad" +
                 " left join UserInformation ui on ad.user.userId = ui.userId" +
                 " order by ad.creationTime desc", AdShortInformationService.class)
@@ -47,16 +47,6 @@ public final class AdDao extends AbstractDao<Ad> {
                 " where ad.adId = :id")
             .setParameter("id", id)
             .getSingleResult();
-    }
-
-    public void updateAdEditingTimeByPictureId(Long id) {
-        EntityManagerProvider.getEntityManager()
-            .createQuery("update Ad ad set ad.editingTime = :editingTime" +
-                " where ad.adId = (" +
-                " select p.ad.adId from Picture p" +
-                " where p.pictureId = :id)")
-            .setParameter("editingTime", LocalDateTime.now())
-            .setParameter("id", id);
     }
 
 

@@ -30,13 +30,13 @@ import javax.persistence.Table;
 public class Picture {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "picture_id")
+    @Column(name = "picture_id", nullable = false)
     private Long pictureId;
 
     @Column(nullable = false)
     private String reference;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ad_id")
+    @JoinColumn(name = "ad_id", nullable = false)
     private Ad ad;
 }

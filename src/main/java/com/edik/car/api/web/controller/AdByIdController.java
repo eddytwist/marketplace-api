@@ -1,5 +1,6 @@
 package com.edik.car.api.web.controller;
 
+import com.edik.car.api.service.AdService;
 import com.edik.car.api.service.impl.AdServiceImpl;
 import com.edik.car.api.web.utils.UriUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/api/v1/ads/*")
 public class AdByIdController extends BaseController {
 
-    private final AdServiceImpl adService = AdServiceImpl.getInstance();
+    private final AdService adService = AdServiceImpl.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
