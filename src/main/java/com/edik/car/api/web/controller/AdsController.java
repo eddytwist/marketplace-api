@@ -1,24 +1,27 @@
 package com.edik.car.api.web.controller;
 
 import com.edik.car.api.service.AdService;
-import com.edik.car.api.service.impl.AdServiceImpl;
 import com.edik.car.api.web.dto.request.CreateAdRequest;
 import com.edik.car.api.web.dto.request.PatchAdRequest;
 import com.edik.car.api.web.dto.request.UpdateAdRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
-@WebServlet("/api/v1/ads")
+@RestController
+@RequestMapping("/api/v1/ads")
 public class AdsController extends BaseController {
 
     public static final int DEFAULT_ADS_PER_PAGE = 10;
     public static final int DEFAULT_PAGE_NUMBER = 1;
 
-    private final AdService adService = AdServiceImpl.getInstance();
+    @Autowired
+    private AdService adService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
