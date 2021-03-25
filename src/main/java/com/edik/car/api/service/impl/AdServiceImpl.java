@@ -18,21 +18,24 @@ import com.edik.car.api.web.dto.response.AdFullInformationResponse;
 import com.edik.car.api.web.dto.response.AdResponse;
 import com.edik.car.api.web.dto.response.AdShortInformationResponse;
 import com.edik.car.api.web.mapper.AdMapper;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Service(value = "adService")
 public final class AdServiceImpl extends AbstractService implements AdService {
 
-    private static volatile AdServiceImpl adServiceImplInstance;
+    @Autowired
+    private AdDao adDao;
 
-    private final AdDao adDao = AdDao.getInstance();
-    private final UserDao userDao = UserDao.getInstance();
-    private final PictureDao pictureDao = PictureDao.getInstance();
+    @Autowired
+    private UserDao userDao;
+
+    @Autowired
+    private PictureDao pictureDao;
 
     @Override
     public AdResponse create(CreateAdRequest createAdRequest) {
@@ -216,22 +219,5 @@ public final class AdServiceImpl extends AbstractService implements AdService {
         }
 
         return AdMapper.toAdResponse(patchedAd);
-    }
-
-    public static AdServiceImpl getInstance() {
-        AdServiceImpl localInstance = adServiceImplInstance;
-
-        if (localInstance == null) {
-
-            synchronized (AdServiceImpl.class) {
-                localInstance = adServiceImplInstance;
-
-                if (localInstance == null) {
-                    adServiceImplInstance = localInstance = new AdServiceImpl();
-                }
-            }
-        }
-
-        return localInstance;
     }
 }

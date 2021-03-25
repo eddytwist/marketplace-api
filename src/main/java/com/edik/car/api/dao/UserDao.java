@@ -2,10 +2,10 @@ package com.edik.car.api.dao;
 
 import com.edik.car.api.dao.db.EntityManagerProvider;
 import com.edik.car.api.dao.model.User;
+import org.springframework.stereotype.Repository;
 
+@Repository(value = "userDao")
 public class UserDao extends AbstractDao<User> {
-
-    private static volatile UserDao userDaoHibaInstance;
 
     @Override
     public Class<User> getEntityType() {
@@ -21,22 +21,5 @@ public class UserDao extends AbstractDao<User> {
                 " where user.userId = :id", User.class)
             .setParameter("id", id)
             .getSingleResult();
-    }
-
-    public static UserDao getInstance() {
-        UserDao localInstance = userDaoHibaInstance;
-
-        if (localInstance == null) {
-
-            synchronized (UserDao.class) {
-                localInstance = userDaoHibaInstance;
-
-                if (localInstance == null) {
-                    userDaoHibaInstance = localInstance = new UserDao();
-                }
-            }
-        }
-
-        return localInstance;
     }
 }

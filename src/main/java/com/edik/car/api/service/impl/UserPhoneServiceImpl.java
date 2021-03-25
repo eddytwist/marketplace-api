@@ -9,18 +9,17 @@ import com.edik.car.api.web.dto.request.CreateUserPhoneRequest;
 import com.edik.car.api.web.dto.request.UpdateUserPhoneRequest;
 import com.edik.car.api.web.dto.response.UserPhoneResponse;
 import com.edik.car.api.web.mapper.UserPhoneMapper;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Service(value = "userPhoneService")
 public final class UserPhoneServiceImpl extends AbstractService implements UserPhoneService {
 
-    private static volatile UserPhoneServiceImpl userPhoneServiceImplInstance;
-
-    private final UserPhoneDao userPhoneDao = UserPhoneDao.getInstance();
+    @Autowired
+    private UserPhoneDao userPhoneDao;
 
     @Override
     public UserPhoneResponse create(CreateUserPhoneRequest createUserPhoneRequest) {
@@ -108,22 +107,5 @@ public final class UserPhoneServiceImpl extends AbstractService implements UserP
             rollback();
             throw new ServiceFailedException("Can't delete UserPhone id: " + id, e);
         }
-    }
-
-    public static UserPhoneServiceImpl getInstance() {
-        UserPhoneServiceImpl localInstance = userPhoneServiceImplInstance;
-
-        if (localInstance == null) {
-
-            synchronized (UserPhoneServiceImpl.class) {
-                localInstance = userPhoneServiceImplInstance;
-
-                if (localInstance == null) {
-                    userPhoneServiceImplInstance = localInstance = new UserPhoneServiceImpl();
-                }
-            }
-        }
-
-        return localInstance;
     }
 }

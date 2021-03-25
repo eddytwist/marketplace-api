@@ -1,4 +1,6 @@
 plugins {
+    id 'org.springframework.boot' version '2.4.4'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
     id 'war'
 }
@@ -22,8 +24,6 @@ targetCompatibility = 1.8
 
 dependencies {
 
-    compileOnly('javax.servlet:javax.servlet-api:4.0.1')
-
     compile group: 'com.zaxxer', name: 'HikariCP', version: '4.0.1'
 
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.18'
@@ -31,6 +31,10 @@ dependencies {
     providedCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.18'
 
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.18'
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     implementation group: 'org.hibernate', name: 'hibernate-hikaricp', version: '5.4.29.Final'
     implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.4.29.Final'

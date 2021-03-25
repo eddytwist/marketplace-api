@@ -10,18 +10,17 @@ import com.edik.car.api.web.dto.request.CreateUserRequest;
 import com.edik.car.api.web.dto.request.UpdateUserRequest;
 import com.edik.car.api.web.dto.response.UserResponse;
 import com.edik.car.api.web.mapper.UserMapper;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Service(value = "userService")
 public final class UserServiceImpl extends AbstractService implements UserService {
 
-    private static volatile UserServiceImpl userServiceInstance;
-
-    private final UserDao userDao = UserDao.getInstance();
+    @Autowired
+    private UserDao userDao;
 
     @Override
     public UserResponse create(CreateUserRequest createUserRequest) {
@@ -117,22 +116,5 @@ public final class UserServiceImpl extends AbstractService implements UserServic
             rollback();
             throw new ServiceFailedException("Can't delete User id: " + id, e);
         }
-    }
-
-    public static UserServiceImpl getInstance() {
-        UserServiceImpl localInstance = userServiceInstance;
-
-        if (localInstance == null) {
-
-            synchronized (UserServiceImpl.class) {
-                localInstance = userServiceInstance;
-
-                if (localInstance == null) {
-                    userServiceInstance = localInstance = new UserServiceImpl();
-                }
-            }
-        }
-
-        return localInstance;
     }
 }

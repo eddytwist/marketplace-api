@@ -2,13 +2,10 @@ package com.edik.car.api.dao;
 
 import com.edik.car.api.dao.db.EntityManagerProvider;
 import com.edik.car.api.dao.model.Picture;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Repository;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Repository(value = "pictureDao")
 public final class PictureDao extends AbstractDao<Picture> {
-
-    private static volatile PictureDao pictureDaoInstance;
 
     @Override
     public Class<Picture> getEntityType() {
@@ -23,22 +20,5 @@ public final class PictureDao extends AbstractDao<Picture> {
                 " where pic.pictureId = :id", Picture.class)
             .setParameter("id", id)
             .getSingleResult();
-    }
-
-    public static PictureDao getInstance() {
-        PictureDao localInstance = pictureDaoInstance;
-
-        if (localInstance == null) {
-
-            synchronized (PictureDao.class) {
-                localInstance = pictureDaoInstance;
-
-                if (localInstance == null) {
-                    pictureDaoInstance = localInstance = new PictureDao();
-                }
-            }
-        }
-
-        return localInstance;
     }
 }

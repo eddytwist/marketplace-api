@@ -9,18 +9,17 @@ import com.edik.car.api.web.dto.request.CreatePictureRequest;
 import com.edik.car.api.web.dto.request.UpdatePictureRequest;
 import com.edik.car.api.web.dto.response.PictureResponse;
 import com.edik.car.api.web.mapper.PictureMapper;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Service(value = "pictureService")
 public final class PictureServiceImpl extends AbstractService implements PictureService {
 
-    private static volatile PictureServiceImpl pictureServiceImplInstance;
-
-    private final PictureDao pictureDao = PictureDao.getInstance();
+    @Autowired
+    private PictureDao pictureDao;
 
     @Override
     public PictureResponse create(CreatePictureRequest createPictureRequest) {
@@ -108,22 +107,5 @@ public final class PictureServiceImpl extends AbstractService implements Picture
             rollback();
             throw new ServiceFailedException("Can't delete Picture id: " + id, e);
         }
-    }
-
-    public static PictureServiceImpl getInstance() {
-        PictureServiceImpl localInstance = pictureServiceImplInstance;
-
-        if (localInstance == null) {
-
-            synchronized (PictureServiceImpl.class) {
-                localInstance = pictureServiceImplInstance;
-
-                if (localInstance == null) {
-                    pictureServiceImplInstance = localInstance = new PictureServiceImpl();
-                }
-            }
-        }
-
-        return localInstance;
     }
 }
