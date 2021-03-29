@@ -1,6 +1,5 @@
 package com.edik.car.api.dao;
 
-import com.edik.car.api.dao.db.DataSource;
 import com.edik.car.api.dao.model.User;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;

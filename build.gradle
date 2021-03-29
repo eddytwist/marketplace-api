@@ -13,39 +13,22 @@ repositories {
     mavenCentral()
 }
 
-ext {
-    junitVersion = '5.7.0'
-    lombokVersion = '1.18.18'
-    jacksonVersion = '2.12.1'
-}
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 11
+targetCompatibility = 11
 
 dependencies {
-
-    compile group: 'com.zaxxer', name: 'HikariCP', version: '4.0.1'
-
-    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.18'
-
-    providedCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.18'
-
-    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.18'
-
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+
+    implementation group: 'com.zaxxer', name: 'HikariCP'
+    implementation group: 'org.postgresql', name: 'postgresql'
+    implementation group: 'org.hibernate', name: 'hibernate-hikaricp'
+    implementation group: 'org.hibernate', name: 'hibernate-core'
+
+    providedCompile group: 'org.projectlombok', name: 'lombok'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-    implementation group: 'org.hibernate', name: 'hibernate-hikaricp', version: '5.4.29.Final'
-    implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.4.29.Final'
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
-    implementation group: 'log4j', name: 'log4j', version: '1.2.17'
-    implementation ("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}")
-    implementation ("com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}")
-
-    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
-    testAnnotationProcessor ("org.projectlombok:lombok:${lombokVersion}")
+    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok'
 }
 
 test {

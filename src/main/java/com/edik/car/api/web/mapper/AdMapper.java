@@ -1,6 +1,6 @@
 package com.edik.car.api.web.mapper;
 
-import com.edik.car.api.dao.dto.AdShortInformationService;
+import com.edik.car.api.dao.dto.AdWithUserInfoAndPicsNumberService;
 import com.edik.car.api.dao.model.Ad;
 import com.edik.car.api.dao.model.Picture;
 import com.edik.car.api.dao.model.User;
@@ -8,9 +8,9 @@ import com.edik.car.api.dao.model.UserPhone;
 import com.edik.car.api.web.dto.request.CreateAdRequest;
 import com.edik.car.api.web.dto.request.PatchAdRequest;
 import com.edik.car.api.web.dto.request.UpdateAdRequest;
-import com.edik.car.api.web.dto.response.AdFullInformationResponse;
 import com.edik.car.api.web.dto.response.AdResponse;
-import com.edik.car.api.web.dto.response.AdShortInformationResponse;
+import com.edik.car.api.web.dto.response.AdWithUserInfoAndPhonesAndPicturesResponse;
+import com.edik.car.api.web.dto.response.AdWithUserInfoAndPicsNumberResponse;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -41,12 +41,12 @@ public final class AdMapper {
             .build();
     }
 
-    public static AdFullInformationResponse toAdFullInformationResponse(Ad ad, User user) {
+    public static AdWithUserInfoAndPhonesAndPicturesResponse toAdFullInformationResponse(Ad ad, User user) {
         if (ad == null || user == null) {
             return null;
         }
 
-        return AdFullInformationResponse.builder()
+        return AdWithUserInfoAndPhonesAndPicturesResponse.builder()
             .adId(ad.getAdId())
             .year(ad.getYear())
             .brand(ad.getBrand())
@@ -77,12 +77,12 @@ public final class AdMapper {
         return user.getUserInformation().getName();
     }
 
-    public static AdShortInformationResponse toAdShortInformationResponse(AdShortInformationService ad) {
+    public static AdWithUserInfoAndPicsNumberResponse toAdShortInformationResponse(AdWithUserInfoAndPicsNumberService ad) {
         if (ad == null) {
             return null;
         }
 
-        return AdShortInformationResponse.builder()
+        return AdWithUserInfoAndPicsNumberResponse.builder()
             .adId(ad.getAdId())
             .year(ad.getYear())
             .brand(ad.getBrand())

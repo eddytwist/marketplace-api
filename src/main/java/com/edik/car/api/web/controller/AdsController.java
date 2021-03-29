@@ -1,62 +1,91 @@
 package com.edik.car.api.web.controller;
 
 import com.edik.car.api.service.AdService;
+import com.edik.car.api.service.PictureService;
 import com.edik.car.api.web.dto.request.CreateAdRequest;
 import com.edik.car.api.web.dto.request.PatchAdRequest;
 import com.edik.car.api.web.dto.request.UpdateAdRequest;
+import com.edik.car.api.web.dto.response.AdResponse;
+import com.edik.car.api.web.dto.response.AdWithUserInfoAndPhonesAndPicturesResponse;
+import com.edik.car.api.web.dto.response.AdWithUserInfoAndPicsNumberResponse;
+import com.edik.car.api.web.dto.response.PictureResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/ads")
 public class AdsController extends BaseController {
 
-    public static final int DEFAULT_ADS_PER_PAGE = 10;
-    public static final int DEFAULT_PAGE_NUMBER = 1;
+    public static final String DEFAULT_ADS_PER_PAGE = "10";
+    public static final String DEFAULT_PAGE_NUMBER = "1";
 
     @Autowired
     private AdService adService;
+    @Autowired
+    private PictureService pictureService;
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
-        log.info("GET method running.");
-        log.info("Transferred params: {}", req.getQueryString());
-
-        executeWithStatusOk(resp, () -> {
-            int page = (req.getParameter("page") == null) ? DEFAULT_PAGE_NUMBER : Integer.parseInt(req.getParameter("page"));
-            int size = (req.getParameter("size") == null) ? DEFAULT_ADS_PER_PAGE : Integer.parseInt(req.getParameter("size"));
-
-            return adService.getAllShortInformationAds(page, size);
-        });
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<AdWithUserInfoAndPicsNumberResponse>> getAds(
+        @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
+        @RequestParam(value = "size", defaultValue = DEFAULT_ADS_PER_PAGE) int size
+    ) {
+        return ResponseEntity.ok(adService.getAllAdsWithPageAndSize(page, size));
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        log.info("POST method running.");
-        log.info("Transferred params: {}", req.getQueryString());
-
-        executeWithStatusCreated(resp, () -> adService.create(getRequestObject(req, CreateAdRequest.class)));
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AdResponse> createAd(@RequestBody CreateAdRequest createAdRequest) {
+        return ResponseEntity.ok(adService.create(createAdRequest));
     }
 
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
-        log.info("PUT method running.");
-        log.info("Transferred params: {}", req.getQueryString());
-
-        executeWithStatusCreated(resp, () -> adService.update(getRequestObject(req, UpdateAdRequest.class)));
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AdResponse> updateAd(@RequestBody UpdateAdRequest updateAdRequest) {
+        return ResponseEntity.ok(adService.update(updateAdRequest));
     }
 
-    @Override
-    protected void doPatch(HttpServletRequest req, HttpServletResponse resp) {
-        log.info("PATCH method running.");
-        log.info("Transferred params: {}", req.getQueryString());
+    @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AdResponse> patchAd(@RequestBody PatchAdRequest patchAdRequest) {
+        return ResponseEntity.ok(adService.updateYearBrandModelMileageEngineVolumeEnginePower(patchAdRequest));
+    }
 
-        executeWithStatusCreated(resp, () -> adService.updateAllowedFields(getRequestObject(req, PatchAdRequest.class)));
+    @GetMapping(value = "/{adId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AdWithUserInfoAndPhonesAndPicturesResponse> getAd(@PathVariable Long adId) {
+        return ResponseEntity.ok(adService.getAdWithUserInfoAndPhonesAndPicturesByAdId(adId));
+    }
+
+    @DeleteMapping("/{adId}")
+    public ResponseEntity<Void> deleteAd(@PathVariable long adId) {
+        adService.delete(adId);
+
+        return ResponseEntity.noContent()
+            .build();
+    }
+
+    @GetMapping(value = "/{adId}/pictures/{pictureId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PictureResponse> getPicture(@PathVariable long adId, @PathVariable long pictureId) {
+        return ResponseEntity.ok(pictureService.getById(pictureId));
+    }
+
+    //TODO!! add adId to delete method.
+    @DeleteMapping("/{adId}/pictures/{pictureId}")
+    public ResponseEntity<Void> deletePicture(@PathVariable long adId, @PathVariable long pictureId) {
+        adService.deletePictureByAdIdAndPictureId(pictureId);
+
+        return ResponseEntity.noContent()
+            .build();
     }
 }

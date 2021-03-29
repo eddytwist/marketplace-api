@@ -3,7 +3,7 @@ package com.edik.car.api.service.impl;
 import com.edik.car.api.dao.AdDao;
 import com.edik.car.api.dao.PictureDao;
 import com.edik.car.api.dao.UserDao;
-import com.edik.car.api.dao.dto.AdShortInformationService;
+import com.edik.car.api.dao.dto.AdWithUserInfoAndPicsNumberService;
 import com.edik.car.api.dao.model.Ad;
 import com.edik.car.api.dao.model.Picture;
 import com.edik.car.api.dao.model.User;
@@ -14,9 +14,9 @@ import com.edik.car.api.service.exception.ServiceFailedException;
 import com.edik.car.api.web.dto.request.CreateAdRequest;
 import com.edik.car.api.web.dto.request.PatchAdRequest;
 import com.edik.car.api.web.dto.request.UpdateAdRequest;
-import com.edik.car.api.web.dto.response.AdFullInformationResponse;
 import com.edik.car.api.web.dto.response.AdResponse;
-import com.edik.car.api.web.dto.response.AdShortInformationResponse;
+import com.edik.car.api.web.dto.response.AdWithUserInfoAndPhonesAndPicturesResponse;
+import com.edik.car.api.web.dto.response.AdWithUserInfoAndPicsNumberResponse;
 import com.edik.car.api.web.mapper.AdMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service(value = "adService")
+@Service("adService")
 public final class AdServiceImpl extends AbstractService implements AdService {
 
     @Autowired
@@ -76,7 +76,7 @@ public final class AdServiceImpl extends AbstractService implements AdService {
     }
 
     @Override
-    public AdFullInformationResponse getFullInformationAdById(Long id) {
+    public AdWithUserInfoAndPhonesAndPicturesResponse getAdWithUserInfoAndPhonesAndPicturesByAdId(Long id) {
         Ad adToResponse;
         User userToResponse;
 
@@ -117,8 +117,8 @@ public final class AdServiceImpl extends AbstractService implements AdService {
     }
 
     @Override
-    public List<AdShortInformationResponse> getAllShortInformationAds(int pageNumber, int adsPerPage) {
-        List<AdShortInformationService> paginatedAds;
+    public List<AdWithUserInfoAndPicsNumberResponse> getAllAdsWithPageAndSize(int pageNumber, int adsPerPage) {
+        List<AdWithUserInfoAndPicsNumberService> paginatedAds;
 
         try {
             begin();
@@ -177,7 +177,7 @@ public final class AdServiceImpl extends AbstractService implements AdService {
     }
 
     @Override
-    public void deletePictureFromAdById(Long id) {
+    public void deletePictureByAdIdAndPictureId(Long id) {
         try {
             begin();
 
@@ -197,7 +197,7 @@ public final class AdServiceImpl extends AbstractService implements AdService {
     }
 
     @Override
-    public AdResponse updateAllowedFields(PatchAdRequest patchAdRequest) {
+    public AdResponse updateYearBrandModelMileageEngineVolumeEnginePower(PatchAdRequest patchAdRequest) {
         Ad patchedAd;
 
         try {

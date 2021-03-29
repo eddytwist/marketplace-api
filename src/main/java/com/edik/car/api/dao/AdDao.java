@@ -1,13 +1,13 @@
 package com.edik.car.api.dao;
 
 import com.edik.car.api.dao.db.EntityManagerProvider;
-import com.edik.car.api.dao.dto.AdShortInformationService;
+import com.edik.car.api.dao.dto.AdWithUserInfoAndPicsNumberService;
 import com.edik.car.api.dao.model.Ad;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository(value = "adDao")
+@Repository("adDao")
 public final class AdDao extends AbstractDao<Ad> {
 
     @Override
@@ -15,7 +15,7 @@ public final class AdDao extends AbstractDao<Ad> {
         return Ad.class;
     }
 
-    public List<AdShortInformationService> getAllShortInformationAds(int pageNumber, int limit) {
+    public List<AdWithUserInfoAndPicsNumberService> getAllShortInformationAds(int pageNumber, int limit) {
         return EntityManagerProvider.getEntityManager()
             .createQuery("select new com.edik.car.api.dao.dto.AdShortInformationService(" +
                 " ad.adId," +
@@ -30,7 +30,7 @@ public final class AdDao extends AbstractDao<Ad> {
                 ")" +
                 " from Ad ad" +
                 " left join UserInformation ui on ad.user.userId = ui.userId" +
-                " order by ad.creationTime desc", AdShortInformationService.class)
+                " order by ad.creationTime desc", AdWithUserInfoAndPicsNumberService.class)
             .setFirstResult((pageNumber - 1) * limit)
             .setMaxResults(limit)
             .getResultList();

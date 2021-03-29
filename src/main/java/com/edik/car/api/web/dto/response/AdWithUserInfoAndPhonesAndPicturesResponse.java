@@ -11,6 +11,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @Getter
@@ -18,15 +19,20 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class AdShortInformationResponse {
+public class AdWithUserInfoAndPhonesAndPicturesResponse {
     private Long adId;
     private Integer year;
     private String brand;
     private String model;
+    private Integer engineVolume;
+    private Integer enginePower;
     private Condition condition;
     private Long mileage;
+    private String ownerName;
+    private List<String> userPhones;
+    private List<String> pictures;
     @JsonFormat(pattern = DateConstants.LOCAL_DATE_TIME_PATTERN_Z, timezone = DateConstants.UTC_TIME_ZONE)
     private LocalDateTime creationTime;
-    private String ownerName;
-    private Integer picturesNumber;
+    @JsonFormat(pattern = DateConstants.LOCAL_DATE_TIME_PATTERN_Z, timezone = DateConstants.UTC_TIME_ZONE)
+    private LocalDateTime editingTime;
 }

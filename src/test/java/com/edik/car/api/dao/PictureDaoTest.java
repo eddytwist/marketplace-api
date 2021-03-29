@@ -1,6 +1,5 @@
 package com.edik.car.api.dao;
 
-import com.edik.car.api.dao.db.DataSource;
 import com.edik.car.api.dao.model.Ad;
 import com.edik.car.api.dao.model.Condition;
 import com.edik.car.api.dao.model.Picture;
@@ -23,9 +22,9 @@ class PictureDaoTest {
 
     private static final String REFERENCE = "reference";
 
-    PictureDao pictureDao = PictureDao.getInstance();
-    AdDao adDao = AdDao.getInstance();
-    UserDao userDao = UserDao.getInstance();
+    PictureDao pictureDao;
+    AdDao adDao;
+    UserDao userDao;
     Picture picture;
     Ad ad;
     User user;

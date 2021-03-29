@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class AdShortInformationService {
+public class AdWithUserInfoAndPicsNumberService {
     private Long adId;
     private Integer year;
     private String brand;

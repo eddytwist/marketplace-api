@@ -3,9 +3,9 @@ package com.edik.car.api.service;
 import com.edik.car.api.web.dto.request.CreateAdRequest;
 import com.edik.car.api.web.dto.request.PatchAdRequest;
 import com.edik.car.api.web.dto.request.UpdateAdRequest;
-import com.edik.car.api.web.dto.response.AdFullInformationResponse;
 import com.edik.car.api.web.dto.response.AdResponse;
-import com.edik.car.api.web.dto.response.AdShortInformationResponse;
+import com.edik.car.api.web.dto.response.AdWithUserInfoAndPhonesAndPicturesResponse;
+import com.edik.car.api.web.dto.response.AdWithUserInfoAndPicsNumberResponse;
 
 import java.util.List;
 
@@ -15,17 +15,17 @@ public interface AdService {
 
     AdResponse getById(Long id);
 
-    AdFullInformationResponse getFullInformationAdById(Long id);
+    AdWithUserInfoAndPhonesAndPicturesResponse getAdWithUserInfoAndPhonesAndPicturesByAdId(Long id);
 
     List<AdResponse> getAll();
 
-    List<AdShortInformationResponse> getAllShortInformationAds(int pageNumber, int adsPerPage);
+    List<AdWithUserInfoAndPicsNumberResponse> getAllAdsWithPageAndSize(int pageNumber, int adsPerPage);
 
     AdResponse update(UpdateAdRequest updateAdRequest);
 
     void delete(Long id);
 
-    void deletePictureFromAdById(Long id);
+    void deletePictureByAdIdAndPictureId(Long id);
 
-    AdResponse updateAllowedFields(PatchAdRequest patchAdRequest);
+    AdResponse updateYearBrandModelMileageEngineVolumeEnginePower(PatchAdRequest patchAdRequest);
 }

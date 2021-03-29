@@ -1,6 +1,5 @@
 package com.edik.car.api.dao;
 
-import com.edik.car.api.dao.db.DataSource;
 import com.edik.car.api.dao.model.Ad;
 import com.edik.car.api.dao.model.Condition;
 import com.edik.car.api.dao.model.User;
@@ -29,8 +28,8 @@ class AdDaoTest {
     private static final LocalDateTime CREATION_TIME = LocalDateTime.of(2021, 2, 8, 12, 20);
     private static final LocalDateTime EDITING_TIME = LocalDateTime.of(2021, 2, 15, 16, 20);
 
-    AdDao adDao = AdDao.getInstance();
-    UserDao userDao = UserDao.getInstance();
+    AdDao adDao;
+    UserDao userDao;
     User user;
     Ad ad;
 
