@@ -9,8 +9,8 @@ import com.edik.car.api.web.dto.response.AdResponse;
 import com.edik.car.api.web.dto.response.AdWithUserInfoAndPhonesAndPicturesResponse;
 import com.edik.car.api.web.dto.response.AdWithUserInfoAndPicsNumberResponse;
 import com.edik.car.api.web.dto.response.PictureResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,15 +29,14 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/ads")
-public class AdsController extends BaseController {
+@RequiredArgsConstructor
+public class AdsController {
 
     public static final String DEFAULT_ADS_PER_PAGE = "10";
     public static final String DEFAULT_PAGE_NUMBER = "1";
 
-    @Autowired
-    private AdService adService;
-    @Autowired
-    private PictureService pictureService;
+    private final AdService adService;
+    private final PictureService pictureService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<AdWithUserInfoAndPicsNumberResponse>> getAds(

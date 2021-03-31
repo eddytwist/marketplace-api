@@ -1,110 +1,64 @@
 package com.edik.car.api.service.impl;
 
-import com.edik.car.api.dao.UserInformationDao;
 import com.edik.car.api.dao.model.UserInformation;
+import com.edik.car.api.repository.UserInformationRepository;
 import com.edik.car.api.service.AbstractService;
 import com.edik.car.api.service.UserInformationService;
-import com.edik.car.api.service.exception.ServiceFailedException;
+import com.edik.car.api.service.exception.ServiceEntityNotFoundException;
 import com.edik.car.api.web.dto.request.UserInformationRequest;
 import com.edik.car.api.web.dto.response.UserInformationResponse;
 import com.edik.car.api.web.mapper.UserInformationMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service(value = "userInformationService")
-public final class UserInformationServiceImpl extends AbstractService implements UserInformationService {
+@Service("userInformationService")
+@RequiredArgsConstructor
+public class UserInformationServiceImpl extends AbstractService implements UserInformationService {
 
-    @Autowired
-    private UserInformationDao userInformationDao;
+    private final UserInformationRepository userInformationRepository;
 
     @Override
+    @Transactional
     public UserInformationResponse create(UserInformationRequest userInformationRequest) {
         UserInformation userInformationToCreate = UserInformationMapper.toUserInformation(userInformationRequest);
-        UserInformation createdUserInformation;
 
-        try {
-            begin();
-
-            createdUserInformation = userInformationDao.save(userInformationToCreate);
-
-            commit();
-        } catch (Exception e) {
-            rollback();
-            throw new ServiceFailedException("Creating failed: " + userInformationRequest, e);
-        }
+        UserInformation createdUserInformation = userInformationRepository.save(userInformationToCreate);
 
         return UserInformationMapper.toUserInformationResponse(createdUserInformation);
     }
 
     @Override
+    @Transactional
     public UserInformationResponse getById(Long id) {
-        UserInformation userInformation;
-
-        try {
-            begin();
-
-            userInformation = userInformationDao.findById(id);
-
-            commit();
-        } catch (Exception e) {
-            rollback();
-            throw new ServiceFailedException("Can't find Picture with id: " + id, e);
-        }
-
+        UserInformation userInformation = userInformationRepository.findById(id)
+            .orElseThrow(() -> new ServiceEntityNotFoundException("UserInformation", id));
         return UserInformationMapper.toUserInformationResponse(userInformation);
     }
 
     @Override
+    @Transactional
     public List<UserInformationResponse> getAll() {
-        List<UserInformation> usersInformation;
-
-        try {
-            begin();
-
-            usersInformation = userInformationDao.findAll();
-
-            commit();
-        } catch (Exception e) {
-            rollback();
-            throw new ServiceFailedException("Can't find UsersInformation.", e);
-        }
-
-        return usersInformation
+        return userInformationRepository.findAll()
             .stream()
             .map(UserInformationMapper::toUserInformationResponse)
             .collect(Collectors.toList());
     }
 
     @Override
+    @Transactional
     public void update(UserInformationRequest userInformationRequest) {
         UserInformation userInformation = UserInformationMapper.toUserInformation(userInformationRequest);
 
-        try {
-            begin();
-
-            userInformationDao.update(userInformation);
-
-            commit();
-        } catch (Exception e) {
-            rollback();
-            throw new ServiceFailedException("Can't update UserInformation: " + userInformationRequest, e);
-        }
+        userInformationRepository.save(userInformation);
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
-        try {
-            begin();
-
-            userInformationDao.delete(id);
-
-            commit();
-        } catch (Exception e) {
-            rollback();
-            throw new ServiceFailedException("Can't delete UserInformation id: " + id, e);
-        }
+        userInformationRepository.deleteById(id);
     }
 }

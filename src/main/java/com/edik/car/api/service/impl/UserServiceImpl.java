@@ -1,120 +1,69 @@
 package com.edik.car.api.service.impl;
 
-import com.edik.car.api.dao.UserDao;
 import com.edik.car.api.dao.model.User;
+import com.edik.car.api.repository.UserRepository;
 import com.edik.car.api.service.AbstractService;
 import com.edik.car.api.service.UserService;
 import com.edik.car.api.service.exception.ServiceEntityNotFoundException;
-import com.edik.car.api.service.exception.ServiceFailedException;
 import com.edik.car.api.web.dto.request.CreateUserRequest;
 import com.edik.car.api.web.dto.request.UpdateUserRequest;
 import com.edik.car.api.web.dto.response.UserResponse;
 import com.edik.car.api.web.mapper.UserMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service(value = "userService")
-public final class UserServiceImpl extends AbstractService implements UserService {
+@Service("userService")
+@RequiredArgsConstructor
+public class UserServiceImpl extends AbstractService implements UserService {
 
-    @Autowired
-    private UserDao userDao;
+    private final UserRepository userRepository;
 
     @Override
+    @Transactional
     public UserResponse create(CreateUserRequest createUserRequest) {
         User userToCreate = UserMapper.toUser(createUserRequest);
-        User createdUser;
 
-        try {
-            begin();
-
-            createdUser = userDao.save(userToCreate);
-
-            commit();
-        } catch (Exception e) {
-            rollback();
-            throw new ServiceFailedException("Creating failed: " + createUserRequest, e);
-        }
+        User createdUser = userRepository.save(userToCreate);
 
         return UserMapper.toUserResponse(createdUser);
     }
 
     @Override
+    @Transactional
     public UserResponse getById(Long id) {
-        User user;
-
-        try {
-            begin();
-
-            user = userDao.findById(id);
-
-            commit();
-        } catch (Exception e) {
-            rollback();
-            throw new ServiceFailedException("Can't find User with id: " + id, e);
-        }
-
+        User user = userRepository.findById(id).orElseThrow();
         return UserMapper.toUserResponse(user);
     }
 
     @Override
+    @Transactional
     public List<UserResponse> getAll() {
-        List<User> users;
-
-        try {
-            begin();
-
-            users = userDao.findAll();
-
-            commit();
-        } catch (Exception e) {
-            rollback();
-            throw new ServiceFailedException("Can't find Users.", e);
-        }
-
-        return users
+        return userRepository.findAll()
             .stream()
             .map(UserMapper::toUserResponse)
             .collect(Collectors.toList());
     }
 
     @Override
+    @Transactional
     public UserResponse update(UpdateUserRequest updateUserRequest) {
-        User updatedUser;
+        User foundedUser = userRepository.findById(updateUserRequest.getUserId())
+            .orElseThrow(() -> new ServiceEntityNotFoundException("User", updateUserRequest.getUserId()));
 
-        try {
-            begin();
+        UserMapper.updateUserFields(foundedUser, updateUserRequest);
 
-            User foundedUser = userDao.findById(updateUserRequest.getUserId());
-
-            if (foundedUser != null) {
-                UserMapper.updateUserFields(foundedUser, updateUserRequest);
-                updatedUser = userDao.update(foundedUser);
-            } else {
-                throw new ServiceEntityNotFoundException("User", updateUserRequest.getUserId());
-            }
-            commit();
-        } catch (Exception e) {
-            rollback();
-            throw new ServiceFailedException("Can't update User: " + updateUserRequest, e);
-        }
+        User updatedUser = userRepository.save(foundedUser);
 
         return UserMapper.toUserResponse(updatedUser);
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
-        try {
-            begin();
-
-            userDao.delete(id);
-
-            commit();
-        } catch (Exception e) {
-            rollback();
-            throw new ServiceFailedException("Can't delete User id: " + id, e);
-        }
+        userRepository.deleteById(id);
     }
 }

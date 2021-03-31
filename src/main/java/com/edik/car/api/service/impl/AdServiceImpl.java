@@ -1,16 +1,14 @@
 package com.edik.car.api.service.impl;
 
-import com.edik.car.api.dao.AdDao;
-import com.edik.car.api.dao.PictureDao;
-import com.edik.car.api.dao.UserDao;
-import com.edik.car.api.dao.dto.AdWithUserInfoAndPicsNumberService;
 import com.edik.car.api.dao.model.Ad;
 import com.edik.car.api.dao.model.Picture;
 import com.edik.car.api.dao.model.User;
+import com.edik.car.api.repository.AdRepository;
+import com.edik.car.api.repository.PictureRepository;
+import com.edik.car.api.repository.UserRepository;
 import com.edik.car.api.service.AbstractService;
 import com.edik.car.api.service.AdService;
 import com.edik.car.api.service.exception.ServiceEntityNotFoundException;
-import com.edik.car.api.service.exception.ServiceFailedException;
 import com.edik.car.api.web.dto.request.CreateAdRequest;
 import com.edik.car.api.web.dto.request.PatchAdRequest;
 import com.edik.car.api.web.dto.request.UpdateAdRequest;
@@ -18,205 +16,121 @@ import com.edik.car.api.web.dto.response.AdResponse;
 import com.edik.car.api.web.dto.response.AdWithUserInfoAndPhonesAndPicturesResponse;
 import com.edik.car.api.web.dto.response.AdWithUserInfoAndPicsNumberResponse;
 import com.edik.car.api.web.mapper.AdMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service("adService")
-public final class AdServiceImpl extends AbstractService implements AdService {
+@RequiredArgsConstructor
+public class AdServiceImpl extends AbstractService implements AdService {
 
-    @Autowired
-    private AdDao adDao;
-
-    @Autowired
-    private UserDao userDao;
-
-    @Autowired
-    private PictureDao pictureDao;
+    private final AdRepository adRepository;
+    private final PictureRepository pictureRepository;
+    private final UserRepository userRepository;
 
     @Override
+    @Transactional
     public AdResponse create(CreateAdRequest createAdRequest) {
-        Ad adToCreate = AdMapper.toAd(createAdRequest);
-        Ad createdAd;
+        Ad adToCreate = AdMapper.toAd(createAdRequest)
+            .setUser(userRepository
+                .findById(createAdRequest.getUserId())
+                .orElseThrow()
+            );
 
-        try {
-            begin();
-
-            adToCreate.setUser(userDao.findById(createAdRequest.getUserId()));
-            createdAd = adDao.save(adToCreate);
-
-            commit();
-        } catch (Exception e) {
-            rollback();
-            throw new ServiceFailedException("Creating failed: " + createAdRequest, e);
-        }
+        Ad createdAd = adRepository.save(adToCreate);
 
         return AdMapper.toAdResponse(createdAd);
     }
 
     @Override
+    @Transactional
     public AdResponse getById(Long id) {
-        Ad ad;
-
-        try {
-            begin();
-
-            ad = adDao.findById(id);
-
-            commit();
-        } catch (Exception e) {
-            rollback();
-            throw new ServiceFailedException("Can't find Ad with id: " + id, e);
-        }
-
+        Ad ad = adRepository.findById(id)
+            .orElseThrow(() -> new ServiceEntityNotFoundException("Ad", id));
         return AdMapper.toAdResponse(ad);
     }
 
     @Override
+    @Transactional
     public AdWithUserInfoAndPhonesAndPicturesResponse getAdWithUserInfoAndPhonesAndPicturesByAdId(Long id) {
-        Ad adToResponse;
-        User userToResponse;
+        Ad adToResponse = adRepository.findOneWithPicturesByAdId(id)
+            .orElseThrow(() -> new ServiceEntityNotFoundException("Ad", id));
 
-        try {
-            begin();
-
-            adToResponse = adDao.findAdByIdWithPics(id);
-            userToResponse = userDao.findByIdWithUserInfoAndPhones(adToResponse.getUser().getUserId());
-
-            commit();
-        } catch (Exception e) {
-            rollback();
-            throw new ServiceFailedException("Can't find Ad with id: " + id, e);
-        }
+        User userToResponse = userRepository.findOneWithUserInfoAndUserPhonesByUserId(adToResponse.getUser().getUserId())
+            .orElseThrow(() -> new ServiceEntityNotFoundException("User", adToResponse.getUser().getUserId()));
 
         return AdMapper.toAdFullInformationResponse(adToResponse, userToResponse);
     }
 
     @Override
+    @Transactional
     public List<AdResponse> getAll() {
-        List<Ad> ads;
-
-        try {
-            begin();
-
-            ads = adDao.findAll();
-
-            commit();
-        } catch (Exception e) {
-            rollback();
-            throw new ServiceFailedException("Can't find Ads.", e);
-        }
-
-        return ads
+        return adRepository.findAll()
             .stream()
             .map(AdMapper::toAdResponse)
             .collect(Collectors.toList());
     }
 
     @Override
+    @Transactional
     public List<AdWithUserInfoAndPicsNumberResponse> getAllAdsWithPageAndSize(int pageNumber, int adsPerPage) {
-        List<AdWithUserInfoAndPicsNumberService> paginatedAds;
 
-        try {
-            begin();
+        Pageable sortedByCreationTime = PageRequest.of(pageNumber, adsPerPage, Sort.by("creation_time"));
 
-            paginatedAds = adDao.getAllShortInformationAds(pageNumber, adsPerPage);
-
-            commit();
-        } catch (Exception e) {
-            rollback();
-            throw new ServiceFailedException("Can't find Ads.", e);
-        }
-
-        return paginatedAds
+        return adRepository.findAllWithPicturesAndUserInformation(sortedByCreationTime)
             .stream()
             .map(AdMapper::toAdShortInformationResponse)
             .collect(Collectors.toList());
     }
 
     @Override
+    @Transactional
     public AdResponse update(UpdateAdRequest updateAdRequest) {
-        Ad updatedAd;
+        Ad foundedAd = adRepository.findById(updateAdRequest.getAdId())
+            .orElseThrow(() -> new ServiceEntityNotFoundException("Ad", updateAdRequest.getAdId()));
 
-        try {
-            begin();
-
-            Ad foundedAd = adDao.findById(updateAdRequest.getAdId());
-
-            if (foundedAd != null) {
-                AdMapper.updateAdFields(foundedAd, updateAdRequest);
-                updatedAd = adDao.update(foundedAd);
-            } else {
-                throw new ServiceEntityNotFoundException("Ad", updateAdRequest.getAdId());
-            }
-
-            commit();
-        } catch (Exception e) {
-            rollback();
-            throw new ServiceFailedException("Can't update Ad: " + updateAdRequest, e);
-        }
+        AdMapper.updateAdFields(foundedAd, updateAdRequest);
+        Ad updatedAd = adRepository.save(foundedAd);
 
         return AdMapper.toAdResponse(updatedAd);
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
-        try {
-            begin();
-
-            adDao.delete(id);
-
-            commit();
-        } catch (Exception e) {
-            rollback();
-            throw new ServiceFailedException("Can't delete Ad id: " + id, e);
-        }
+        adRepository.deleteById(id);
     }
 
     @Override
+    @Transactional
     public void deletePictureByAdIdAndPictureId(Long id) {
-        try {
-            begin();
+        Picture pictureToDelete = pictureRepository.findOneWithAdByPictureId(id)
+            .orElseThrow(() -> new ServiceEntityNotFoundException("Picture", id));
 
-            Picture pictureToDelete = pictureDao.findByIdWithAd(id);
-            Ad foundedAd = adDao.findById(pictureToDelete.getAd().getAdId());
+        Ad foundedAd = adRepository.findById(pictureToDelete.getAd().getAdId())
+            .orElseThrow(() -> new ServiceEntityNotFoundException("Ad", id));
 
-            foundedAd.removePicture(pictureToDelete);
-            foundedAd.setEditingTime(LocalDateTime.now());
+        foundedAd.removePicture(pictureToDelete);
+        foundedAd.setEditingTime(LocalDateTime.now());
 
-            adDao.update(foundedAd);
-
-            commit();
-        } catch (Exception e) {
-            rollback();
-            throw new ServiceFailedException("Can't delete Picture from Ad by Picture id: " + id, e);
-        }
+        adRepository.save(foundedAd);
     }
 
     @Override
+    @Transactional
     public AdResponse updateYearBrandModelMileageEngineVolumeEnginePower(PatchAdRequest patchAdRequest) {
-        Ad patchedAd;
+        Ad foundedAd = adRepository.findById(patchAdRequest.getAdId())
+            .orElseThrow(() -> new ServiceEntityNotFoundException("Ad", patchAdRequest.getAdId()));
 
-        try {
-            begin();
-
-            Ad foundedAd = adDao.findById(patchAdRequest.getAdId());
-
-            if (foundedAd != null) {
-                AdMapper.updateAllowedAdFields(foundedAd, patchAdRequest);
-                patchedAd = adDao.update(foundedAd);
-            } else {
-                throw new ServiceEntityNotFoundException("Ad", patchAdRequest.getAdId());
-            }
-
-            commit();
-        } catch (Exception e) {
-            rollback();
-            throw new ServiceFailedException("Can't update Ad: " + patchAdRequest, e);
-        }
+        AdMapper.updateAllowedAdFields(foundedAd, patchAdRequest);
+        Ad patchedAd = adRepository.save(foundedAd);
 
         return AdMapper.toAdResponse(patchedAd);
     }

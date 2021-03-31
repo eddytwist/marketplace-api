@@ -4,8 +4,8 @@ import com.edik.car.api.service.UserService;
 import com.edik.car.api.web.dto.request.CreateUserRequest;
 import com.edik.car.api.web.dto.request.UpdateUserRequest;
 import com.edik.car.api.web.dto.response.UserResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,10 +22,10 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/users")
-public class UsersController extends BaseController {
+@RequiredArgsConstructor
+public class UsersController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     //TODO!! add pagination.
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
