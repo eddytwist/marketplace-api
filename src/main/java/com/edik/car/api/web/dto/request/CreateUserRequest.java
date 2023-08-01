@@ -5,11 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
 @Setter
 @Getter
+@Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString

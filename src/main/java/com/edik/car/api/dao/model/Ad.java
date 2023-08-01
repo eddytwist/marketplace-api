@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -65,18 +67,19 @@ public class Ad {
     @Column(
         name = "creation_time",
         updatable = false,
-        nullable = false
+        nullable = true
     )
     private LocalDateTime creationTime;
 
     @Column(
         name = "editing_time",
         insertable = false,
-        nullable = false
+        nullable = true
     )
     private LocalDateTime editingTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -84,8 +87,10 @@ public class Ad {
     @OneToMany(
         mappedBy = "ad",
         cascade = CascadeType.ALL,
-        orphanRemoval = true
+        orphanRemoval = true,
+        fetch = FetchType.EAGER
     )
+    @Fetch(FetchMode.JOIN)
     private List<Picture> pictures = new ArrayList<>();
 
     public void addPicture(Picture picture) {

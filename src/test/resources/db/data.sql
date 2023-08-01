@@ -41,8 +41,8 @@ CREATE TABLE ads
     condition     conditions  NOT NULL,
     mileage       bigint,
     engine_power  integer,
-    creation_time timestamp   NOT NULL,
-    editing_time  timestamp   NOT NULL,
+    creation_time timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    editing_time  timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id)
         REFERENCES users (user_id)
         ON DELETE CASCADE
@@ -58,21 +58,21 @@ CREATE TABLE pictures
         ON DELETE CASCADE
 );
 
-INSERT INTO users
-VALUES (1, 'ed', 'ed@mail.ru', 123);
-
-INSERT INTO user_information
-VALUES (1, 'Eduard');
-
-INSERT INTO user_phones
-VALUES (1, +375291111111, 1),
-       (2, +375292222222, 1),
-       (3, +375293333333, 1);
-
-INSERT INTO ads
-VALUES (1, 1, 1999, 'ww', 'jj', 1400, 'new', 150000, 200, '2016-06-22 19:10:25-07', '2016-06-24 20:10:25-07'),
-       (2, 1, 1999, 'bb', 'aa', 1600, 'new', 150000, 200, '2016-06-22 19:10:25-07', '2016-06-24 20:10:25-07');
-
-INSERT INTO pictures
-VALUES (1, 'reference1', 1),
-       (2, 'reference2', 1);
+-- INSERT INTO users
+-- VALUES (1, 'ed', 'ed@mail.ru', 123);
+--
+-- INSERT INTO user_information
+-- VALUES (1, 'Eduard');
+--
+-- INSERT INTO user_phones
+-- VALUES (1, +375291111111, 1),
+--        (2, +375292222222, 1),
+--        (3, +375293333333, 1);
+--
+-- INSERT INTO ads
+-- VALUES (1, 1, 1999, 'ww', 'jj', 1400, 'new', 150000, 200, '2016-06-22 19:10:25-07', '2016-06-24 20:10:25-07'),
+--        (2, 1, 1999, 'bb', 'aa', 1600, 'new', 150000, 200, '2016-06-22 19:10:25-07', '2016-06-24 20:10:25-07');
+--
+-- INSERT INTO pictures
+-- VALUES (1, 'reference1', 1),
+--        (2, 'reference2', 1);

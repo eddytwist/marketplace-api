@@ -1,6 +1,7 @@
 package com.edik.car.api.dao;
 
 import com.edik.car.api.dao.db.DataSource;
+import com.edik.car.api.dao.db.EntityManagerProvider;
 import com.edik.car.api.dao.model.Ad;
 import com.edik.car.api.dao.model.Condition;
 import com.edik.car.api.dao.model.User;
@@ -42,7 +43,7 @@ class AdDaoTest {
             .setPassword("pass")
         );
         ad = adDao.save(new Ad()
-//            .setUserId(user.getUserId())
+            .setUser(user)
             .setYear(YEAR)
             .setBrand(BRAND)
             .setModel(MODEL)
@@ -51,7 +52,7 @@ class AdDaoTest {
             .setMileage(MILEAGE)
             .setEnginePower(ENGINE_POWER)
             .setCreationTime(CREATION_TIME)
-            .setEditingTime(EDITING_TIME)
+            .setEditingTime(CREATION_TIME)
         );
     }
 
@@ -95,6 +96,7 @@ class AdDaoTest {
 
     @Test
     void getAll() {
+        EntityManagerProvider.getEntityManager().getTransaction().begin();
         adDao.save(ad
             .setBrand("JIGULI")
             .setModel("2107")
@@ -104,6 +106,8 @@ class AdDaoTest {
             .setEngineVolume(0)
             .setMileage(0L)
         );
+        EntityManagerProvider.getEntityManager().getTransaction().commit();
+
         List<Ad> foundedAds = adDao.findAll();
         assertEquals(foundedAds.size(), 2);
 
